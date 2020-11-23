@@ -1,0 +1,256 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="referrer" content="always">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no,address=no,email=no">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0">
+    <!-- No cache -->
+    <meta http-equiv="Expires" content="-1">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache; no-store; no-save">
+    <!-- Summary -->
+    <meta property="og:title" content="project">
+    <meta property="og:description" content="project">
+    <title>카뉴스집 🙈 | CAR_NEWS.ZIP</title>
+    <!--<link rel="shortcut icon" href="../favicon.ico" />-->
+    <!-- CSS -->
+    <link rel="stylesheet" href="{% static 'css/reset.css' %}">
+	<link rel="stylesheet" href="{% static 'css/jquery-ui.css' %}">
+	<link rel="stylesheet" href="{% static 'css/swiper.css' %}">
+	<link rel="stylesheet" href="{% static 'css/content.css' %}">
+    <!--[if lt IE 9]>
+		<script src="../resources/js/html5shiv.min.js"></script>
+	<![endif]-->
+</head>
+<body class="dark">
+<div id="wrap">
+	<header class="header">
+		<h1 class="service-name">
+			카뉴스집 🙈<br>
+			<span>[{{ today_date }} CAR_NEWS.ZIP]</span>
+		</h1>
+		<select name="" id="" class="view-mode-changer">
+			<option value="">Dark mode</option>
+			<option value="" selected>Light mode</option>
+		</select>
+	</header>
+	<section class="container">
+		<div class="category-list">
+			<div class="inner">
+				<ul>
+					<li class="curr"><a href="javascript:;">중고차 뉴스</a></li>
+					<li><a href="javascript:;">신차 뉴스</a></li>
+					<li><a href="javascript:;">시승기</a></li>
+					<li><a href="javascript:;">자동차 업계 뉴스</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="item-list">
+			<div class="inner">
+				<p class="txt-guide">* 뉴스 기사를 클릭하면 해당 뉴스로 이동됩니다.</p>
+				<ul class="news-group used-car show">
+					{% for list in used_news_list %}
+						<li>
+							<a href="{{ list.news_url }}" target="_blank">
+								{% if list.media_code == '200' or list.news_img_url == 'None' %}
+								<div class="picture">
+									<p><span class="ico">😰</span><br>해당 언론사에서<br>이미지를 불러올 수 없습니다.</p>
+								</div>
+								{% else %}
+								<div class="picture" style="background:url('{{ list.news_img_url }}') no-repeat center; background-size:cover;"></div>
+								{% endif %}
+								<div class="info-box">
+									<div class="tags">
+										{% if list.write_date == today_date %}
+											<span class="today">TODAY</span>
+										{% endif %}
+										{% if list.media_code == '100' %}
+											<span class="ah">{{ list.media_name }}</span>
+										{% elif list.media_code == '200' %}
+											<span class="daily">{{ list.media_name }}</span>
+										{% elif list.media_code == '300' %}
+											<span class="auto-view">{{ list.media_name }}</span>
+										{% elif list.media_code == '400' %}
+											<span class="chosun">{{ list.media_name }}</span>
+										{% elif list.media_code == '500' %}
+											<span class="auto-morning">{{ list.media_name }}</span>
+										{% elif list.media_code == '600' %}
+											<span class="auto-diary">{{ list.media_name }}</span>
+										{% elif list.media_code == '700' %}
+											<span class="carguy">{{ list.media_name }}</span>
+										{% elif list.media_code == '800' %}
+											<span class="drive">{{ list.media_name }}</span>
+										{% endif %}
+									</div>
+									<p class="subject">{{ list.news_title }}</p>
+									<p class="summary">{{ list.news_content }}</p>
+								</div>
+							</a>
+							<div class="infos">
+								<span class="date">{{ list.write_date }}</span>
+								<button type="button" class="btn-like">👍 <strong>0</strong></button>
+							</div>
+						</li>
+					{% endfor %}
+				</ul>
+				<ul class="news-group new-car">
+					{% for list in new_news_list %}
+						<li>
+							<a href="{{ list.news_url }}" target="_blank">
+								{% if list.media_code == '200' or list.news_img_url == 'None' %}
+								<div class="picture">
+									<p><span class="ico">😰</span><br>해당 언론사에서<br>이미지를 불러올 수 없습니다.</p>
+								</div>
+								{% else %}
+								<div class="picture" style="background:url('{{ list.news_img_url }}') no-repeat center; background-size:cover;"></div>
+								{% endif %}
+								<div class="info-box">
+									<div class="tags">
+										{% if list.write_date == today_date %}
+											<span class="today">TODAY</span>
+										{% endif %}
+										{% if list.media_code == '100' %}
+											<span class="ah">{{ list.media_name }}</span>
+										{% elif list.media_code == '200' %}
+											<span class="daily">{{ list.media_name }}</span>
+										{% elif list.media_code == '300' %}
+											<span class="auto-view">{{ list.media_name }}</span>
+										{% elif list.media_code == '400' %}
+											<span class="chosun">{{ list.media_name }}</span>
+										{% elif list.media_code == '500' %}
+											<span class="auto-morning">{{ list.media_name }}</span>
+										{% elif list.media_code == '600' %}
+											<span class="auto-diary">{{ list.media_name }}</span>
+										{% elif list.media_code == '700' %}
+											<span class="carguy">{{ list.media_name }}</span>
+										{% elif list.media_code == '800' %}
+											<span class="drive">{{ list.media_name }}</span>
+										{% endif %}
+									</div>
+									<p class="subject">{{ list.news_title }}</p>
+									<p class="summary">{{ list.news_content }}</p>
+								</div>
+							</a>
+							<div class="infos">
+								<span class="date">{{ list.write_date }}</span>
+								<button type="button" class="btn-like">👍 <strong>0</strong></button>
+							</div>
+						</li>
+					{% endfor %}
+				</ul>
+				<ul class="news-group review">
+					{% for list in review_list %}
+						<li>
+							<a href="{{ list.news_url }}" target="_blank">
+								{% if list.media_code == '200' or list.news_img_url == 'None' %}
+								<div class="picture">
+									<p><span class="ico">😰</span><br>해당 언론사에서<br>이미지를 불러올 수 없습니다.</p>
+								</div>
+								{% else %}
+								<div class="picture" style="background:url('{{ list.news_img_url }}') no-repeat center; background-size:cover;"></div>
+								{% endif %}
+								<div class="info-box">
+									<div class="tags">
+										{% if list.write_date == today_date %}
+											<span class="today">TODAY</span>
+										{% endif %}
+										{% if list.media_code == '100' %}
+											<span class="ah">{{ list.media_name }}</span>
+										{% elif list.media_code == '200' %}
+											<span class="daily">{{ list.media_name }}</span>
+										{% elif list.media_code == '300' %}
+											<span class="auto-view">{{ list.media_name }}</span>
+										{% elif list.media_code == '400' %}
+											<span class="chosun">{{ list.media_name }}</span>
+										{% elif list.media_code == '500' %}
+											<span class="auto-morning">{{ list.media_name }}</span>
+										{% elif list.media_code == '600' %}
+											<span class="auto-diary">{{ list.media_name }}</span>
+										{% elif list.media_code == '700' %}
+											<span class="carguy">{{ list.media_name }}</span>
+										{% elif list.media_code == '800' %}
+											<span class="drive">{{ list.media_name }}</span>
+										{% endif %}
+									</div>
+									<p class="subject">{{ list.news_title }}</p>
+									<p class="summary">{{ list.news_content }}</p>
+								</div>
+							</a>
+							<div class="infos">
+								<span class="date">{{ list.write_date }}</span>
+								<button type="button" class="btn-like">👍 <strong>0</strong></button>
+							</div>
+						</li>
+					{% endfor %}
+				</ul>
+				<ul class="news-group industry">
+					{% for list in industry_list %}
+						<li>
+							<a href="{{ list.news_url }}" target="_blank">
+								{% if list.media_code == '200' or list.news_img_url == 'None' %}
+								<div class="picture">
+									<p><span class="ico">😰</span><br>해당 언론사에서<br>이미지를 불러올 수 없습니다.</p>
+								</div>
+								{% else %}
+								<div class="picture" style="background:url('{{ list.news_img_url }}') no-repeat center; background-size:cover;"></div>
+								{% endif %}
+								<div class="info-box">
+									<div class="tags">
+										{% if list.write_date == today_date %}
+											<span class="today">TODAY</span>
+										{% endif %}
+										{% if list.media_code == '100' %}
+											<span class="ah">{{ list.media_name }}</span>
+										{% elif list.media_code == '200' %}
+											<span class="daily">{{ list.media_name }}</span>
+										{% elif list.media_code == '300' %}
+											<span class="auto-view">{{ list.media_name }}</span>
+										{% elif list.media_code == '400' %}
+											<span class="chosun">{{ list.media_name }}</span>
+										{% elif list.media_code == '500' %}
+											<span class="auto-morning">{{ list.media_name }}</span>
+										{% elif list.media_code == '600' %}
+											<span class="auto-diary">{{ list.media_name }}</span>
+										{% elif list.media_code == '700' %}
+											<span class="carguy">{{ list.media_name }}</span>
+										{% elif list.media_code == '800' %}
+											<span class="drive">{{ list.media_name }}</span>
+										{% endif %}
+									</div>
+									<p class="subject">{{ list.news_title }}</p>
+									<p class="summary">{{ list.news_content }}</p>
+								</div>
+							</a>
+							<div class="infos">
+								<span class="date">{{ list.write_date }}</span>
+								<button type="button" class="btn-like">👍 <strong>0</strong></button>
+							</div>
+						</li>
+					{% endfor %}
+				</ul>
+			</div>
+		</div>
+	</section>
+</div>
+
+<!-- Javascript -->
+<script type="text/javascript" src="/static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="/static/js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="/static/js/swiper.min.js"></script>
+<script type="text/javascript" src="/static/js/common.js"></script>
+<script>
+$(function(){
+	$('.category-list ul li a').on('click', function(){
+		var idx = $(this).parent('li').index();
+		$('.category-list ul li').removeClass('curr').eq(idx).addClass('curr');
+		$('.news-group').removeClass('show');
+		$('.news-group').eq(idx).addClass('show');
+	});
+});
+</script>
+</body>
+</html>
