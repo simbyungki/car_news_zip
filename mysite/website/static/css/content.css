@@ -1,5 +1,17 @@
 @charset "utf-8";
-body.dark {background:#f1f1f1;}
+/* skin */
+#wrap {transition:all .3s;}
+#wrap.darkmode {background:#777;}
+#wrap.darkmode .header {background:#000; border-bottom:1px solid #555;}
+#wrap.darkmode .header .service-name {color:#fff;}
+#wrap.darkmode .header .btn-reload-data {color:#999;}
+#wrap.darkmode .header .view-mode-changer {color:#fff; background:#777;}
+#wrap.darkmode .category-list {background:#333;}
+#wrap.darkmode .item-list ul li {background:#333; border:1px solid #999}
+#wrap.darkmode .item-list ul li .subject {color:#fff;}
+#wrap.darkmode .item-list ul li .summary {color:#999;}
+#wrap.darkmode .item-list ul li .infos .btn-like strong {color:#777;}
+
 .header {position:fixed; top:0; left:0; z-index:100; padding-top:24px; width:100%; height:120px; text-align:center; border-bottom:1px solid #ddd; background:#fff; box-sizing:border-box;}
 .header .service-name {font-size:40px; font-weight:800;}
 .header .service-name span {font-size:22px; font-weight:600;}
@@ -55,6 +67,17 @@ body.dark {background:#f1f1f1;}
 .category-list ul li + li {margin-left:25px;}
 .category-list ul li:first-child {color:#d00; font-size:20px;}
 
+.loading {display:none;}
+.loading .dim {position:fixed; left:0; top:0; z-index:100; width:100%; height:100%; background:rgba(0,0,0,.8);}
+.loading .loading-box {position:fixed; left:50%; top:40%; z-index:100; margin-left:-190px; padding:40px 40px 30px; width:300px; text-align:center; background:#fff; box-shadow:0 3px 0 rgba(0,0,0,.2);}
+.loading .loading-box .out-box {position:relative; width:100%; height:6px; background:#999; overflow:hidden;}
+.loading .loading-box .out-box .in-box {animation:moveBox 1.5s ease-in-out infinite alternate-reverse; position:absolute; top:1px; left:-77%; width:80%; height:4px; background:#000;}
+.loading .loading-box p {margin-top:20px; line-height:26px; color:#222; font-size:18px;}
+@keyframes moveBox {
+	from {left:-77%;}
+	to {left:97%;}
+}
+
 /***** 
     responsive 
                 */
@@ -108,6 +131,7 @@ body.dark {background:#f1f1f1;}
 	.header .service-name span {display:block; margin-top:14px; font-size:20px;}
 	.container {padding-top:160px;}
 	.category-list {top:110px;}
+	.category-list ul li + li {margin-left:14px;}
 	.category-list ul li a {font-size:14px;}
 	.item-list ul li .picture {height:185px;}
 	.item-list ul li .picture p {padding:65px 0 0;}

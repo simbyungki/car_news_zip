@@ -16,7 +16,7 @@
     <meta property="og:title" content="project">
     <meta property="og:description" content="project">
     <title>카뉴스집 🙈 | CAR_NEWS.ZIP</title>
-    <!--<link rel="shortcut icon" href="../favicon.ico" />-->
+    <link rel="shortcut icon" href="{% static 'favico.png' %}" />
     <!-- CSS -->
     <link rel="stylesheet" href="{% static 'css/reset.css' %}">
 	<link rel="stylesheet" href="{% static 'css/jquery-ui.css' %}">
@@ -26,16 +26,16 @@
 		<script src="../resources/js/html5shiv.min.js"></script>
 	<![endif]-->
 </head>
-<body class="dark">
+<body>
 <div id="wrap">
 	<header class="header">
 		<h1 class="service-name">
 			카뉴스집 🙈<br>
-			<span>[{{ today_date }} CAR_NEWS.ZIP]</span>
+			<span><a href="{% url 'reload_data' %}" title="숨은기능 : 데이터 새로 받아오기 (약 1분 소요)" class="btn-reload-data">[{{ today_date }} CAR_NEWS.ZIP]</a></span>
 		</h1>
 		<select name="" id="" class="view-mode-changer">
-			<option value="">Dark mode</option>
-			<option value="" selected>Light mode</option>
+			<option value="dark">Dark mode</option>
+			<option value="light" selected>Light mode</option>
 		</select>
 	</header>
 	<section class="container">
@@ -56,7 +56,7 @@
 					{% for list in used_news_list %}
 						<li>
 							<a href="{{ list.news_url }}" target="_blank">
-								{% if list.media_code == '200' or list.news_img_url == 'None' %}
+								{% if list.media_code == '200' or list.news_img_url == 'None' or list.news_img_url == '' %}
 								<div class="picture">
 									<p><span class="ico">😰</span><br>해당 언론사에서<br>이미지를 불러올 수 없습니다.</p>
 								</div>
@@ -101,7 +101,7 @@
 					{% for list in new_news_list %}
 						<li>
 							<a href="{{ list.news_url }}" target="_blank">
-								{% if list.media_code == '200' or list.news_img_url == 'None' %}
+								{% if list.media_code == '200' or list.news_img_url == 'None' or list.news_img_url == '' %}
 								<div class="picture">
 									<p><span class="ico">😰</span><br>해당 언론사에서<br>이미지를 불러올 수 없습니다.</p>
 								</div>
@@ -146,7 +146,7 @@
 					{% for list in review_list %}
 						<li>
 							<a href="{{ list.news_url }}" target="_blank">
-								{% if list.media_code == '200' or list.news_img_url == 'None' %}
+								{% if list.media_code == '200' or list.news_img_url == 'None' or list.news_img_url == '' %}
 								<div class="picture">
 									<p><span class="ico">😰</span><br>해당 언론사에서<br>이미지를 불러올 수 없습니다.</p>
 								</div>
@@ -191,7 +191,7 @@
 					{% for list in industry_list %}
 						<li>
 							<a href="{{ list.news_url }}" target="_blank">
-								{% if list.media_code == '200' or list.news_img_url == 'None' %}
+								{% if list.media_code == '200' or list.news_img_url == 'None' or list.news_img_url == '' %}
 								<div class="picture">
 									<p><span class="ico">😰</span><br>해당 언론사에서<br>이미지를 불러올 수 없습니다.</p>
 								</div>
@@ -235,6 +235,18 @@
 			</div>
 		</div>
 	</section>
+	<div class="loading">
+		<div class="dim"></div>
+		<div class="loading-box">
+			<div class="out-box">
+				<i class="in-box"></i>
+			</div>
+			<p>
+				다시 데이터를 불러오는 중입니다.<br>
+				(약 1분 소요됩니다.)
+			</p>
+		</div>
+	</div>
 </div>
 
 <!-- Javascript -->
@@ -249,6 +261,19 @@ $(function(){
 		$('.category-list ul li').removeClass('curr').eq(idx).addClass('curr');
 		$('.news-group').removeClass('show');
 		$('.news-group').eq(idx).addClass('show');
+	});
+
+	$('.btn-reload-data').on('click', function(){
+		$('.loading').show();
+	});
+
+	$('.view-mode-changer').on('change', function(){
+		var skinMode = $(this).val();
+		if(skinMode == 'dark'){
+			$('#wrap').addClass('darkmode');
+		}else{
+			$('#wrap').removeClass('darkmode');
+		}
 	});
 });
 </script>
