@@ -75,10 +75,18 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    # }
+	'default' : {
+		'ENGINE': 'django.db.backends.mysql',
+		'NAME': 'CAR_NEWS_ZIP', 
+		'USER': 'root',
+		'PASSWORD': 'dbsgPwls!2',
+		'HOST': '118.27.37.85',
+		'PORT': '3306'
+	}
 }
 DATABASE_OPTIONS = {'charset': 'utf8'}
 
@@ -105,7 +113,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ko'
 
 TIME_ZONE = 'Asia/Seoul'
 
