@@ -12,7 +12,7 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 import mysql.connector
 
-dbconn = mysql.connector.connect(host='139.150.79.124', user='AP_ATC_INSP', password='autoplus2020!', database='AP_ATC_INSP', port="3306")
+# dbconn = mysql.connector.connect(host='139.150.79.124', user='AP_ATC_INSP', password='autoplus2020!', database='AP_ATC_INSP', port="3306")
 
 # BeautifulSoup
 def get_soup(url) :
