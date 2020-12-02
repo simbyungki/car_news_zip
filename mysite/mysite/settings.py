@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'f-lb5)y%6im%q!_ru@y_wc$56!_js&_ywenai2_m7gw_%#5@)9'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1', '.pythonanywhere.com', '220.118.169.29', '192.168.1.4', '192.168.1.6']
+ALLOWED_HOSTS = ['127.0.0.1', '.pythonanywhere.com', '118.27.37.85']
 
 
 # Application definition
@@ -75,18 +75,10 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    # }
-	'default' : {
-		'ENGINE': 'django.db.backends.mysql',
-		'NAME': 'AP_ATC_INSP', 
-		'USER': 'AP_ATC_INSP',
-		'PASSWORD': 'autoplus2020!',
-		'HOST': '139.150.79.124',
-		'PORT': '3306'
-	}
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
 }
 DATABASE_OPTIONS = {'charset': 'utf8'}
 
