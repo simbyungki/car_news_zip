@@ -131,8 +131,8 @@
 	.header .service-name span {display:block; margin-top:14px; font-size:20px;}
 	.container {padding-top:160px;}
 	.category-list {top:110px;}
-	.category-list ul li + li {margin-left:14px;}
-	.category-list ul li a {font-size:14px;}
+	.category-list ul li + li {margin-left:10px;}
+	.category-list ul li a {font-size:13px;}
 	.item-list ul li .picture {height:185px;}
 	.item-list ul li .picture p {padding:65px 0 0;}
 }
