@@ -78,19 +78,19 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    # }
 
-	# 'default' : {
-	# 	'ENGINE': 'django.db.backends.mysql',
-	# 	'NAME': 'CAR_NEWS_ZIP', 
-	# 	'USER': 'root',
-	# 	'PASSWORD': 'dbsgPwls!2',
-	# 	'HOST': '118.27.37.85',
-	# 	'PORT': '3306'
-	# }
+	'default' : {
+		'ENGINE': 'django.db.backends.mysql',
+		'NAME': 'CAR_NEWS_ZIP', 
+		'USER': 'car_news_zip',
+		'PASSWORD': 'dbsgPwls!2',
+		'HOST': '118.27.37.85',
+		'PORT': '3366'
+	}
 }
 DATABASE_OPTIONS = {'charset': 'utf8'}
 
