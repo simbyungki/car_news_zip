@@ -12,7 +12,7 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 import mysql.connector
 
-# dbconn = mysql.connector.connect(host='139.150.79.124', user='AP_ATC_INSP', password='autoplus2020!', database='AP_ATC_INSP', port="3306")
+dbconn = mysql.connector.connect(host='118.27.37.85', user='car_news_zip', password='dbsgPwls!2', database='CAR_NEWS_ZIP', port="3366")
 
 # BeautifulSoup
 def get_soup(url) :
@@ -40,6 +40,7 @@ new_car_list = []
 used_car_list = []
 review_list = []
 industry_list = []
+now_dt = datetime.today().strftime('%Y.%m.%d %H:%M%S')
 
 # 오토뷰 신차
 def get_autoview_new() :
@@ -341,8 +342,8 @@ def get_autoh_new_k() :
 
 		data_list.append(data_group)
 
-		# 상위 10개만 가져오기
-		if idx == 9 :
+		# 상위 15개만 가져오기
+		if idx == 14 :
 			break
 
 
@@ -380,8 +381,8 @@ def get_autoh_new_g() :
 
 		data_list.append(data_group)
 
-		# 상위 10개만 가져오기
-		if idx == 9 :
+		# 상위 15개만 가져오기
+		if idx == 14 :
 			break
 
 	return_data_dic['autoh_new_g'] = data_list
@@ -418,8 +419,8 @@ def get_autoh_used() :
 
 		data_list.append(data_group)
 
-		# 상위 10개만 가져오기
-		if idx == 9 :
+		# 상위 15개만 가져오기
+		if idx == 14 :
 			break
 
 	return_data_dic['autoh_used'] = data_list
@@ -456,8 +457,8 @@ def get_autoh_review() :
 
 		data_list.append(data_group)
 
-		# 상위 10개만 가져오기
-		if idx == 9 :
+		# 상위 15개만 가져오기
+		if idx == 14 :
 			break
 
 	return_data_dic['autoh_review'] = data_list
@@ -494,8 +495,8 @@ def get_autoh_industry() :
 
 		data_list.append(data_group)
 
-		# 상위 10개만 가져오기
-		if idx == 9 :
+		# 상위 15개만 가져오기
+		if idx == 14 :
 			break
 
 	return_data_dic['autoh_industry'] = data_list
@@ -533,8 +534,8 @@ def get_daily_used() :
 
 			data_list.append(data_group)
 
-			# 상위 10개만 가져오기
-			# if idx == 9 :
+			# 상위 15개만 가져오기
+			# if idx == 14 :
 			# 	break
 
 	return_data_dic['daily_used'] = data_list
@@ -571,8 +572,8 @@ def get_daily_review() :
 
 			data_list.append(data_group)
 
-			# 상위 10개만 가져오기
-			# if idx == 9 :
+			# 상위 15개만 가져오기
+			# if idx == 14 :
 			# 	break
 
 	return_data_dic['daily_review'] = data_list
@@ -609,8 +610,8 @@ def get_daily_industry() :
 
 			data_list.append(data_group)
 
-			# 상위 10개만 가져오기
-			# if idx == 9 :
+			# 상위 15개만 가져오기
+			# if idx == 14 :
 			# 	break
 
 	return_data_dic['daily_industry'] = data_list
@@ -1003,23 +1004,36 @@ def insert_used_db() :
 					summary = re.sub('[-=.#/?:$}\"\']', '', news.get('summary'))
 					img_url = news.get('img_url')
 					date = news.get('date').replace('/', '-').replace('.', '-')
+
+					# newUsedCarNews = TblUsedCarNewsList.objects.create(
+					# 	MEDIA_CODE = media_code,
+					# 	MEDIA_NAME = media_name,
+					# 	NEWS_CODE = news_code,
+					# 	NEWS_TITLE = subject,
+					# 	NEWS_CONTENT = summary,
+					# 	NEWS_IMG_URL = img_url,
+					# 	NEWS_URL = url,
+					# 	WRITE_DATE = date,
+					# 	ADD_DATE = now_dt
+					# )
+
 					execute(f"""
-							INSERT IGNORE INTO TBL_USED_CAR_NEWS_LIST 
-							(
-								MEDIA_CODE, MEDIA_NAME, 
-								NEWS_CODE, NEWS_TITLE, 
-								NEWS_CONTENT, NEWS_IMG_URL,
-								NEWS_URL, WRITE_DATE, 
-								ADD_DATE
-							) 
-							VALUES (
-								"{media_code}", "{media_name}", 
-								"{news_code}", "{subject}", 
-								"{summary}", "{img_url}", 
-								"{url}", "{date}", 
-								NOW()
-							) 
-						""")
+						INSERT IGNORE INTO TBL_USED_CAR_NEWS_LIST 
+						(
+							MEDIA_CODE, MEDIA_NAME, 
+							NEWS_CODE, NEWS_TITLE, 
+							NEWS_CONTENT, NEWS_IMG_URL,
+							NEWS_URL, WRITE_DATE, 
+							ADD_DATE
+						) 
+						VALUES (
+							"{media_code}", "{media_name}", 
+							"{news_code}", "{subject}", 
+							"{summary}", "{img_url}", 
+							"{url}", "{date}", 
+							NOW()
+						) 
+					""")
 		
 		print('ㅡ'*50)
 		print('중고차 관련 기사 수집 및 DB저장 완료!')
@@ -1086,23 +1100,36 @@ def insert_new_db() :
 					summary = re.sub('[-=.#/?:$}\"\']', '', news.get('summary')).replace('\"', '')
 					img_url = news.get('img_url')
 					date = news.get('date').replace('/', '-').replace('.', '-')
+					
+					# newNewCarNews = TblNewCarNewsList.objects.create(
+					# 	MEDIA_CODE = media_code,
+					# 	MEDIA_NAME = media_name,
+					# 	NEWS_CODE = news_code,
+					# 	NEWS_TITLE = subject,
+					# 	NEWS_CONTENT = summary,
+					# 	NEWS_IMG_URL = img_url,
+					# 	NEWS_URL = url,
+					# 	WRITE_DATE = date,
+					# 	ADD_DATE = now_dt
+					# )
+
 					execute(f"""
-							INSERT IGNORE INTO TBL_NEW_CAR_NEWS_LIST 
-							(
-								MEDIA_CODE, MEDIA_NAME, 
-								NEWS_CODE, NEWS_TITLE, 
-								NEWS_CONTENT, NEWS_IMG_URL,
-								NEWS_URL, WRITE_DATE, 
-								ADD_DATE
-							) 
-							VALUES (
-								"{media_code}", "{media_name}", 
-								"{news_code}", "{subject}", 
-								"{summary}", "{img_url}", 
-								"{url}", "{date}", 
-								NOW()
-							) 
-						""")
+						INSERT IGNORE INTO TBL_NEW_CAR_NEWS_LIST 
+						(
+							MEDIA_CODE, MEDIA_NAME, 
+							NEWS_CODE, NEWS_TITLE, 
+							NEWS_CONTENT, NEWS_IMG_URL,
+							NEWS_URL, WRITE_DATE, 
+							ADD_DATE
+						) 
+						VALUES (
+							"{media_code}", "{media_name}", 
+							"{news_code}", "{subject}", 
+							"{summary}", "{img_url}", 
+							"{url}", "{date}", 
+							NOW()
+						) 
+					""")
 
 		print('ㅡ'*50)
 		print('신차 관련 기사 수집 및 DB저장 완료!')
@@ -1194,23 +1221,36 @@ def insert_review_db() :
 					summary = re.sub('[-=.#/?:$}\"\']', '', news.get('summary')).replace('\"', '')
 					img_url = news.get('img_url')
 					date = news.get('date').replace('/', '-').replace('.', '-')
+
+					# newReview = TblReviewList.objects.create(
+					# 	MEDIA_CODE = media_code,
+					# 	MEDIA_NAME = media_name,
+					# 	NEWS_CODE = news_code,
+					# 	NEWS_TITLE = subject,
+					# 	NEWS_CONTENT = summary,
+					# 	NEWS_IMG_URL = img_url,
+					# 	NEWS_URL = url,
+					# 	WRITE_DATE = date,
+					# 	ADD_DATE = now_dt
+					# )
+
 					execute(f"""
-							INSERT IGNORE INTO TBL_REVIEW_LIST 
-							(
-								MEDIA_CODE, MEDIA_NAME, 
-								NEWS_CODE, NEWS_TITLE, 
-								NEWS_CONTENT, NEWS_IMG_URL,
-								NEWS_URL, WRITE_DATE, 
-								ADD_DATE
-							) 
-							VALUES (
-								"{media_code}", "{media_name}", 
-								"{news_code}", "{subject}", 
-								"{summary}", "{img_url}", 
-								"{url}", "{date}", 
-								NOW()
-							) 
-						""")
+						INSERT IGNORE INTO TBL_REVIEW_LIST 
+						(
+							MEDIA_CODE, MEDIA_NAME, 
+							NEWS_CODE, NEWS_TITLE, 
+							NEWS_CONTENT, NEWS_IMG_URL,
+							NEWS_URL, WRITE_DATE, 
+							ADD_DATE
+						) 
+						VALUES (
+							"{media_code}", "{media_name}", 
+							"{news_code}", "{subject}", 
+							"{summary}", "{img_url}", 
+							"{url}", "{date}", 
+							NOW()
+						) 
+					""")
 		print('ㅡ'*50)
 		print('시승기 수집 및 DB저장 완료!')
 		print('ㅡ'*50)
@@ -1292,23 +1332,36 @@ def insert_industry_db() :
 					summary = re.sub('[-=.#/?:$}]\"\'', '', news.get('summary')).replace('\"', '')
 					img_url = news.get('img_url')
 					date = news.get('date').replace('/', '-').replace('.', '-')
+
+					# newIndustry = TblIndustryList.objects.create(
+					# 	MEDIA_CODE = media_code,
+					# 	MEDIA_NAME = media_name,
+					# 	NEWS_CODE = news_code,
+					# 	NEWS_TITLE = subject,
+					# 	NEWS_CONTENT = summary,
+					# 	NEWS_IMG_URL = img_url,
+					# 	NEWS_URL = url,
+					# 	WRITE_DATE = date,
+					# 	ADD_DATE = now_dt
+					# )
+
 					execute(f"""
-							INSERT IGNORE INTO TBL_INDUSTRY_LIST 
-							(
-								MEDIA_CODE, MEDIA_NAME, 
-								NEWS_CODE, NEWS_TITLE, 
-								NEWS_CONTENT, NEWS_IMG_URL,
-								NEWS_URL, WRITE_DATE, 
-								ADD_DATE
-							) 
-							VALUES (
-								"{media_code}", "{media_name}", 
-								"{news_code}", "{subject}", 
-								"{summary}", "{img_url}", 
-								"{url}", "{date}", 
-								NOW()
-							) 
-						""")
+						INSERT IGNORE INTO TBL_INDUSTRY_LIST 
+						(
+							MEDIA_CODE, MEDIA_NAME, 
+							NEWS_CODE, NEWS_TITLE, 
+							NEWS_CONTENT, NEWS_IMG_URL,
+							NEWS_URL, WRITE_DATE, 
+							ADD_DATE
+						) 
+						VALUES (
+							"{media_code}", "{media_name}", 
+							"{news_code}", "{subject}", 
+							"{summary}", "{img_url}", 
+							"{url}", "{date}", 
+							NOW()
+						) 
+					""")
 		print('ㅡ'*50)
 		print('자동차 업계 뉴스 수집 및 DB저장 완료!')
 		print('ㅡ'*50)
@@ -1328,9 +1381,9 @@ def reload_data(request) :
 	insert_review_db()
 	insert_industry_db()
 
-	dbconn.commit()
+	# dbconn.commit()
 	print('DB Commit 완료!')
-	dbconn.close()
+	# dbconn.close()
 	print('DB Close 완료!')
 
 	return redirect('/')
@@ -1349,3 +1402,9 @@ def news_list(request) :
 		'review_list': review_list, 
 		'industry_list': industry_list,
 	})
+
+
+
+# if __name__ == '__main__' : 
+# 	# insert_industry_db()
+# 	pass
