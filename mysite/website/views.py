@@ -1404,6 +1404,13 @@ def news_list(request) :
 	})
 
 
+def login(request) :
+
+	return render(request, 'website/login.html')
+
+def join(request) : 
+	
+	return render(request, 'website/join.html')
 
 # if __name__ == '__main__' : 
 # 	# insert_industry_db()

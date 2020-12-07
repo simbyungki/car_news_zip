@@ -2,23 +2,23 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
-    <meta name="referrer" content="always">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="format-detection" content="telephone=no,address=no,email=no">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0">
-    <!-- No cache -->
-    <meta http-equiv="Expires" content="-1">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Cache-Control" content="no-cache; no-store; no-save">
-    <!-- Summary -->
-    <meta property="og:title" content="project">
-    <meta property="og:description" content="project">
-    <title>카뉴스집 🙈 | CAR_NEWS.ZIP</title>
-    <link rel="shortcut icon" href="{% static 'favico.png' %}" />
-    <!-- CSS -->
-    <link rel="stylesheet" href="{% static 'css/reset.css' %}">
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+	<meta name="referrer" content="always">
+	<meta name="mobile-web-app-capable" content="yes">
+	<meta name="format-detection" content="telephone=no,address=no,email=no">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0">
+	<!-- No cache -->
+	<meta http-equiv="Expires" content="-1">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-Control" content="no-cache; no-store; no-save">
+	<!-- Summary -->
+	<meta property="og:title" content="카뉴스집">
+	<meta property="og:description" content="카뉴스집, 자동차 뉴스, 중고차 뉴스, 신차 뉴스, 자동차 시승기">
+	<title>카뉴스집 🙈 | CAR_NEWS_ZIP</title>
+	<link rel="shortcut icon" href="{% static 'favico.png' %}" />
+	<!-- CSS -->
+	<link rel="stylesheet" href="{% static 'css/reset.css' %}">
 	<link rel="stylesheet" href="{% static 'css/jquery-ui.css' %}">
 	<link rel="stylesheet" href="{% static 'css/swiper.css' %}">
 	<link rel="stylesheet" href="{% static 'css/content.css' %}">
@@ -31,7 +31,7 @@
 	<header class="header">
 		<h1 class="service-name">
 			카뉴스집 🙈<br>
-			<span><a href="{% url 'reload_data' %}" title="숨은기능 : 데이터 새로 받아오기 (약 1분 소요)" class="btn-reload-data">[{{ today_date }} CAR_NEWS.ZIP]</a></span>
+			<span><a href="{% url 'reload_data' %}" title="숨은기능 : 데이터 새로 받아오기 (약 1분 소요)" class="btn-reload-data">[{{ today_date }} CAR_NEWS_ZIP]</a></span>
 		</h1>
 		<select name="" id="" class="view-mode-changer">
 			<option value="dark">Dark mode</option>

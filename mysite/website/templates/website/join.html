@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+	<meta name="referrer" content="always">
+	<meta name="mobile-web-app-capable" content="yes">
+	<meta name="format-detection" content="telephone=no,address=no,email=no">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0">
+	<!-- No cache -->
+	<meta http-equiv="Expires" content="-1">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-Control" content="no-cache; no-store; no-save">
+	<!-- Summary -->
+	<meta property="og:title" content="카뉴스집">
+	<meta property="og:description" content="카뉴스집, 자동차 뉴스, 중고차 뉴스, 신차 뉴스, 자동차 시승기">
+	<title>회원가입 | 카뉴스집 🙈</title>
+	<link rel="shortcut icon" href="{% static 'favico.png' %}" />
+	<!-- CSS -->
+	<link rel="stylesheet" href="{% static 'css/reset.css' %}">
+	<link rel="stylesheet" href="{% static 'css/jquery-ui.css' %}">
+	<link rel="stylesheet" href="{% static 'css/swiper.css' %}">
+	<link rel="stylesheet" href="{% static 'css/content.css' %}">
+    <!--[if lt IE 9]>
+		<script src="../resources/js/html5shiv.min.js"></script>
+	<![endif]-->
+</head>
+<body>
+<div id="wrap" class="member-p">
+	<section class="container">
+		<h1 class="service-name">
+			<span>회원가입</span> | <a href="/">카뉴스집 🙈</a>
+		</h1>
+		<div class="member-box">
+			<form method="POST">
+				{% csrf_token %}
+				<div class="default-form">
+					<input type="email" id="userId" name="userId" placeholder="아이디(이메일)" autocomplete="false">
+					<input type="password" id="userPW" name="userPW" placeholder="비밀번호" autocomplete="new-password">
+					<input type="password" id="userPW" name="userPW" placeholder="비밀번호 확인(재입력)" autocomplete="new-password">
+					<div class="btn full">
+						<button type="button" class="btn-join btn-deep-gray">회원가입</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</section>
+</div>
+
+<!-- Javascript -->
+<script type="text/javascript" src="/static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="/static/js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="/static/js/swiper.min.js"></script>
+<script type="text/javascript" src="/static/js/common.js"></script>
+<script>
+$(function(){
+	
+});
+</script>
+</body>
+</html>

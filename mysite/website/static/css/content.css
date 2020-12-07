@@ -78,6 +78,31 @@
 	to {left:97%;}
 }
 
+/* common */
+.default-form input[type="email"],
+.default-form input[type="password"],
+.default-form input[type="text"] {padding:0 12px; width:100%; height:40px; letter-spacing:0; font-size:14px; box-sizing:border-box; border:1px solid #ddd;}
+.default-form input[type="email"]:focus,
+.default-form input[type="password"]:focus,
+.default-form input[type="text"]:focus {border:1px solid #00affa;} 
+.default-form .btn {display:flex; justify-content:space-between; margin-top:10px;}
+.default-form .btn button,
+.default-form .btn a {display:block;}
+.default-form .btn.full button,
+.default-form .btn.full a {width:100%; height:46px; font-size:16px; font-weight:600; text-align:center;}
+.btn-deep-gray {color:#fff; border:1px solid #444; background:#444;}
+
+/* login */
+.member-p {margin:0 auto; width:90%; max-width:400px;}
+.member-p .service-name {font-size:35px; font-weight:400; text-align:center;}
+.member-p .service-name a {color:#999;}
+.member-p .service-name span {color:#444; font-weight:600;}
+.member-p .member-box {margin-top:15px; padding:15px 0;}
+.member-p .member-box input[type="password"] {margin-top:5px;}
+.member-p .member-box .check-member {margin-top:20px; line-height:20px; font-size:14px; text-align:center;}
+.member-p .member-box .link-join {display:block; margin-top:10px; color:#00affa; font-size:16px; text-align:center; text-decoration:underline;}
+
+
 /***** 
     responsive 
                 */
