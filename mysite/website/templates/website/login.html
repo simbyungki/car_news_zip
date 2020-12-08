@@ -36,10 +36,13 @@
 			<form method="POST">
 				{% csrf_token %}
 				<div class="default-form">
-					<input type="email" id="userId" name="userId" placeholder="아이디(이메일)">
-					<input type="password" id="userPW" name="userPW" placeholder="비밀번호">
+					<input type="email" id="memb-id" name="memb-id" placeholder="아이디(이메일)">
+					<input type="password" id="pw" name="pw" placeholder="비밀번호">
+					{% if error %}
+						<p class="message">{{ error }}</p>
+					{% endif %}
 					<div class="btn full">
-						<button type="button" class="btn-login btn-deep-gray">로그인</button>
+						<button type="submit" class="btn-login btn-deep-gray">로그인</button>
 					</div>
 				</div>
 				<p class="check-member">

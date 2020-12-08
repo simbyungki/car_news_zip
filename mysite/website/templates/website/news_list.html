@@ -31,12 +31,25 @@
 	<header class="header">
 		<h1 class="service-name">
 			카뉴스집 🙈<br>
-			<span><a href="{% url 'reload_data' %}" title="숨은기능 : 데이터 새로 받아오기 (약 1분 소요)" class="btn-reload-data">[{{ today_date }} CAR_NEWS_ZIP]</a></span>
+			<span><a href="{% url 'reload_data' %}" title="숨은기능 : 데이터 새로 받아오기 (약 1분 소요)" class="btn-reload-data">[{{ today_date }} 
+				{% if user %}
+					{{ user }} 님만을 위한 뉴스!
+				{% else %}
+					CAR NEWS ZIP
+				{% endif %}
+			]</a></span>
 		</h1>
-		<select name="" id="" class="view-mode-changer">
-			<option value="dark">Dark mode</option>
-			<option value="light" selected>Light mode</option>
-		</select>
+		<div class="fncs">
+			{% if user %}
+				<a href="/logout/" class="btn-login">로그아웃</a>
+			{% else %}
+				<a href="/login/" class="btn-logout">로그인</a>
+			{% endif %}
+			<select name="" id="" class="view-mode-changer">
+				<option value="dark">Dark mode</option>
+				<option value="light" selected>Light mode</option>
+			</select>
+		</div>
 	</header>
 	<section class="container">
 		<div class="category-list">
@@ -55,7 +68,7 @@
 				<ul class="news-group used-car show">
 					{% for list in used_news_list %}
 						<li>
-							<a href="{{ list.news_url }}" target="_blank">
+							<a href="{{ list.news_url }}" target="_blank" title="{{ list.news_title }}">
 								{% if list.media_code == '200' or list.news_img_url == 'None' or list.news_img_url == '' %}
 								<div class="picture">
 									<p><span class="ico">😰</span><br>해당 언론사에서<br>이미지를 불러올 수 없습니다.</p>
@@ -100,7 +113,7 @@
 				<ul class="news-group new-car">
 					{% for list in new_news_list %}
 						<li>
-							<a href="{{ list.news_url }}" target="_blank">
+							<a href="{{ list.news_url }}" target="_blank" title="{{ list.news_title }}">
 								{% if list.media_code == '200' or list.news_img_url == 'None' or list.news_img_url == '' %}
 								<div class="picture">
 									<p><span class="ico">😰</span><br>해당 언론사에서<br>이미지를 불러올 수 없습니다.</p>
@@ -145,7 +158,7 @@
 				<ul class="news-group review">
 					{% for list in review_list %}
 						<li>
-							<a href="{{ list.news_url }}" target="_blank">
+							<a href="{{ list.news_url }}" target="_blank" title="{{ list.news_title }}">
 								{% if list.media_code == '200' or list.news_img_url == 'None' or list.news_img_url == '' %}
 								<div class="picture">
 									<p><span class="ico">😰</span><br>해당 언론사에서<br>이미지를 불러올 수 없습니다.</p>
@@ -190,7 +203,7 @@
 				<ul class="news-group industry">
 					{% for list in industry_list %}
 						<li>
-							<a href="{{ list.news_url }}" target="_blank">
+							<a href="{{ list.news_url }}" target="_blank" title="{{ list.news_title }}">
 								{% if list.media_code == '200' or list.news_img_url == 'None' or list.news_img_url == '' %}
 								<div class="picture">
 									<p><span class="ico">😰</span><br>해당 언론사에서<br>이미지를 불러올 수 없습니다.</p>

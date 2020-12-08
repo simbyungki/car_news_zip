@@ -16,7 +16,11 @@
 .header .service-name {font-size:40px; font-weight:800;}
 .header .service-name span {font-size:22px; font-weight:600;}
 .header .service-name span.date {letter-spacing:-1px; font-size:18px;}
-.header .view-mode-changer {position:absolute; right:5%; top:20px;}
+.header .service-name span a,
+.header .service-name span a:visited {color:#444;}
+.header .fncs {position:absolute; right:5%; top:20px;}
+.header .fncs a {margin-right:14px; line-height:38px; color:#888; font-size:14px; font-weight:600; text-align:right;}
+.header .fncs a:hover {color:#000;}
 .container {padding-top:180px;}
 .container .inner {position:relative; margin:0 auto; padding:10px 0; width:90%;}
 
@@ -85,6 +89,8 @@
 .default-form input[type="email"]:focus,
 .default-form input[type="password"]:focus,
 .default-form input[type="text"]:focus {border:1px solid #00affa;} 
+.default-form input[type="password"] {font-family:'맑은고딕', Malgun-Gothic;}
+.default-form .message {margin:10px 0 20px; color:#d00; font-size:14px;}
 .default-form .btn {display:flex; justify-content:space-between; margin-top:10px;}
 .default-form .btn button,
 .default-form .btn a {display:block;}
@@ -98,6 +104,8 @@
 .member-p .service-name a {color:#999;}
 .member-p .service-name span {color:#444; font-weight:600;}
 .member-p .member-box {margin-top:15px; padding:15px 0;}
+.member-p .member-box select {margin-top:5px; width:100%; border:1px solid #ddd;}
+.default-form input[name='memb-name'],
 .member-p .member-box input[type="password"] {margin-top:5px;}
 .member-p .member-box .check-member {margin-top:20px; line-height:20px; font-size:14px; text-align:center;}
 .member-p .member-box .link-join {display:block; margin-top:10px; color:#00affa; font-size:16px; text-align:center; text-decoration:underline;}

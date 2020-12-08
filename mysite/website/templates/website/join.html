@@ -33,14 +33,23 @@
 			<span>회원가입</span> | <a href="/">카뉴스집 🙈</a>
 		</h1>
 		<div class="member-box">
-			<form method="POST">
+			<form method="POST" action="">
 				{% csrf_token %}
+				{{ join_result }}
 				<div class="default-form">
-					<input type="email" id="userId" name="userId" placeholder="아이디(이메일)" autocomplete="false">
-					<input type="password" id="userPW" name="userPW" placeholder="비밀번호" autocomplete="new-password">
-					<input type="password" id="userPW" name="userPW" placeholder="비밀번호 확인(재입력)" autocomplete="new-password">
+					<input type="email" id="memb-id" name="memb-id" placeholder="아이디(이메일)" autocomplete="false">
+					<input type="text" id="memb-name" name="memb-name" placeholder="이름 또는 닉네임" autocomplete="false">
+					<select id="gender" name="gender">
+						<option value="male">남성</option>
+						<option value="female">여성</option>
+					</select>
+					<input type="password" id="pw" name="pw" placeholder="비밀번호" autocomplete="new-password">
+					<input type="password" id="re-pw" name="re-pw" placeholder="비밀번호 확인(재입력)" autocomplete="new-password">
+					{% if error %}
+						<p class="message">{{ error }}</p>
+					{% endif %}
 					<div class="btn full">
-						<button type="button" class="btn-join btn-deep-gray">회원가입</button>
+						<button type="submit" class="btn-join btn-deep-gray">회원가입</button>
 					</div>
 				</div>
 			</form>
@@ -55,7 +64,9 @@
 <script type="text/javascript" src="/static/js/common.js"></script>
 <script>
 $(function(){
-	
+	{% if join_result == 'success' %}
+	alert('회원가입이 완료되었습니다.')
+	{% endif %}
 });
 </script>
 </body>
