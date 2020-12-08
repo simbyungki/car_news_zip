@@ -162,7 +162,10 @@
 	.header {height:110px;}
 	.header .service-name {font-size:34px;}
 	.header .service-name span {display:block; margin-top:14px; font-size:20px;}
+	.header .fncs a {display:block; position:fixed; bottom:0; left:0; width:100%; height:50px; line-height:50px; color:#fff; font-size:18px; font-weight:600; text-align:center; background:#444;}
 	.container {padding-top:160px;}
+	.container .inner {width:96%;}
+	.item-list {padding-bottom:40px;}
 	.category-list {top:110px;}
 	.category-list ul li + li {margin-left:10px;}
 	.category-list ul li a {font-size:13px;}
