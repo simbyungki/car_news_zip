@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
-import os
+import os, json
 import mimetypes
 # css
 mimetypes.add_type("text/css", ".css", True)
@@ -23,7 +23,19 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'f-lb5)y%6im%q!_ru@y_wc$56!_js&_ywenai2_m7gw_%#5@)9'
+secret_file = os.path.join(BASE_DIR, 'secrets.json')
+
+with open(secret_file) as f :
+	secrets = json.loads(f.read())
+
+def get_secret(setting, secrets=secrets) : 
+	try : 
+		return secrets[setting]
+	except KeyError : 
+		error_msg = "Set the {} environment variable".format(setting)
+		raise ImproperlyConfigured(error_msg)
+
+SECRET_KEY = get_secret("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -90,8 +102,8 @@ DATABASES = {
 		'ENGINE': 'django.db.backends.mysql',
 		'NAME': 'CAR_NEWS_ZIP', 
 		'USER': 'car_news_zip',
-		'PASSWORD': 'dbsgPwls!2',
-		'HOST': '118.27.37.85',
+		'PASSWORD': get_secret("DB_PASSWORD"),
+		'HOST': get_secret("DB_HOST"),
 		'PORT': '3366'
 	}
 }
