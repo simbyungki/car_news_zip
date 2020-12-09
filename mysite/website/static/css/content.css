@@ -179,6 +179,8 @@
 	.item-list ul li {margin-top:10px; padding-top:10px; padding-bottom:10px;}
 	.item-list ul li .picture {width:80px; height:80px;}
 	.item-list ul li .picture p {padding:65px 0 0;}
+	.item-list ul li .tags span {padding:0 4px; height:18px; line-height:20px; font-size:11px;}
+	.item-list ul li .tags span + span {margin-left:0;}
 	.item-list ul li .info-box {width:calc(100% - 90px); height:110px;}
 	.item-list ul li .subject {margin-bottom:5px; font-size:16px;}
 	.item-list ul li .summary {line-height:18px; font-size:14px;}
