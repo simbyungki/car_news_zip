@@ -274,38 +274,35 @@
 <script type="text/javascript" src="/static/js/jquery-ui.min.js"></script>
 <script type="text/javascript" src="/static/js/swiper.min.js"></script>
 <script type="text/javascript" src="/static/js/common.js"></script>
-<!-- Global site tag (gtag.js) - Google Analytics -->
+<script data-ad-client="ca-pub-3984460457062336" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-T4CL1V9FXP"></script>
 <script>
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
+	$(function(){
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'G-T4CL1V9FXP');
 
-	gtag('config', 'G-T4CL1V9FXP');
-</script>
-<script data-ad-client="ca-pub-3984460457062336" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-$(function(){
-	$('.category-list ul li a').on('click', function(){
-		var idx = $(this).parent('li').index();
-		$('.category-list ul li').removeClass('curr').eq(idx).addClass('curr');
-		$('.news-group').removeClass('show');
-		$('.news-group').eq(idx).addClass('show');
-	});
+		$('.category-list ul li a').on('click', function(){
+			var idx = $(this).parent('li').index();
+			$('.category-list ul li').removeClass('curr').eq(idx).addClass('curr');
+			$('.news-group').removeClass('show');
+			$('.news-group').eq(idx).addClass('show');
+		});
 
-	$('.btn-reload-data').on('click', function(){
-		$('.loading').show();
-	});
+		$('.btn-reload-data').on('click', function(){
+			$('.loading').show();
+		});
 
-	$('.view-mode-changer').on('change', function(){
-		var skinMode = $(this).val();
-		if(skinMode == 'dark'){
-			$('#wrap').addClass('darkmode');
-		}else{
-			$('#wrap').removeClass('darkmode');
-		}
+		$('.view-mode-changer').on('change', function(){
+			var skinMode = $(this).val();
+			if(skinMode == 'dark'){
+				$('#wrap').addClass('darkmode');
+			}else{
+				$('#wrap').removeClass('darkmode');
+			}
+		});
 	});
-});
 </script>
 </body>
 </html>

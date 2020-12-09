@@ -40,7 +40,7 @@
 			<span>로그인</span> | <a href="/">카뉴스집 🙈</a>
 		</h1>
 		<div class="member-box">
-			<form method="POST">
+			<form method="POST" id="loginForm">
 				{% csrf_token %}
 				<div class="default-form">
 					<input type="email" id="memb-id" name="memb-id" placeholder="아이디(이메일)">
@@ -49,7 +49,7 @@
 						<p class="message">{{ error }}</p>
 					{% endif %}
 					<div class="btn full">
-						<button type="submit" class="btn-login btn-deep-gray">로그인</button>
+						<button type="button" class="btn-login btn-deep-gray">로그인</button>
 					</div>
 				</div>
 				<p class="check-member">
@@ -67,19 +67,15 @@
 <script type="text/javascript" src="/static/js/swiper.min.js"></script>
 <script type="text/javascript" src="/static/js/common.js"></script>
 <!-- Global site tag (gtag.js) - Google Analytics -->
+<script data-ad-client="ca-pub-3984460457062336" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-T4CL1V9FXP"></script>
 <script>
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-
-	gtag('config', 'G-T4CL1V9FXP');
-</script>
-<script data-ad-client="ca-pub-3984460457062336" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-$(function(){
-	
-});
+	$(function(){
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'G-T4CL1V9FXP');
+	});
 </script>
 </body>
 </html>
