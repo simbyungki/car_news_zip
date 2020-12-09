@@ -44,11 +44,24 @@
 				{% csrf_token %}
 				{{ join_result }}
 				<div class="default-form">
-					<input type="email" id="memb-id" name="memb-id" placeholder="아이디(이메일)" autocomplete="false">
-					<input type="text" id="memb-name" name="memb-name" placeholder="이름 또는 닉네임" autocomplete="false">
+					<input type="email" id="memb-id" name="memb-id" placeholder="아이디(이메일)" autocomplete="false" value="{% if memb_id %} {{ memb_id }} {% endif %}">
+					<input type="text" id="memb-name" name="memb-name" placeholder="이름 또는 닉네임" autocomplete="false" value="{% if memb_name %} {{ memb_name }} {% endif %}">
 					<select id="gender" name="gender">
-						<option value="male">남성</option>
-						<option value="female">여성</option>
+						{% if gender %}
+							{% if gender == 'male' %}
+							<option value="">성별</option>
+							<option value="male" selected>남성</option>
+							<option value="female">여성</option>
+							{% else %}
+							<option value="">성별</option>
+							<option value="male">남성</option>
+							<option value="female" selected>여성</option>
+							{% endif %}
+						{% else %}
+							<option value="" selected>성별</option>
+							<option value="male">남성</option>
+							<option value="female">여성</option>
+						{% endif %}
 					</select>
 					<input type="password" id="pw" name="pw" placeholder="비밀번호" autocomplete="new-password">
 					<input type="password" id="re-pw" name="re-pw" placeholder="비밀번호 확인(재입력)" autocomplete="new-password">

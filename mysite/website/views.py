@@ -1451,15 +1451,24 @@ def join(request) :
 		password = request.POST.get('pw', None)
 		re_password = request.POST.get('re-pw', None)
 		res_data = {}
-
-		if not (memb_id and password and re_password) : 
+		if not (memb_id and gender and password and re_password) : 
 			res_data['error'] = '* 모든 값을 입력해주세요.'
 			return render(request, 'website/join.html', res_data)
 		elif password != re_password : 
 			res_data['error'] = '* 비밀번호가 다릅니다.'
+			res_data = {
+				'memb_id': memb_id,
+				'memb_name': memb_name,
+				'gender': gender
+			}
+			print(res_data)
 			return render(request, 'website/join.html', res_data)
 		elif TblMemberList.objects.filter(memb_id = memb_id).exists() == True : 
 			res_data['error'] = '* 이미 존재하는 아이디입니다.'
+			res_data = {
+				'memb_name': memb_name,
+				'gender': gender
+			}
 			return render(request, 'website/join.html', res_data)
 		else :
 			new_member = TblMemberList(
