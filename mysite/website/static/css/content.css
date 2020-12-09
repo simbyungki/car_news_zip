@@ -176,12 +176,13 @@
 	.category-list {top:110px;}
 	.category-list ul li + li {margin-left:10px;}
 	.category-list ul li a {font-size:13px;}
+	.item-list ul li {margin-top:10px; padding-top:10px; padding-bottom:10px;}
 	.item-list ul li .picture {width:80px; height:80px;}
 	.item-list ul li .picture p {padding:65px 0 0;}
 	.item-list ul li .info-box {width:calc(100% - 90px); height:110px;}
 	.item-list ul li .subject {margin-bottom:5px; font-size:16px;}
 	.item-list ul li .summary {line-height:18px; font-size:14px;}
-	.item-list ul li .infos {width:calc(100% - 120px);}
+	.item-list ul li .infos {bottom:10px; width:calc(100% - 120px);}
 	.item-list ul li .infos span {font-size:13px;}
 	.item-list ul li .infos .btn-like strong {top:0; font-size:14px;}
 }
