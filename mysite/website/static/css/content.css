@@ -158,7 +158,7 @@
 	.category-list ul li a {font-size:18px;}
 }
 
-@media screen and (max-width: 380px) {
+@media screen and (max-width: 420px) {
 	.header {height:110px;}
 	.header .service-name {font-size:34px;}
 	.header .service-name span {display:block; margin-top:14px; font-size:20px;}
