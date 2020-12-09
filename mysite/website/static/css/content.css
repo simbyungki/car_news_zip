@@ -152,8 +152,8 @@
 	.item-list ul li {padding-bottom:15px; width:100%;}
 	.item-list ul li:nth-child(2n) {margin-left:0;}
 	.item-list ul li a {display:flex; justify-content:space-between;}
-	.item-list ul li .picture {width:125px; height:125px;}
-	.item-list ul li .picture p {padding:80px 0 0;}
+	.item-list ul li .picture {width:125px; height:125px; overflow:hidden;}
+	.item-list ul li .picture p {padding:26px 0 0; line-height:16px; font-size:12px;}
 	.item-list ul li .info-box {width:calc(100% - 140px);}
 	.item-list ul li .tags {left:0; top:0;}
 	.item-list ul li .subject {margin:0 0 10px;}
@@ -178,7 +178,7 @@
 	.category-list ul li a {font-size:13px;}
 	.item-list ul li {margin-top:10px; padding-top:10px; padding-bottom:10px;}
 	.item-list ul li .picture {width:80px; height:80px;}
-	.item-list ul li .picture p {padding:65px 0 0;}
+	.item-list ul li .picture p {padding:20px 0 0;}
 	.item-list ul li .tags span {padding:0 4px; height:18px; line-height:20px; font-size:11px;}
 	.item-list ul li .tags span + span {margin-left:0;}
 	.item-list ul li .info-box {width:calc(100% - 90px); height:110px;}
