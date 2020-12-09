@@ -1,6 +1,6 @@
 @charset "utf-8";
 /* skin */
-#wrap {transition:all .3s;}
+#wrap {min-width:350px; transition:all .3s;}
 #wrap.darkmode {background:#777;}
 #wrap.darkmode .header {background:#000; border-bottom:1px solid #555;}
 #wrap.darkmode .header .service-name {color:#fff;}
@@ -149,26 +149,39 @@
 @media screen and (max-width: 768px) {
 	.header {padding:20px 5%; text-align:left;}
 	.container {padding-top:170px;}
-	.item-list ul li {width:100%;}
+	.item-list ul li {padding-bottom:15px; width:100%;}
 	.item-list ul li:nth-child(2n) {margin-left:0;}
-	.item-list ul li .picture {height:225px;}
+	.item-list ul li a {display:flex; justify-content:space-between;}
+	.item-list ul li .picture {width:125px; height:125px;}
 	.item-list ul li .picture p {padding:80px 0 0;}
+	.item-list ul li .info-box {width:calc(100% - 140px);}
+	.item-list ul li .tags {left:0; top:0;}
+	.item-list ul li .subject {margin:0 0 10px;}
+	.item-list ul li .infos {position:absolute; left:auto; right:15px; bottom:15px; width:calc(100% - 170px);}
 	.category-list {height:50px;}
 	.category-list ul li + li {margin-left:18px;}
 	.category-list ul li a {font-size:18px;}
 }
 
-@media screen and (max-width: 420px) {
+@media screen and (max-width: 450px) {
 	.header {height:110px;}
-	.header .service-name {font-size:34px;}
-	.header .service-name span {display:block; margin-top:14px; font-size:20px;}
+	.header .service-name {font-size:32px;}
+	.header .service-name span {display:block; margin-top:14px; font-size:18px;}
+	.header .fncs {top:15px;}
 	.header .fncs a {display:block; position:fixed; bottom:0; left:0; width:100%; height:50px; line-height:50px; color:#fff; font-size:18px; font-weight:600; text-align:center; background:#444;}
 	.container {padding-top:160px;}
 	.container .inner {width:96%;}
 	.item-list {padding-bottom:40px;}
+	.item-list .txt-guide {font-size:14px;}
 	.category-list {top:110px;}
 	.category-list ul li + li {margin-left:10px;}
 	.category-list ul li a {font-size:13px;}
-	.item-list ul li .picture {height:185px;}
+	.item-list ul li .picture {width:80px; height:80px;}
 	.item-list ul li .picture p {padding:65px 0 0;}
+	.item-list ul li .info-box {width:calc(100% - 90px); height:110px;}
+	.item-list ul li .subject {margin-bottom:5px; font-size:16px;}
+	.item-list ul li .summary {line-height:18px; font-size:14px;}
+	.item-list ul li .infos {width:calc(100% - 120px);}
+	.item-list ul li .infos span {font-size:13px;}
+	.item-list ul li .infos .btn-like strong {top:0; font-size:14px;}
 }
