@@ -5,6 +5,7 @@ from django.utils import timezone
 
 # 회원 TABLE
 class TblMemberList(models.Model) :
+	objects = models.Manager()
 	memb_no = models.AutoField(db_column='MEMB_NO', primary_key=True, verbose_name='No')
 	memb_id = models.EmailField(db_column='MEMB_ID', max_length=100, verbose_name='아이디')
 	memb_name = models.CharField(db_column='MEMB_NAME', max_length=100, verbose_name='이름')
@@ -18,6 +19,7 @@ class TblMemberList(models.Model) :
 
 # 통합 뉴스 TABLE
 class TblTotalCarNewsList(models.Model):
+	objects = models.Manager()
 	news_no = models.AutoField(db_column='NEWS_NO', primary_key=True)
 	news_category = models.CharField(db_column='NEWS_CATEGORY', max_length=10, blank=True, null=True, verbose_name='뉴스 카테고리')
 	media_code = models.CharField(db_column='MEDIA_CODE', max_length=50, blank=True, null=True)

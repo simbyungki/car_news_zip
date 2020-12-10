@@ -73,7 +73,7 @@
 			<div class="inner">
 				<p class="txt-guide">* 뉴스 기사를 클릭하면 해당 뉴스로 이동됩니다.</p>
 				<ul class="news-group show">
-					{% comment %} {% for list in total_car_news_list %}
+					{% for list in total_car_news_list %}
 						<li>
 							<a href="{{ list.news_url }}" target="_blank" title="{{ list.news_title }}">
 								{% if list.media_code == '200' or list.news_img_url == 'None' or list.news_img_url == '' %}
@@ -115,7 +115,7 @@
 								<button type="button" class="btn-like">👍 <strong>0</strong></button>
 							</div>
 						</li>
-					{% endfor %} {% endcomment %}
+					{% endfor %}
 				</ul>
 			</div>
 		</div>
@@ -127,7 +127,7 @@
 				<i class="in-box"></i>
 			</div>
 			<p>
-				다시 데이터를 불러오는 중입니다.<br>
+				데이터를 불러오는 중입니다.<br>
 				(잠시만 기다려주세요.)
 			</p>
 		</div>
@@ -148,7 +148,7 @@
 		gtag('js', new Date());
 		gtag('config', 'G-T4CL1V9FXP');
 
-		loadNewsList(0);
+		// loadNewsList(0);
 
 		{% comment %} $('.category-list ul li a').on('click', function(){
 			var idx = $(this).parent('li').index();

@@ -46,7 +46,7 @@ now_dt = datetime.today().strftime('%Y.%m.%d %H:%M%S')
 # 오토뷰
 class GetAutoview() :
 	# 오토뷰 신차
-	def new() :
+	def new(self) :
 		url = 'http://www.autoview.co.kr/content/news/news_new_car.asp?page=1&pageshow=1'
 				
 		soup = get_soup(url)
@@ -1406,6 +1406,7 @@ def news_list(request) :
 	res_data = {
 		'total_car_news_list' : total_car_news_list
 	}
+
 	user_id = request.session.get('user')
 	if user_id :
 		memb_name = TblMemberList.objects.filter(memb_id=user_id).values()[0].get('memb_name')
@@ -1416,21 +1417,24 @@ def news_list(request) :
 	return render(request, 'website/news_list.html', res_data)
 
 def list_data(request) :
-	news = TblTotalCarNewsList.objects.all().filter(news_category=1).order_by('-write_date')
+	category = 1
 	if request.method == 'GET' :
 		idx = request.GET.get('idx')
 		if idx == 0 :
-			news = TblTotalCarNewsList.objects.all().filter(news_category=1).order_by('-write_date')
+			print(0)
+			category = 1
 		elif idx == 1 :
-			news = TblTotalCarNewsList.objects.all().filter(news_category=3).order_by('-write_date')
+			print(1)
+			category = 3
 		elif idx == 2 :
-			news = TblTotalCarNewsList.objects.all().filter(news_category=5).order_by('-write_date')
+			print(2)
+			category = 5
 		elif idx == 3 :
-			news = TblTotalCarNewsList.objects.all().filter(news_category=7).order_by('-write_date')
-	news_list = serializers.serialize('json', news)
-	print(idx, news_list)
+			print(3)
+			category = 7
+	news = TblTotalCarNewsList.objects.all().filter(news_category=7).order_by('-write_date')
 
-	return HttpResponse(news_list, content_type="text/json-comment-filtered")
+	return HttpResponse(serializers.serialize('json', news), content_type="text/json-comment-filtered")
 
 
 
