@@ -3,7 +3,8 @@ from django.contrib import auth
 from .models import TblTotalCarNewsList
 from .models import TblMemberList
 from datetime import datetime
-from django.http import JsonResponse
+from django.http import HttpResponse
+from django.core import serializers
 
 import requests
 import re
@@ -1413,6 +1414,23 @@ def news_list(request) :
 		res_data['user'] = None
 
 	return render(request, 'website/news_list.html', res_data)
+
+def list_data(request) :
+	news = TblTotalCarNewsList.objects.all().filter(news_category=1).order_by('-write_date')
+	if request.method == 'GET' :
+		idx = request.GET.get('idx')
+		if idx == 0 :
+			news = TblTotalCarNewsList.objects.all().filter(news_category=1).order_by('-write_date')
+		elif idx == 1 :
+			news = TblTotalCarNewsList.objects.all().filter(news_category=3).order_by('-write_date')
+		elif idx == 2 :
+			news = TblTotalCarNewsList.objects.all().filter(news_category=5).order_by('-write_date')
+		elif idx == 3 :
+			news = TblTotalCarNewsList.objects.all().filter(news_category=7).order_by('-write_date')
+	news_list = serializers.serialize('json', news)
+	print(idx, news_list)
+
+	return HttpResponse(news_list, content_type="text/json-comment-filtered")
 
 
 

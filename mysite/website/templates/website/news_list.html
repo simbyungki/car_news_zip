@@ -73,7 +73,7 @@
 			<div class="inner">
 				<p class="txt-guide">* 뉴스 기사를 클릭하면 해당 뉴스로 이동됩니다.</p>
 				<ul class="news-group show">
-					{% for list in total_car_news_list %}
+					{% comment %} {% for list in total_car_news_list %}
 						<li>
 							<a href="{{ list.news_url }}" target="_blank" title="{{ list.news_title }}">
 								{% if list.media_code == '200' or list.news_img_url == 'None' or list.news_img_url == '' %}
@@ -115,7 +115,7 @@
 								<button type="button" class="btn-like">👍 <strong>0</strong></button>
 							</div>
 						</li>
-					{% endfor %}
+					{% endfor %} {% endcomment %}
 				</ul>
 			</div>
 		</div>
@@ -128,7 +128,7 @@
 			</div>
 			<p>
 				다시 데이터를 불러오는 중입니다.<br>
-				(약 1분 소요됩니다.)
+				(잠시만 기다려주세요.)
 			</p>
 		</div>
 	</div>
@@ -148,12 +148,20 @@
 		gtag('js', new Date());
 		gtag('config', 'G-T4CL1V9FXP');
 
+		loadNewsList(0);
+
 		{% comment %} $('.category-list ul li a').on('click', function(){
 			var idx = $(this).parent('li').index();
 			$('.category-list ul li').removeClass('curr').eq(idx).addClass('curr');
 			$('.news-group').removeClass('show');
 			$('.news-group').eq(idx).addClass('show');
 		}); {% endcomment %}
+
+		$('.category-list ul li a').on('click', function(){
+			var idx = $(this).parent('li').index();
+			$('.category-list ul li').removeClass('curr').eq(idx).addClass('curr');
+			loadNewsList(idx);
+		});
 
 		$('.btn-reload-data').on('click', function(){
 			$('.loading').show();
@@ -168,6 +176,41 @@
 			}
 		});
 	});
+
+	function loadNewsList(idx){
+		$('.loading').show();
+		$.ajax({
+			url: '{% url "list_data" %}',
+			type: 'GET',
+			data: {
+				'idx': idx
+			},
+			dataType: 'json',
+			success: function(data){
+				console.log(data)
+				$('.loading').hide();
+				var newsList = "";
+				newsList += '{% for list in total_car_news_list %}';
+				newsList += '<li>';
+				newsList += '<a href="{{ list.news_url }}" target="_blank" title="{{ list.news_title }}">';
+				newsList += '{% if list.media_code == "200" or list.news_img_url == "None" or list.news_img_url == "" %}';
+				newsList += '<div class="picture">';
+				newsList += '<p><span class="ico">😰</span><br>해당 언론사에서<br>이미지를 불러올 수 없습니다.</p>';
+				newsList += '</div>';
+				newsList += '{% else %}';
+				newsList += '<div class="picture" style="background:url(\'{{ list.news_img_url }}\') no-repeat center; background-size:cover;"></div>';
+				newsList += '{% endif %}';
+				newsList += '</a>';
+				newsList += '</li>';
+				newsList += '{% endfor %}';
+
+				$('.news-group').html(newsList)
+			},
+			error : function(request, status, error){
+				console.log(error)
+			},
+		});
+	}
 </script>
 </body>
 </html>
