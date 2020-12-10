@@ -40,7 +40,7 @@
 			<span>회원가입</span> | <a href="/">카뉴스집 🙈</a>
 		</h1>
 		<div class="member-box">
-			<form method="POST" action="">
+			<form method="POST" id="joinForm">
 				{% csrf_token %}
 				{{ join_result }}
 				<div class="default-form">

@@ -1,11 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib import auth
-from .models import TblUsedCarNewsList
-from .models import TblNewCarNewsList
-from .models import TblReviewList
-from .models import TblIndustryList
+from .models import TblTotalCarNewsList
 from .models import TblMemberList
 from datetime import datetime
+from django.http import JsonResponse
 
 import requests
 import re
@@ -14,7 +12,7 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 import mysql.connector
 
-dbconn = mysql.connector.connect(host='118.27.37.85', user='car_news_zip', password='dbsgPwls!2', database='CAR_NEWS_ZIP', port="3366")
+dbconn = mysql.connector.connect(host='118.27.37.85', user='car_news_zip', password='dbsgPwls!2', database='CAR_NEWS_ZIP', port='3366')
 
 # BeautifulSoup
 def get_soup(url) :
@@ -1029,16 +1027,16 @@ def insert_used_db() :
 					# )
 
 					execute(f"""
-						INSERT IGNORE INTO TBL_USED_CAR_NEWS_LIST 
+						INSERT IGNORE INTO TBL_TOTAL_CAR_NEWS_LIST 
 						(
-							MEDIA_CODE, MEDIA_NAME, 
+							MEDIA_CODE, NEWS_CATEGORY, MEDIA_NAME, 
 							NEWS_CODE, NEWS_TITLE, 
 							NEWS_CONTENT, NEWS_IMG_URL,
 							NEWS_URL, WRITE_DATE, 
 							ADD_DATE
 						) 
 						VALUES (
-							"{media_code}", "{media_name}", 
+							"{media_code}", 1, "{media_name}", 
 							"{news_code}", "{subject}", 
 							"{summary}", "{img_url}", 
 							"{url}", "{date}", 
@@ -1125,16 +1123,16 @@ def insert_new_db() :
 					# )
 
 					execute(f"""
-						INSERT IGNORE INTO TBL_NEW_CAR_NEWS_LIST 
+						INSERT IGNORE INTO TBL_TOTAL_CAR_NEWS_LIST 
 						(
-							MEDIA_CODE, MEDIA_NAME, 
+							MEDIA_CODE, NEWS_CATEGORY, MEDIA_NAME, 
 							NEWS_CODE, NEWS_TITLE, 
 							NEWS_CONTENT, NEWS_IMG_URL,
 							NEWS_URL, WRITE_DATE, 
 							ADD_DATE
 						) 
 						VALUES (
-							"{media_code}", "{media_name}", 
+							"{media_code}", 3, "{media_name}", 
 							"{news_code}", "{subject}", 
 							"{summary}", "{img_url}", 
 							"{url}", "{date}", 
@@ -1246,16 +1244,16 @@ def insert_review_db() :
 					# )
 
 					execute(f"""
-						INSERT IGNORE INTO TBL_REVIEW_LIST 
+						INSERT IGNORE INTO TBL_TOTAL_CAR_NEWS_LIST 
 						(
-							MEDIA_CODE, MEDIA_NAME, 
+							MEDIA_CODE, NEWS_CATEGORY, MEDIA_NAME, 
 							NEWS_CODE, NEWS_TITLE, 
 							NEWS_CONTENT, NEWS_IMG_URL,
 							NEWS_URL, WRITE_DATE, 
 							ADD_DATE
 						) 
 						VALUES (
-							"{media_code}", "{media_name}", 
+							"{media_code}", 5, "{media_name}", 
 							"{news_code}", "{subject}", 
 							"{summary}", "{img_url}", 
 							"{url}", "{date}", 
@@ -1357,16 +1355,16 @@ def insert_industry_db() :
 					# )
 
 					execute(f"""
-						INSERT IGNORE INTO TBL_INDUSTRY_LIST 
+						INSERT IGNORE INTO TBL_TOTAL_CAR_NEWS_LIST 
 						(
-							MEDIA_CODE, MEDIA_NAME, 
+							MEDIA_CODE, NEWS_CATEGORY, MEDIA_NAME, 
 							NEWS_CODE, NEWS_TITLE, 
 							NEWS_CONTENT, NEWS_IMG_URL,
 							NEWS_URL, WRITE_DATE, 
 							ADD_DATE
 						) 
 						VALUES (
-							"{media_code}", "{media_name}", 
+							"{media_code}", 7, "{media_name}", 
 							"{news_code}", "{subject}", 
 							"{summary}", "{img_url}", 
 							"{url}", "{date}", 
@@ -1402,16 +1400,10 @@ def reload_data(request) :
 # 목록
 def news_list(request) :
 	today_date = datetime.today().strftime('%Y-%m-%d')
-	used_news_list = TblUsedCarNewsList.objects.all().order_by('-write_date')
-	new_news_list = TblNewCarNewsList.objects.all().order_by('-write_date')
-	review_list = TblReviewList.objects.all().order_by('-write_date')
-	industry_list = TblIndustryList.objects.all().order_by('-write_date')
+	# used_news_list = TblTotalCarNewsList.objects.all().order_by('-write_date')
+	total_car_news_list = TblTotalCarNewsList.objects.all().filter(news_category=1).order_by('-write_date')
 	res_data = {
-		'used_news_list': used_news_list, 
-		'today_date': today_date, 
-		'new_news_list': new_news_list, 
-		'review_list': review_list, 
-		'industry_list': industry_list,
+		'total_car_news_list' : total_car_news_list
 	}
 	user_id = request.session.get('user')
 	if user_id :
@@ -1421,6 +1413,8 @@ def news_list(request) :
 		res_data['user'] = None
 
 	return render(request, 'website/news_list.html', res_data)
+
+
 
 # 회원
 def login(request) :
