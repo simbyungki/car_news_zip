@@ -46,7 +46,7 @@ now_dt = datetime.today().strftime('%Y.%m.%d %H:%M%S')
 # 오토뷰
 class GetAutoview() :
 	# 오토뷰 신차
-	def new(self) :
+	def new() :
 		url = 'http://www.autoview.co.kr/content/news/news_new_car.asp?page=1&pageshow=1'
 				
 		soup = get_soup(url)
@@ -1415,8 +1415,30 @@ def list_data(request) :
 	if request.method == 'GET' :
 		idx = request.GET.get('list_idx')
 		list_type = request.GET.get('list_type')
-		media_code = request.GET.get('media_code')
 		category_num = 1
+		
+		
+	news = ''
+	if list_type == 'media' : 
+		#오토헤럴드 : 100, 데일리카 : 200, 오토뷰 : 300, IT조선 : 400, 오토모닝 : 500, 오토다이어리 : 600, 카가이 : 700, 더드라이브 : 800
+		if idx == '0' :
+			category_num = 100
+		elif idx == '1' : 
+			category_num = 200
+		elif idx == '2' :
+			category_num = 300
+		elif idx == '3' :
+			category_num = 400
+		elif idx == '4' :
+			category_num = 500
+		elif idx == '5' :
+			category_num = 600
+		elif idx == '6' :
+			category_num = 700
+		elif idx == '7' :
+			category_num = 800
+		news = TblTotalCarNewsList.objects.all().filter(media_code=category_num).order_by('-write_date')
+	elif list_type == 'category' :
 		if idx == '0' :
 			category_num = 1
 		elif idx == '1' : 
@@ -1425,14 +1447,7 @@ def list_data(request) :
 			category_num = 5
 		elif idx == '3' :
 			category_num = 7
-
-		#오토헤럴드 : 100, 데일리카 : 200, 오토뷰 : 300, IT조선 : 400, 오토모닝 : 500, 오토다이어리 : 600, 카가이 : 700, 더드라이브 : 800
-		
-		news = ''
-		if list_type == 'media' : 
-			news = TblTotalCarNewsList.objects.all().filter(news_category=category_num).order_by('-write_date')
-		elif list_type == 'category' :
-			news = TblTotalCarNewsList.objects.all().filter(news_category=category_num).order_by('-write_date')
+		news = TblTotalCarNewsList.objects.all().filter(news_category=category_num).order_by('-write_date')
 
 	return HttpResponse(serializers.serialize('json', news), content_type="text/json-comment-filtered")
 

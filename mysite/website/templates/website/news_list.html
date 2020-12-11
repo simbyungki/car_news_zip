@@ -43,9 +43,9 @@
 				{% if user %}
 					{% if user == '심병기' %}
 					<a href="{% url 'reload_data' %}" title="숨은기능 : 데이터 새로 받아오기 (약 1분 소요)" class="btn-reload-data">
-					[{{ today_date }} {{ user }} 님만을 위한 뉴스!]</a>
+					[{{ today_date }} {{ user }}님만을 위한 뉴스!]</a>
 					{% else %}
-					[{{ today_date }} {{ user }} 님만을 위한 뉴스!]
+					[{{ today_date }} {{ user }}님만을 위한 뉴스!]
 					{% endif %}	
 				{% else %}
 					[{{ today_date }} CAR NEWS ZIP!]
@@ -69,10 +69,10 @@
 				<nav class="menu">
 					<ul>
 						<li class="active">
-							<a href="/list_data?list_type=category&amp;list_idx=0">자동차 관련 뉴스 보기</a>
+							<a href="javascript:;" onclick="loadNewsList(0, 'category');">자동차 관련 뉴스 보기</a>
 							<ul>
-								<li class="active">&middot; <a href="/list_data?list_type=category&amp;list_idx=0">뉴스 카테고리별 보기</a></li>
-								<li>&middot; <a href="/list_data?list_type=media&amp;media_code=100">언론사별 보기</a></li>
+								<li class="active">&middot; <a href="javascript:;" onclick="loadNewsList(0, 'category');">뉴스 카테고리별 보기</a></li>
+								<li>&middot; <a href="javascript:;" onclick="loadNewsList(0, 'media');">언론사별 보기</a></li>
 							</ul>
 						</li>
 						<li>
@@ -96,11 +96,21 @@
 	<section class="container">
 		<div class="category-list">
 			<div class="inner">
-				<ul class="category">
+				<ul class="sub-menu category show">
 					<li class="curr"><a href="javascript:;">중고차 뉴스</a></li>
 					<li><a href="javascript:;">신차 뉴스</a></li>
 					<li><a href="javascript:;">시승기</a></li>
 					<li><a href="javascript:;">자동차 업계 뉴스</a></li>
+				</ul>
+				<ul class="sub-menu media">
+					<li class="curr"><a href="javascript:;">오토헤럴드</a></li>
+					<li><a href="javascript:;">데일리카</a></li>
+					<li><a href="javascript:;">오토뷰</a></li>
+					<li><a href="javascript:;">IT조선</a></li>
+					<li><a href="javascript:;">오토모닝</a></li>
+					<li><a href="javascript:;">오토다이어리</a></li>
+					<li><a href="javascript:;">카가이</a></li>
+					<li><a href="javascript:;">더드라이브</a></li>
 				</ul>
 			</div>
 		</div>
@@ -111,7 +121,7 @@
 			</div>
 		</div>
 	</section>
-	<div class="loading">
+	<div class="loading" style="display:block;">
 		<div class="dim"></div>
 		<div class="loading-box">
 			<div class="out-box">
@@ -139,22 +149,17 @@
 		gtag('js', new Date());
 		gtag('config', 'G-T4CL1V9FXP');
 
+		//최초 목록
 		loadNewsList(0, 'category');
-
-		{% comment %} $('.category-list ul li a').on('click', function(){
-			var idx = $(this).parent('li').index();
-			$('.category-list ul li').removeClass('curr').eq(idx).addClass('curr');
-			$('.news-group').removeClass('show');
-			$('.news-group').eq(idx).addClass('show');
-		}); {% endcomment %}
 
 		$('.category-list ul li a').on('click', function(){
 			var idx = $(this).parent('li').index();
-			$('.category-list ul li').removeClass('curr').eq(idx).addClass('curr');
-			{% comment %} if($(this).){
-
-			} {% endcomment %}
-			loadNewsList(idx, 'category');
+			$(this).closest('ul').find('li').removeClass('curr').eq(idx).addClass('curr');
+			if($(this).closest('ul').hasClass('category')){
+				loadNewsList(idx, 'category');
+			}else if($(this).closest('ul').hasClass('media')){
+				loadNewsList(idx, 'media');
+			}
 		});
 
 		$('.btn-reload-data').on('click', function(){
@@ -169,6 +174,16 @@
 				$(this).addClass('active');
 				$('.gnb-box, .header .fncs').addClass('show');
 			}
+		});
+
+		$('.gnb-box .menu ul ul a').on('click', function(){
+			$('.gnb-box .menu ul ul li').removeClass('active');
+			$(this).parent('li').addClass('active');
+		});
+		$('.gnb-box .dim').on('click', function(){
+			//close gnb box
+			$('.header .btn-gnb').removeClass('active');
+			$('.gnb-box, .header .fncs').removeClass('show');
 		});
 
 		$('.view-mode-changer').on('change', function(){
@@ -240,7 +255,19 @@
 					newsItem += '</div>';
 					newsItem += '</li>';
 				}
-				$('.news-group').html(newsItem)
+				$('.news-group').html(newsItem);
+				//sub menu
+				$('.category-list ul').removeClass('show');
+				if(list_type == 'category'){
+					$('#wrap').addClass('category-news');
+					$('.category-list ul.category').addClass('show');
+				}else if(list_type == 'media'){
+					$('#wrap').addClass('media-news');
+					$('.category-list ul.media').addClass('show');
+				}
+				//close gnb box
+				$('.header .btn-gnb').removeClass('active');
+				$('.gnb-box, .header .fncs').removeClass('show');
 			},
 			error : function(request, status, error){
 				console.log(error)
