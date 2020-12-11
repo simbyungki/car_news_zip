@@ -44,16 +44,15 @@
 - 로그인, 회원가입 Template 작업
 
 #### 2020.12.04 (금)
-- 서버 임대 (Conoha.jp)
 - CentOS8 서버 셋팅
- - Python, Django
- - MariaDB
+  - Python, Django
+  - MariaDB
 
 #### 2020.12.02 (수)
-- 서버 임대 (Conoha.jp)
+- 호스팅 서버 임대 (Conoha.jp)
 - CentOS8 서버 셋팅
- - Python, Django
- - MariaDB
+  - Python, Django
+  - MariaDB
 
 #### 2020.12.01 (화)
 - 뉴스 가져오기 기능 웹 버튼으로 구현
