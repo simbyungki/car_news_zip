@@ -36,15 +36,21 @@
 <body>
 <div id="wrap">
 	<header class="header">
+		<a href="javascript:;" class="btn-gnb" title="메뉴"></a>
 		<h1 class="service-name">
 			카뉴스집 🙈<br>
-			<span><a href="{% url 'reload_data' %}" title="숨은기능 : 데이터 새로 받아오기 (약 1분 소요)" class="btn-reload-data">[{{ today_date }} 
+			<span>
 				{% if user %}
-					{{ user }} 님만을 위한 뉴스!
+					{% if user == '심병기' %}
+					<a href="{% url 'reload_data' %}" title="숨은기능 : 데이터 새로 받아오기 (약 1분 소요)" class="btn-reload-data">
+					[{{ today_date }} {{ user }} 님만을 위한 뉴스!]</a>
+					{% else %}
+					[{{ today_date }} {{ user }} 님만을 위한 뉴스!]
+					{% endif %}	
 				{% else %}
-					CAR NEWS ZIP
+					[{{ today_date }} CAR NEWS ZIP!]
 				{% endif %}
-			]</a></span>
+			</span>
 		</h1>
 		<div class="fncs">
 			{% if user %}
@@ -57,11 +63,40 @@
 				<option value="light" selected>Light mode</option>
 			</select>
 		</div>
+		<section class="gnb-box">
+			<div class="dim"></div>
+			<div class="box">
+				<nav class="menu">
+					<ul>
+						<li class="active">
+							<a href="/list_data?list_type=category&amp;list_idx=0">자동차 관련 뉴스 보기</a>
+							<ul>
+								<li class="active">&middot; <a href="/list_data?list_type=category&amp;list_idx=0">뉴스 카테고리별 보기</a></li>
+								<li>&middot; <a href="/list_data?list_type=media&amp;media_code=100">언론사별 보기</a></li>
+							</ul>
+						</li>
+						<li>
+							<a href="javascript:;">마이페이지</a>
+							<ul>
+								<li>&middot;  <a href="javascript:;">찜한 뉴스 목록</a></li>
+							</ul>
+						</li>
+						<li>
+							<a href="javascript:;">카뉴스집</a>
+							<ul>
+								<li>&middot;  <a href="javascript:;">카뉴스집 소개</a></li>
+								<li>&middot;  <a href="mailto:dung8524@gmail.com">카뉴스집 문의하기</a></li>
+							</ul>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</section>
 	</header>
 	<section class="container">
 		<div class="category-list">
 			<div class="inner">
-				<ul>
+				<ul class="category">
 					<li class="curr"><a href="javascript:;">중고차 뉴스</a></li>
 					<li><a href="javascript:;">신차 뉴스</a></li>
 					<li><a href="javascript:;">시승기</a></li>
@@ -72,51 +107,7 @@
 		<div class="item-list">
 			<div class="inner">
 				<p class="txt-guide">* 뉴스 기사를 클릭하면 해당 뉴스로 이동됩니다.</p>
-				<ul class="news-group show">
-					{% comment %} {% for list in total_car_news_list %}
-						<li>
-							<a href="{{ list.news_url }}" target="_blank" title="{{ list.news_title }}">
-								{% if list.media_code == '200' or list.news_img_url == 'None' or list.news_img_url == '' %}
-								<div class="picture">
-									<p><span class="ico">😰</span><br>해당 언론사에서<br>이미지를 불러올 수 없습니다.</p>
-								</div>
-								{% else %}
-								<div class="picture" style="background:url('{{ list.news_img_url }}') no-repeat center; background-size:cover;"></div>
-								{% endif %}
-								<div class="info-box">
-									<div class="tags">
-										{% if list.write_date == today_date %}
-											<span class="today">TODAY</span>
-										{% endif %}
-										{% if list.media_code == '100' %}
-											<span class="ah">{{ list.media_name }}</span>
-										{% elif list.media_code == '200' %}
-											<span class="daily">{{ list.media_name }}</span>
-										{% elif list.media_code == '300' %}
-											<span class="auto-view">{{ list.media_name }}</span>
-										{% elif list.media_code == '400' %}
-											<span class="chosun">{{ list.media_name }}</span>
-										{% elif list.media_code == '500' %}
-											<span class="auto-morning">{{ list.media_name }}</span>
-										{% elif list.media_code == '600' %}
-											<span class="auto-diary">{{ list.media_name }}</span>
-										{% elif list.media_code == '700' %}
-											<span class="carguy">{{ list.media_name }}</span>
-										{% elif list.media_code == '800' %}
-											<span class="drive">{{ list.media_name }}</span>
-										{% endif %}
-									</div>
-									<p class="subject">{{ list.news_title }}</p>
-									<p class="summary">{{ list.news_content }}</p>
-								</div>
-							</a>
-							<div class="infos">
-								<span class="date">{{ list.write_date }}</span>
-								<button type="button" class="btn-like">👍 <strong>0</strong></button>
-							</div>
-						</li>
-					{% endfor %} {% endcomment %}
-				</ul>
+				<ul class="news-group show"></ul>
 			</div>
 		</div>
 	</section>
@@ -148,7 +139,7 @@
 		gtag('js', new Date());
 		gtag('config', 'G-T4CL1V9FXP');
 
-		loadNewsList(0);
+		loadNewsList(0, 'category');
 
 		{% comment %} $('.category-list ul li a').on('click', function(){
 			var idx = $(this).parent('li').index();
@@ -160,11 +151,24 @@
 		$('.category-list ul li a').on('click', function(){
 			var idx = $(this).parent('li').index();
 			$('.category-list ul li').removeClass('curr').eq(idx).addClass('curr');
-			loadNewsList(idx);
+			if($(this).){
+
+			}
+			loadNewsList(idx, 'category');
 		});
 
 		$('.btn-reload-data').on('click', function(){
 			$('.loading').show();
+		});
+
+		$('.header .btn-gnb').on('click', function(){
+			if($(this).hasClass('active')){
+				$(this).removeClass('active');
+				$('.gnb-box, .header .fncs').removeClass('show');
+			}else{
+				$(this).addClass('active');
+				$('.gnb-box, .header .fncs').addClass('show');
+			}
 		});
 
 		$('.view-mode-changer').on('change', function(){
@@ -177,34 +181,21 @@
 		});
 	});
 
-	function loadNewsList(idx){
+	function loadNewsList(idx, list_type){
 		$('.loading').show();
 		$.ajax({
 			url: '{% url "list_data" %}',
 			type: 'GET',
 			data: {
-				'idx': idx
+				'list_idx': idx,
+				'list_type': list_type
 			},
 			dataType: 'json',
 			success: function(data){
 				$('.loading').hide();
-				var newsList = "";				
+				var newsItem = "";				
 				for(i = 0; i < data.length; i++){
 					list = data[i].fields;
-					newsList += '<li>';
-					newsList += '<a href="' + list.news_url + '" target="_blank" title="' + list.news_title + '">';
-					if(list.media_code == '200' || list.news_img_url == 'None' || list.news_img_url == ''){
-						newsList += '<div class="picture">';
-						newsList += '<p><span class="ico">😰</span><br>해당 언론사에서<br>이미지를 불러올 수 없습니다.</p>';
-						newsList += '</div>';
-					}else{
-						newsList += '<div class="picture" style="background:url(' + list.news_img_url + ') no-repeat center; background-size:cover;"></div>';
-					}
-					newsList += '<div class="info-box">';
-					newsList += '<div class="tags">';
-					if(list.write_date == '{{ today_date|escapejs }}'){
-						newsList += '<span class="today">TODAY</span>';
-					}
 					var media_name = '';
 					if(list.media_code == '100'){
 						media_name = 'ah'
@@ -223,18 +214,33 @@
 					}else if(list.media_code == '800'){
 						media_name = 'drive'
 					}
-					newsList += '<span class="'+ media_name +'">' + list.media_name + '</span>';
-					newsList += '</div>';
-					newsList += '<p class="subject">' + list.news_title + '</p>';
-					newsList += '<p class="summary">' + list.news_content + '</p>';
-					newsList += '</a>';
-					newsList += '<div class="infos">';
-					newsList += '<span class="date">' + list.write_date + '</span>';
-					newsList += '<button type="button" class="btn-like">👍 <strong>0</strong></button>';
-					newsList += '</div>';
-					newsList += '</li>';
+					newsItem += '<li>';
+					newsItem += '<a href="' + list.news_url + '" target="_blank" title="' + list.news_title + '">';
+					if(list.media_code == '200' || list.news_img_url == 'None' || list.news_img_url == ''){
+						newsItem += '<div class="picture">';
+						newsItem += '<p><span class="ico">😰</span><br>해당 언론사에서<br>이미지를 불러올 수 없습니다.</p>';
+						newsItem += '</div>';
+					}else{
+						newsItem += '<div class="picture" style="background:url(\'' + list.news_img_url + '\') no-repeat center; background-size:cover;"></div>';
+					}
+					newsItem += '<div class="info-box">';
+					newsItem += '<div class="tags">';
+					if(list.write_date == '{{ today_date|escapejs }}'){
+						newsItem += '<span class="today">TODAY</span>';
+					}
+					newsItem += '<span class="'+ media_name +'">' + list.media_name + '</span>';
+					newsItem += '</div>';
+					newsItem += '<p class="subject">' + list.news_title + '</p>';
+					newsItem += '<p class="summary">' + list.news_content + '</p>';
+					newsItem += '</div>';
+					newsItem += '</a>';
+					newsItem += '<div class="infos">';
+					newsItem += '<span class="date">' + list.write_date + '</span>';
+					newsItem += '<button type="button" class="btn-like">👍 <strong>0</strong></button>';
+					newsItem += '</div>';
+					newsItem += '</li>';
 				}
-				$('.news-group').html(newsList)
+				$('.news-group').html(newsItem)
 			},
 			error : function(request, status, error){
 				console.log(error)

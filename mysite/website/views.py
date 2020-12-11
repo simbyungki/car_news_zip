@@ -1402,7 +1402,6 @@ def reload_data(request) :
 def news_list(request) :
 	today_date = datetime.today().strftime('%Y-%m-%d')
 	res_data = {'today_date': today_date}
-
 	user_id = request.session.get('user')
 	if user_id :
 		memb_name = TblMemberList.objects.filter(memb_id=user_id).values()[0].get('memb_name')
@@ -1414,7 +1413,10 @@ def news_list(request) :
 
 def list_data(request) :
 	if request.method == 'GET' :
-		idx = request.GET.get('idx')
+		idx = request.GET.get('list_idx')
+		list_type = request.GET.get('list_type')
+		media_code = request.GET.get('media_code')
+		category_num = 1
 		if idx == '0' :
 			category_num = 1
 		elif idx == '1' : 
@@ -1424,7 +1426,14 @@ def list_data(request) :
 		elif idx == '3' :
 			category_num = 7
 
-	news = TblTotalCarNewsList.objects.all().filter(news_category=category_num).order_by('-write_date')
+		#오토헤럴드 : 100, 데일리카 : 200, 오토뷰 : 300, IT조선 : 400, 오토모닝 : 500, 오토다이어리 : 600, 카가이 : 700, 더드라이브 : 800
+		
+		news = ''
+		if list_type == 'media' : 
+			news = TblTotalCarNewsList.objects.all().filter(news_category=category_num).order_by('-write_date')
+		elif list_type == 'category' :
+			news = TblTotalCarNewsList.objects.all().filter(news_category=category_num).order_by('-write_date')
+
 	return HttpResponse(serializers.serialize('json', news), content_type="text/json-comment-filtered")
 
 
