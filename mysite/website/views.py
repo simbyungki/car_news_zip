@@ -1401,11 +1401,7 @@ def reload_data(request) :
 # 목록
 def news_list(request) :
 	today_date = datetime.today().strftime('%Y-%m-%d')
-	# used_news_list = TblTotalCarNewsList.objects.all().order_by('-write_date')
-	total_car_news_list = TblTotalCarNewsList.objects.all().filter(news_category=1).order_by('-write_date')
-	res_data = {
-		'total_car_news_list' : total_car_news_list
-	}
+	res_data = {'today_date': today_date}
 
 	user_id = request.session.get('user')
 	if user_id :
@@ -1417,23 +1413,18 @@ def news_list(request) :
 	return render(request, 'website/news_list.html', res_data)
 
 def list_data(request) :
-	category = 1
 	if request.method == 'GET' :
 		idx = request.GET.get('idx')
-		if idx == 0 :
-			print(0)
-			category = 1
-		elif idx == 1 :
-			print(1)
-			category = 3
-		elif idx == 2 :
-			print(2)
-			category = 5
-		elif idx == 3 :
-			print(3)
-			category = 7
-	news = TblTotalCarNewsList.objects.all().filter(news_category=7).order_by('-write_date')
+		if idx == '0' :
+			category_num = 1
+		elif idx == '1' : 
+			category_num = 3
+		elif idx == '2' :
+			category_num = 5
+		elif idx == '3' :
+			category_num = 7
 
+	news = TblTotalCarNewsList.objects.all().filter(news_category=category_num).order_by('-write_date')
 	return HttpResponse(serializers.serialize('json', news), content_type="text/json-comment-filtered")
 
 
