@@ -151,9 +151,9 @@
 		$('.category-list ul li a').on('click', function(){
 			var idx = $(this).parent('li').index();
 			$('.category-list ul li').removeClass('curr').eq(idx).addClass('curr');
-			if($(this).){
+			{% comment %} if($(this).){
 
-			}
+			} {% endcomment %}
 			loadNewsList(idx, 'category');
 		});
 
