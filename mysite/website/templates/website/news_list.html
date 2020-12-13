@@ -150,15 +150,15 @@
 		gtag('config', 'G-T4CL1V9FXP');
 
 		//최초 목록
-		loadNewsList(0, 'category');
+		loadNewsList(0, 'category', 0, 12);
 
 		$('.category-list ul li a').on('click', function(){
 			var idx = $(this).parent('li').index();
 			$(this).closest('ul').find('li').removeClass('curr').eq(idx).addClass('curr');
 			if($(this).closest('ul').hasClass('category')){
-				loadNewsList(idx, 'category');
+				loadNewsList(idx, 'category', 0, 12);
 			}else if($(this).closest('ul').hasClass('media')){
-				loadNewsList(idx, 'media');
+				loadNewsList(idx, 'media', 0, 12);
 			}
 		});
 
@@ -196,14 +196,16 @@
 		});
 	});
 
-	function loadNewsList(idx, list_type){
+	function loadNewsList(idx, list_type, start_idx, load_length){
 		$('.loading').show();
 		$.ajax({
 			url: '{% url "list_data" %}',
 			type: 'GET',
 			data: {
 				'list_idx': idx,
-				'list_type': list_type
+				'list_type': list_type,
+				'start_idx': start_idx,
+				'load_length': load_length
 			},
 			dataType: 'json',
 			success: function(data){
@@ -251,7 +253,8 @@
 					newsItem += '</a>';
 					newsItem += '<div class="infos">';
 					newsItem += '<span class="date">' + list.write_date + '</span>';
-					newsItem += '<button type="button" class="btn-like">👍 <strong>0</strong></button>';
+					newsItem += '<span class="view-cnt" title="이 기사 조회수">👁 <strong>0</strong></span>'
+					newsItem += '<button type="button" class="btn-like" title="이 기사 찜하기">👍 <strong>0</strong></button>';
 					newsItem += '</div>';
 					newsItem += '</li>';
 				}

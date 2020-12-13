@@ -85,7 +85,7 @@
 .item-list ul li .infos {position:absolute; left:15px; bottom:15px; width:calc(100% - 30px)}
 .item-list ul li .infos span {position:relative; color:#777;}
 .item-list ul li .infos span + span {margin-left:13px;}
-.item-list ul li .infos span + span:after {display:block; content:"|"; position:absolute; left:-11px; top:0; color:#ddd;}
+.item-list ul li .infos span + span:after {display:block; content:"|"; position:absolute; left:-9px; top:1px; color:#ddd;}
 .item-list ul li .infos .btn-like {position:absolute; right:5px; bottom:-4px; line-height:24px;}
 .item-list ul li .infos .btn-like:active {bottom:-5px;}
 .item-list ul li .infos .btn-like strong {position:relative; top:1px; margin-left:3px; font-size:16px;}
