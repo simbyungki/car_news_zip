@@ -26,11 +26,13 @@ class TblTotalCarNewsList(models.Model):
 	media_name = models.CharField(db_column='MEDIA_NAME', max_length=100, blank=True, null=True, verbose_name='언론사')
 	news_code = models.CharField(db_column='NEWS_CODE', unique=True, max_length=100)
 	news_title = models.CharField(db_column='NEWS_TITLE', max_length=1000, blank=True, null=True, verbose_name='기사 제목')
-	news_content = models.TextField(db_column='NEWS_CONTENT', blank=True, null=True, verbose_name='간추린 내용')
+	news_summary = models.TextField(db_column='NEWS_SUMMARY', blank=True, null=True, verbose_name='간추린 내용')
+	news_content = models.TextField(db_column='NEWS_CONTENT', blank=True, null=True, verbose_name='기사 상세')
 	news_img_url = models.CharField(db_column='NEWS_IMG_URL', max_length=1000, blank=True, null=True)
 	news_url = models.CharField(db_column='NEWS_URL', max_length=1000, blank=True, null=True, verbose_name='뉴스 링크 URL')
 	write_date = models.CharField(db_column='WRITE_DATE', max_length=30, blank=True, null=True)
 	add_date = models.DateTimeField(db_column='ADD_DATE', blank=True, null=True)
+	mining_status = models.CharField(db_column='MINING_STATUS', max_length=10, blank=True, null=True, verbose_name='텍스트 마이닝 여부')
 	class Meta:
 		managed = False
 		db_table = 'TBL_TOTAL_CAR_NEWS_LIST'

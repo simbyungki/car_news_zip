@@ -31,6 +31,7 @@
 .header .service-name span.date {letter-spacing:-1px; font-size:18px;}
 .header .service-name span a,
 .header .service-name span a:visited {color:#444;}
+.header .service-name sup {position:relative; left:4px; top:-17px; color:#d00; font-size:16px; font-style:italic;}
 .header .fncs {position:absolute; right:5%; top:20px;}
 .header .fncs a {margin-right:14px; line-height:38px; color:#888; font-size:14px; font-weight:600; text-align:right;}
 .header .fncs a:hover {color:#000;}
@@ -184,6 +185,7 @@
 	.header {padding:20px 5%; text-align:left;}
 	.header .service-name {text-align:center;}
 	.header .service-name span {font-size:20px;}
+	.header .service-name sup {font-size:13px;}
 	.header .fncs {opacity:0; z-index:200; transition:all .4s;}
 	.header .fncs.show {opacity:1;}
 	.header .btn-gnb.active {left:20px;}

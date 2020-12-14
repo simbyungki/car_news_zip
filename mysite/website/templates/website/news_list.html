@@ -38,7 +38,7 @@
 	<header class="header">
 		<a href="javascript:;" class="btn-gnb" title="메뉴"></a>
 		<h1 class="service-name">
-			카뉴스집 🙈<br>
+			카뉴스집 🙈<sup>Beta!</sup><br>
 			<span>
 				{% if user %}
 					{% if user == '심병기' %}
@@ -69,25 +69,25 @@
 				<nav class="menu">
 					<ul>
 						<li class="active">
-							<a href="javascript:;" onclick="loadNewsList(0, 'category');">자동차 관련 뉴스 보기</a>
+							<a href="javascript:;" onclick="loadNewsList(0, 'category', 0, 12);">자동차 관련 뉴스 보기</a>
 							<ul>
-								<li class="active">&middot; <a href="javascript:;" onclick="loadNewsList(0, 'category');">뉴스 카테고리별 보기</a></li>
-								<li>&middot; <a href="javascript:;" onclick="loadNewsList(0, 'media');">언론사별 보기</a></li>
+								<li class="active">&middot; <a href="javascript:;" onclick="loadNewsList(0, 'category', 0, 12);">뉴스 카테고리별 보기</a></li>
+								<li>&middot; <a href="javascript:;" onclick="loadNewsList(0, 'media', 0, 12);">언론사별 보기</a></li>
 							</ul>
 						</li>
-						<li>
+						{% comment %} <li>
 							<a href="javascript:;">마이페이지</a>
 							<ul>
 								<li>&middot;  <a href="javascript:;">찜한 뉴스 목록</a></li>
 							</ul>
-						</li>
-						<li>
+						</li> {% endcomment %}
+						{% comment %} <li>
 							<a href="javascript:;">카뉴스집</a>
 							<ul>
 								<li>&middot;  <a href="javascript:;">카뉴스집 소개</a></li>
 								<li>&middot;  <a href="mailto:dung8524@gmail.com">카뉴스집 문의하기</a></li>
 							</ul>
-						</li>
+						</li> {% endcomment %}
 					</ul>
 				</nav>
 			</div>
@@ -248,7 +248,7 @@
 					newsItem += '<span class="'+ media_name +'">' + list.media_name + '</span>';
 					newsItem += '</div>';
 					newsItem += '<p class="subject">' + list.news_title + '</p>';
-					newsItem += '<p class="summary">' + list.news_content + '</p>';
+					newsItem += '<p class="summary">' + list.news_summary + '</p>';
 					newsItem += '</div>';
 					newsItem += '</a>';
 					newsItem += '<div class="infos">';

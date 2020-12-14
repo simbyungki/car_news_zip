@@ -1020,7 +1020,7 @@ def insert_used_db() :
 					# 	MEDIA_NAME = media_name,
 					# 	NEWS_CODE = news_code,
 					# 	NEWS_TITLE = subject,
-					# 	NEWS_CONTENT = summary,
+					# 	NEWS_SUMMARY = summary,
 					# 	NEWS_IMG_URL = img_url,
 					# 	NEWS_URL = url,
 					# 	WRITE_DATE = date,
@@ -1032,16 +1032,16 @@ def insert_used_db() :
 						(
 							MEDIA_CODE, NEWS_CATEGORY, MEDIA_NAME, 
 							NEWS_CODE, NEWS_TITLE, 
-							NEWS_CONTENT, NEWS_IMG_URL,
+							NEWS_SUMMARY, NEWS_CONTENT, NEWS_IMG_URL,
 							NEWS_URL, WRITE_DATE, 
-							ADD_DATE
+							ADD_DATE, MINING_STATUS
 						) 
 						VALUES (
 							"{media_code}", 1, "{media_name}", 
 							"{news_code}", "{subject}", 
-							"{summary}", "{img_url}", 
+							"{summary}", "", "{img_url}", 
 							"{url}", "{date}", 
-							NOW()
+							NOW(), 1
 						) 
 					""")
 		
@@ -1049,7 +1049,7 @@ def insert_used_db() :
 		print('중고차 관련 기사 수집 및 DB저장 완료!')
 		print('ㅡ'*50)
 	except Exception as e :
-		print(e)
+		print(f'***** + error! >> {e}')	
 	finally : 
 		pass
 
@@ -1116,7 +1116,7 @@ def insert_new_db() :
 					# 	MEDIA_NAME = media_name,
 					# 	NEWS_CODE = news_code,
 					# 	NEWS_TITLE = subject,
-					# 	NEWS_CONTENT = summary,
+					# 	NEWS_SUMMARY = summary,
 					# 	NEWS_IMG_URL = img_url,
 					# 	NEWS_URL = url,
 					# 	WRITE_DATE = date,
@@ -1128,16 +1128,16 @@ def insert_new_db() :
 						(
 							MEDIA_CODE, NEWS_CATEGORY, MEDIA_NAME, 
 							NEWS_CODE, NEWS_TITLE, 
-							NEWS_CONTENT, NEWS_IMG_URL,
+							NEWS_SUMMARY, NEWS_CONTENT, NEWS_IMG_URL,
 							NEWS_URL, WRITE_DATE, 
-							ADD_DATE
+							ADD_DATE, MINING_STATUS
 						) 
 						VALUES (
 							"{media_code}", 3, "{media_name}", 
 							"{news_code}", "{subject}", 
-							"{summary}", "{img_url}", 
+							"{summary}", "", "{img_url}", 
 							"{url}", "{date}", 
-							NOW()
+							NOW(), 1
 						) 
 					""")
 
@@ -1145,7 +1145,7 @@ def insert_new_db() :
 		print('신차 관련 기사 수집 및 DB저장 완료!')
 		print('ㅡ'*50)
 	except Exception as e :
-		print(e)
+		print(f'***** + error! >> {e}')	
 	finally : 
 		pass
 	
@@ -1237,7 +1237,7 @@ def insert_review_db() :
 					# 	MEDIA_NAME = media_name,
 					# 	NEWS_CODE = news_code,
 					# 	NEWS_TITLE = subject,
-					# 	NEWS_CONTENT = summary,
+					# 	NEWS_SUMMARY = summary,
 					# 	NEWS_IMG_URL = img_url,
 					# 	NEWS_URL = url,
 					# 	WRITE_DATE = date,
@@ -1249,23 +1249,23 @@ def insert_review_db() :
 						(
 							MEDIA_CODE, NEWS_CATEGORY, MEDIA_NAME, 
 							NEWS_CODE, NEWS_TITLE, 
-							NEWS_CONTENT, NEWS_IMG_URL,
+							NEWS_SUMMARY, NEWS_CONTENT, NEWS_IMG_URL,
 							NEWS_URL, WRITE_DATE, 
-							ADD_DATE
+							ADD_DATE, MINING_STATUS
 						) 
 						VALUES (
 							"{media_code}", 5, "{media_name}", 
 							"{news_code}", "{subject}", 
-							"{summary}", "{img_url}", 
+							"{summary}", "", "{img_url}", 
 							"{url}", "{date}", 
-							NOW()
+							NOW(), 1
 						) 
 					""")
 		print('ㅡ'*50)
 		print('시승기 수집 및 DB저장 완료!')
 		print('ㅡ'*50)
 	except Exception as e :
-		print(e)
+		print(f'***** + error! >> {e}')	
 	finally : 
 		pass
 
@@ -1348,7 +1348,7 @@ def insert_industry_db() :
 					# 	MEDIA_NAME = media_name,
 					# 	NEWS_CODE = news_code,
 					# 	NEWS_TITLE = subject,
-					# 	NEWS_CONTENT = summary,
+					# 	NEWS_SUMMARY = summary,
 					# 	NEWS_IMG_URL = img_url,
 					# 	NEWS_URL = url,
 					# 	WRITE_DATE = date,
@@ -1360,32 +1360,316 @@ def insert_industry_db() :
 						(
 							MEDIA_CODE, NEWS_CATEGORY, MEDIA_NAME, 
 							NEWS_CODE, NEWS_TITLE, 
-							NEWS_CONTENT, NEWS_IMG_URL,
+							NEWS_SUMMARY, NEWS_CONTENT, NEWS_IMG_URL,
 							NEWS_URL, WRITE_DATE, 
-							ADD_DATE
+							ADD_DATE, MINING_STATUS
 						) 
 						VALUES (
 							"{media_code}", 7, "{media_name}", 
 							"{news_code}", "{subject}", 
-							"{summary}", "{img_url}", 
+							"{summary}", "", "{img_url}", 
 							"{url}", "{date}", 
-							NOW()
+							NOW(), 1
 						) 
 					""")
 		print('ㅡ'*50)
 		print('자동차 업계 뉴스 수집 및 DB저장 완료!')
 		print('ㅡ'*50)
 	except Exception as e :
-		print(e)
+		print(f'***** + error! >> {e}')	
 	finally : 
 		pass
 
 
+# 뉴스 기사 상세 크롤링 > INSERT 
+# 오토헤럴드
+def get_auto_h_detail() :
+	newsList = TblTotalCarNewsList.objects.all().filter(media_code=100)	
+	try :
+		print('ㅡㅡㅡ'*30)
+		for idx in range(len(newsList)) : 
+			full_url = 'http://autotimes.hankyung.com/apps/news.sub_view?popup=0&nid=05&c1=05&c2=02&c3=&nkey=' + newsList.values()[idx].get('news_code')
+			print(newsList.values()[idx].get('news_code'))
+			try : 
+				soup = get_soup(full_url)
+				d_title = soup.find('div', attrs={'class': 'view-title'}).find('h2').get_text().strip()
+				d_content = soup.find('div', attrs={'class': 'view_report'}).get_text().strip()
+				
+				d_title = re.sub('[-=.#/?:$}\"\']', '', d_title)
+				d_content = re.sub('[-=.#/?:$}\"\']', '', d_content)
+
+				execute(f"""
+					UPDATE TBL_TOTAL_CAR_NEWS_LIST 
+					SET NEWS_TITLE = "{d_title}", NEWS_CONTENT = "{d_content}"
+					WHERE NEWS_CODE = "{newsList.values()[idx].get('news_code')}" AND NEWS_CONTENT = ""
+				""")
+				time.sleep(3)
+				print(f'{newsList.values()[idx].get("news_code")} :: 기사 본문 스크랩 완료! [{idx + 1} / {len(newsList)}]')
+			except Exception as e :
+				print(f'***** + error! >> {e}')	
+			print('ㅡㅡㅡ'*30)
+	except Exception as e :
+		print(f'***** + error! >> {e}')	
+	finally : 
+		print('DB Commit 완료!')
+		print('DB Close 완료!')
+
+		return redirect('/')
+
+# 데일리카
+def get_dailycar_detail() :
+	newsList = TblTotalCarNewsList.objects.all().filter(media_code=200)	
+	try :
+		print('ㅡㅡㅡ'*30)
+		for idx in range(len(newsList)) : 
+			full_url = f'http://www.dailycar.co.kr/content/news.html?type=view&autoId={newsList.values()[idx].get("news_code")}&from=%2Fcontent%2Fnews.html%3Ftype%3Dlist%26sub%3Dsell%26maker%3Dused'
+			print(newsList.values()[idx].get('news_code'))
+			try : 
+				soup = get_soup(full_url)
+				d_title = soup.find('span', attrs={'id': 'content_titleonly'}).get_text().strip()
+				d_content = soup.find('span', attrs={'id': 'content_bodyonly'}).get_text().strip()
+				
+				d_title = re.sub('[-=.#/?:$}\"\']', '', d_title)
+				d_content = re.sub('[-=.#/?:$}\"\']', '', d_content)
+
+				execute(f"""
+					UPDATE TBL_TOTAL_CAR_NEWS_LIST 
+					SET NEWS_TITLE = "{d_title}", NEWS_CONTENT = "{d_content}"
+					WHERE NEWS_CODE = "{newsList.values()[idx].get('news_code')}" AND NEWS_CONTENT = ""
+				""")
+				time.sleep(3)
+				print(f'{newsList.values()[idx].get("news_code")} :: 기사 본문 스크랩 완료! [{idx + 1} / {len(newsList)}]')
+			except Exception as e :
+				print(f'***** + error! >> {e}')	
+			print('ㅡㅡㅡ'*30)
+	except Exception as e :
+		print(f'***** + error! >> {e}')	
+	finally : 
+		print('DB Commit 완료!')
+		print('DB Close 완료!')
+
+		return redirect('/')
+
+# 오토뷰
+def get_autoview_detail() :
+	newsList = TblTotalCarNewsList.objects.all().filter(media_code=300)	
+	try :
+		print('ㅡㅡㅡ'*30)
+		for idx in range(len(newsList)) : 
+			full_url = f'http://www.autoview.co.kr/content/article.asp?num_code={newsList.values()[idx].get("news_code")}&news_section=new_car&pageshow=1'
+			print(newsList.values()[idx].get('news_code'))
+			try : 
+				soup = get_soup(full_url)
+				d_title = soup.find('div', attrs={'class': 'view_title'}).find('h4').get_text().strip()
+				d_content = soup.find('div', attrs={'class': 'article_text'}).get_text().strip()
+				
+				d_title = re.sub('[-=.#/?:$}\"\']', '', d_title)
+				d_content = re.sub('[-=.#/?:$}\"\']', '', d_content)
+
+				execute(f"""
+					UPDATE TBL_TOTAL_CAR_NEWS_LIST 
+					SET NEWS_TITLE = "{d_title}", NEWS_CONTENT = "{d_content}"
+					WHERE NEWS_CODE = "{newsList.values()[idx].get('news_code')}" AND NEWS_CONTENT = ""
+				""")
+				time.sleep(3)
+				print(f'{newsList.values()[idx].get("news_code")} :: 기사 본문 스크랩 완료! [{idx + 1} / {len(newsList)}]')
+			except Exception as e :
+				print(f'***** + error! >> {e}')	
+			print('ㅡㅡㅡ'*30)
+	except Exception as e :
+		print(f'***** + error! >> {e}')	
+	finally : 
+		print('DB Commit 완료!')
+		print('DB Close 완료!')
+
+		return redirect('/')
+
+# IT조선
+def get_it_chosun_detail() :
+	newsList = TblTotalCarNewsList.objects.all().filter(media_code=400)	
+	try :
+		print('ㅡㅡㅡ'*30)
+		for idx in range(len(newsList)) : 
+			full_url = f'http://it.chosun.com/site/data/html_dir/{newsList.values()[idx].get("news_code")}'
+			print(newsList.values()[idx].get('news_code'))
+			try : 
+				soup = get_soup(full_url)
+				d_title = soup.find('h1', attrs={'id': 'news_title_text_id'}).get_text().strip()
+				d_content = soup.find('div', attrs={'id': 'news_body_id'}).get_text().strip()
+				
+				d_title = re.sub('[-=.#/?:$}\"\']', '', d_title)
+				d_content = re.sub('[-=.#/?:$}\"\']', '', d_content)
+
+				execute(f"""
+					UPDATE TBL_TOTAL_CAR_NEWS_LIST 
+					SET NEWS_TITLE = "{d_title}", NEWS_CONTENT = "{d_content}"
+					WHERE NEWS_CODE = "{newsList.values()[idx].get('news_code')}" AND NEWS_CONTENT = ""
+				""")
+				time.sleep(3)
+				print(f'{newsList.values()[idx].get("news_code")} :: 기사 본문 스크랩 완료! [{idx + 1} / {len(newsList)}]')
+			except Exception as e :
+				print(f'***** + error! >> {e}')	
+			print('ㅡㅡㅡ'*30)
+	except Exception as e :
+		print(f'***** + error! >> {e}')	
+	finally : 
+		print('DB Commit 완료!')
+		print('DB Close 완료!')
+
+		return redirect('/')
+
+# 오토모닝
+def get_auto_morning_detail() :
+	newsList = TblTotalCarNewsList.objects.all().filter(media_code=500)	
+	try :
+		print('ㅡㅡㅡ'*30)
+		for idx in range(len(newsList)) : 
+			full_url = f'http://www.automorning.com/news/article.html?no={newsList.values()[idx].get("news_code")}'
+			print(newsList.values()[idx].get('news_code'))
+			try : 
+				soup = get_soup(full_url)
+				d_title = soup.find('div', attrs={'class': 'art_top'}).find('h2').get_text().strip()
+				d_content = soup.find('div', attrs={'id': 'news_body_area'}).get_text().strip()
+				
+				d_title = re.sub('[-=.#/?:$}\"\']', '', d_title)
+				d_content = re.sub('[-=.#/?:$}\"\']', '', d_content)
+
+				execute(f"""
+					UPDATE TBL_TOTAL_CAR_NEWS_LIST 
+					SET NEWS_TITLE = "{d_title}", NEWS_CONTENT = "{d_content}"
+					WHERE NEWS_CODE = "{newsList.values()[idx].get('news_code')}" AND NEWS_CONTENT = ""
+				""")
+				time.sleep(3)
+				print(f'{newsList.values()[idx].get("news_code")} :: 기사 본문 스크랩 완료! [{idx + 1} / {len(newsList)}]')
+			except Exception as e :
+				print(f'***** + error! >> {e}')	
+			print('ㅡㅡㅡ'*30)
+	except Exception as e :
+		print(f'***** + error! >> {e}')	
+	finally : 
+		print('DB Commit 완료!')
+		print('DB Close 완료!')
+
+		return redirect('/')
+
+# 오토다이어리
+def get_auto_diary_detail() :
+	newsList = TblTotalCarNewsList.objects.all().filter(media_code=600)	
+	try :
+		print('ㅡㅡㅡ'*30)
+		for idx in range(len(newsList)) : 
+			full_url = f'https://www.autodiary.kr{newsList.values()[idx].get("news_code")}'
+			print(newsList.values()[idx].get('news_code'))
+			try : 
+				soup = get_soup(full_url)
+				d_title = soup.find('h2', attrs={'class': 'entry-title'}).get_text().strip()
+				d_content = soup.find('div', attrs={'class': 'post-content'}).get_text().strip()
+				d_title = re.sub('[-=.#/?:$}\"\']', '', d_title)
+				d_content = re.sub('[-=.#/?:$}\"\']', '', d_content)
+
+				execute(f"""
+					UPDATE TBL_TOTAL_CAR_NEWS_LIST 
+					SET NEWS_TITLE = "{d_title}", NEWS_CONTENT = "{d_content}"
+					WHERE NEWS_CODE = "{newsList.values()[idx].get('news_code')}" AND NEWS_CONTENT = ""
+				""")
+				time.sleep(3)
+				print(f'{newsList.values()[idx].get("news_code")} :: 기사 본문 스크랩 완료! [{idx + 1} / {len(newsList)}]')
+			except Exception as e :
+				print(f'***** + error! >> {e}')	
+			print('ㅡㅡㅡ'*30)
+	except Exception as e :
+		print(f'***** + error! >> {e}')	
+	finally : 
+		print('DB Commit 완료!')
+		print('DB Close 완료!')
+
+		return redirect('/')
+
+# 카가이
+def get_carguy_detail() :
+	newsList = TblTotalCarNewsList.objects.all().filter(media_code=700)	
+	try :
+		print('ㅡㅡㅡ'*30)
+		for idx in range(len(newsList)) : 
+			full_url = f'http://www.carguy.kr/news/articleView.html?idxno={newsList.values()[idx].get("news_code")}'
+			print(newsList.values()[idx].get('news_code'))
+			try : 
+				soup = get_soup(full_url)
+				d_title = soup.find('div', attrs={'class': 'article-head-title'}).get_text().strip()
+				d_content = soup.find('div', attrs={'id': 'article-view-content-div'}).get_text().strip()
+				d_title = re.sub('[-=.#/?:$}\"\']', '', d_title)
+				d_content = re.sub('[-=.#/?:$}\"\']', '', d_content)
+
+				execute(f"""
+					UPDATE TBL_TOTAL_CAR_NEWS_LIST 
+					SET NEWS_TITLE = "{d_title}", NEWS_CONTENT = "{d_content}"
+					WHERE NEWS_CODE = "{newsList.values()[idx].get('news_code')}" AND NEWS_CONTENT = ""
+				""")
+				time.sleep(3)
+				print(f'{newsList.values()[idx].get("news_code")} :: 기사 본문 스크랩 완료! [{idx + 1} / {len(newsList)}]')
+			except Exception as e :
+				print(f'***** + error! >> {e}')	
+			print('ㅡㅡㅡ'*30)
+	except Exception as e :
+		print(f'***** + error! >> {e}')	
+	finally : 
+		print('DB Commit 완료!')
+		print('DB Close 완료!')
+
+		return redirect('/')
+
+# 더드라이브
+def get_the_drive_detail() :
+	newsList = TblTotalCarNewsList.objects.all().filter(media_code=800)	
+	try :
+		print('ㅡㅡㅡ'*30)
+		for idx in range(len(newsList)) : 
+			full_url = f'http://www.thedrive.co.kr/news/newsview.php?ncode={newsList.values()[idx].get("news_code")}'
+			print(newsList.values()[idx].get('news_code'))
+			try : 
+				soup = get_soup(full_url)
+				d_title = soup.find('div', attrs={'class': 'viewTitle'}).find('h3').get_text().strip()
+				d_content = soup.find('div', attrs={'id': 'viewConts'}).get_text().strip()
+				d_title = re.sub('[-=.#/?:$}\"\']', '', d_title)
+				d_content = re.sub('[-=.#/?:$}\"\']', '', d_content)
+
+				execute(f"""
+					UPDATE TBL_TOTAL_CAR_NEWS_LIST 
+					SET NEWS_TITLE = "{d_title}", NEWS_CONTENT = "{d_content}"
+					WHERE NEWS_CODE = "{newsList.values()[idx].get('news_code')}" AND NEWS_CONTENT = ""
+				""")
+				time.sleep(3)
+				print(f'{newsList.values()[idx].get("news_code")} :: 기사 본문 스크랩 완료! [{idx + 1} / {len(newsList)}]')
+			except Exception as e :
+				print(f'***** + error! >> {e}')	
+			print('ㅡㅡㅡ'*30)
+	except Exception as e :
+		print(f'***** + error! >> {e}')	
+	finally : 
+		print('DB Commit 완료!')
+		print('DB Close 완료!')
+
+		return redirect('/')
+
+# 상세 뉴스 불러오기
+def load_detail_content() :
+	get_auto_h_detail()
+	get_dailycar_detail()
+	get_autoview_detail()
+	get_it_chosun_detail()
+	get_auto_morning_detail()
+	get_auto_diary_detail()
+	get_carguy_detail()
+	get_the_drive_detail()
+
+	# dbconn.commit()
+	print('DB Commit 완료!')
+	# dbconn.close()
+	print('DB Close 완료!')
+
 
 # 데이터 다시 불러오기
 def reload_data(request) :
-	cursor = dbconn.cursor()
-
 	insert_used_db()
 	insert_new_db()
 	insert_review_db()
@@ -1397,6 +1681,7 @@ def reload_data(request) :
 	print('DB Close 완료!')
 
 	return redirect('/')
+
 
 # 목록
 def news_list(request) :
@@ -1456,6 +1741,8 @@ def list_data(request) :
 
 # 회원
 def login(request) :
+	newsList = TblTotalCarNewsList.objects.all().filter(media_code=100)
+
 	if request.method == 'POST' : 
 		memb_id = request.POST['memb-id']
 		password = request.POST['pw']
@@ -1517,3 +1804,5 @@ def join(request) :
 			return redirect('/login/')
 	else : 
 		return render(request, 'website/join.html')
+
+
