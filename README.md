@@ -1,9 +1,10 @@
-# car_news_zip
-### 9개 자동차 관련 언론사에서 신차/중고차/자동차업계/시승기 뉴스 스크래핑
+# 카뉴스집 (car_news.zip)
+### 8개 자동차 관련 언론사에서 뉴스 스크래핑 및 분석
 
 ### 정보
 - 접속 URL : <a href="http://carnewszip.com">http://carnewszip.com</a>
 - 테이블 명세서 : <a href="https://docs.google.com/spreadsheets/d/1TOZSDXpLZaXQhyP-K11WmGR_dQ1tswQc181uI90sgF4/edit#gid=0">https://docs.google.com/spreadsheets/d/1TOZSDXpLZaXQhyP-K11WmGR_dQ1tswQc181uI90sgF4/edit#gid=0</a>
+- 9개 자동차 언론사 : 오토헤럴드, 데일리카, 오토뷰, IT조선, 오토모닝, 오토다이어리, 카가이, 더드라이브
 
 ---
 
@@ -17,7 +18,6 @@
 - 메뉴 기능 추가 (각 카테고리별 언론사 보기, 언론사별 뉴스 모아보기)
 - 카뉴스집 소개 구성 (간단하게)
 - 뉴스 목록 페이징 처리 (스크롤 로드 방식)
-
 
 ---
 
