@@ -1,6 +1,10 @@
 # car_news_zip
 ### 9개 자동차 관련 언론사에서 신차/중고차/자동차업계/시승기 뉴스 스크래핑
 
+### 정보
+- 접속 URL : <a href="http://carnewszip.com">http://carnewszip.com</a>
+- 테이블 명세서 : <a href="https://docs.google.com/spreadsheets/d/1TOZSDXpLZaXQhyP-K11WmGR_dQ1tswQc181uI90sgF4/edit#gid=0">https://docs.google.com/spreadsheets/d/1TOZSDXpLZaXQhyP-K11WmGR_dQ1tswQc181uI90sgF4/edit#gid=0</a>
+
 ---
 
 ### 추가해야할 기능
@@ -15,10 +19,18 @@
 - 뉴스 목록 페이징 처리 (스크롤 로드 방식)
 
 
-
 ---
 
 ### History
+
+#### 2020.12.14 (월)
+> 현재 각 언론사 목록 페이지에서 뉴스 제목, 요약내용만 가져오고 있는 상황(기사별 2~3줄)  
+데이터 분석을 위한 각 상세페이지에 접근하여 기사 전체 내용 스크랩 필요
+
+- 테이블 생성,수정,삭제
+  - 테이블 명세서 히스토리 참조
+- 뉴스 상세 데이터(제목, 내용) 스크랩
+
 #### 2020.12.13 (일)
 - 뉴스 클릭 수 카운팅 기능
   - UI 구성
