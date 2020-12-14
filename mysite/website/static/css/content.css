@@ -95,8 +95,8 @@
 .category-list ul {display:none; flex-wrap:wrap; margin-top:5px;}
 .category-list ul.show {display:flex;}
 .category-list ul li a {color:#999; font-size:26px; font-weight:600;}
-.category-list ul li.curr {border-bottom:1px solid #fff; background:#666;}
-.category-list ul li.curr a {color:#fff;}
+.category-list ul li.active {border-bottom:1px solid #fff; background:#666;}
+.category-list ul li.active a {color:#fff;}
 .category-list ul li:hover {text-decoration:underline;}
 .category-list ul li {margin-right:25px;}
 .category-list ul li:last-child {margin-right:0;}

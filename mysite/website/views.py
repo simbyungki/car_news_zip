@@ -1703,7 +1703,7 @@ def list_data(request) :
 		start_idx = int(request.GET.get('start_idx'))
 		load_length = int(request.GET.get('load_length'))
 		category_num = 1
-			
+		
 	news = ''
 	if list_type == 'media' : 
 		#오토헤럴드 : 100, 데일리카 : 200, 오토뷰 : 300, IT조선 : 400, 오토모닝 : 500, 오토다이어리 : 600, 카가이 : 700, 더드라이브 : 800
@@ -1723,7 +1723,7 @@ def list_data(request) :
 			category_num = 700
 		elif idx == 7 :
 			category_num = 800
-		news = TblTotalCarNewsList.objects.filter(media_code=category_num).order_by('-write_date')[start_idx:load_length]
+		news = TblTotalCarNewsList.objects.filter(media_code=category_num).order_by('-write_date')[start_idx:start_idx+load_length]
 	elif list_type == 'category' :
 		if idx == 0 :
 			category_num = 1
@@ -1733,8 +1733,8 @@ def list_data(request) :
 			category_num = 5
 		elif idx == 3 :
 			category_num = 7
-		news = TblTotalCarNewsList.objects.filter(news_category=category_num).order_by('-write_date')[start_idx:load_length]
-
+		news = TblTotalCarNewsList.objects.filter(news_category=category_num).order_by('-write_date')[start_idx:start_idx+load_length]
+	
 	return HttpResponse(serializers.serialize('json', news), content_type="text/json-comment-filtered")
 
 

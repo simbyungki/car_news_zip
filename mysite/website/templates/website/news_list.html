@@ -8,10 +8,6 @@
 	<meta name="mobile-web-app-capable" content="yes">
 	<meta name="format-detection" content="telephone=no,address=no,email=no">
 	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0">
-	<!-- No cache -->
-	<meta http-equiv="Expires" content="-1">
-	<meta http-equiv="Pragma" content="no-cache">
-	<meta http-equiv="Cache-Control" content="no-cache; no-store; no-save">
 	<!-- Summary -->
 	<meta name="Keywords" content="자동차, 자동차뉴스, 시승기, 중고차뉴스, 신차뉴스, 자동차업계, 자동차업계뉴스">
 	<meta name="Description" content="카뉴스집은 9개 자동차 언론사들의 뉴스를 모아 제공합니다. (신차, 중고차, 시승기, 자동차업계)">
@@ -56,6 +52,7 @@
 			{% if user %}
 				<a href="/logout/" class="btn-login">로그아웃</a>
 			{% else %}
+				<a href="/join/" class="btn-logout">회원가입</a>
 				<a href="/login/" class="btn-logout">로그인</a>
 			{% endif %}
 			<select name="" id="" class="view-mode-changer">
@@ -97,13 +94,13 @@
 		<div class="category-list">
 			<div class="inner">
 				<ul class="sub-menu category show">
-					<li class="curr"><a href="javascript:;">중고차 뉴스</a></li>
+					<li class="active"><a href="javascript:;">중고차 뉴스</a></li>
 					<li><a href="javascript:;">신차 뉴스</a></li>
 					<li><a href="javascript:;">시승기</a></li>
 					<li><a href="javascript:;">자동차 업계 뉴스</a></li>
 				</ul>
 				<ul class="sub-menu media">
-					<li class="curr"><a href="javascript:;">오토헤럴드</a></li>
+					<li class="active"><a href="javascript:;">오토헤럴드</a></li>
 					<li><a href="javascript:;">데일리카</a></li>
 					<li><a href="javascript:;">오토뷰</a></li>
 					<li><a href="javascript:;">IT조선</a></li>
@@ -143,6 +140,7 @@
 <script data-ad-client="ca-pub-3984460457062336" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-T4CL1V9FXP"></script>
 <script>
+	var connFlag = false;
 	$(function(){
 		window.dataLayer = window.dataLayer || [];
 		function gtag(){dataLayer.push(arguments);}
@@ -153,12 +151,17 @@
 		loadNewsList(0, 'category', 0, 12);
 
 		$('.category-list ul li a').on('click', function(){
-			var idx = $(this).parent('li').index();
-			$(this).closest('ul').find('li').removeClass('curr').eq(idx).addClass('curr');
-			if($(this).closest('ul').hasClass('category')){
-				loadNewsList(idx, 'category', 0, 12);
-			}else if($(this).closest('ul').hasClass('media')){
-				loadNewsList(idx, 'media', 0, 12);
+			if(!connFlag){
+				var idx = $(this).parent('li').index();
+				var categoryBeforeCurrIdx = $('.category-list ul li.active').index();
+				if(idx !== categoryBeforeCurrIdx){
+					$(this).closest('ul').find('li').removeClass('active').eq(idx).addClass('active');
+					if($(this).closest('ul').hasClass('category')){
+						loadNewsList(idx, 'category', 0, 12);
+					}else if($(this).closest('ul').hasClass('media')){
+						loadNewsList(idx, 'media', 0, 12);
+					}
+				}
 			}
 		});
 
@@ -167,12 +170,14 @@
 		});
 
 		$('.header .btn-gnb').on('click', function(){
-			if($(this).hasClass('active')){
-				$(this).removeClass('active');
-				$('.gnb-box, .header .fncs').removeClass('show');
-			}else{
-				$(this).addClass('active');
-				$('.gnb-box, .header .fncs').addClass('show');
+			if(!connFlag){
+				if($(this).hasClass('active')){
+					$(this).removeClass('active');
+					$('.gnb-box, .header .fncs').removeClass('show');
+				}else{
+					$(this).addClass('active');
+					$('.gnb-box, .header .fncs').addClass('show');
+				}
 			}
 		});
 
@@ -194,10 +199,23 @@
 				$('#wrap').removeClass('darkmode');
 			}
 		});
+		
+		$(window).on('scroll', function(e){
+			if(($(window).innerHeight() + $(window).scrollTop()) >= $('body').height()) {
+				if(!connFlag){
+					var thisNewsType = $('#wrap').prop('class');
+					var thisCategory = $('.sub-menu.category li.active').index();
+					var nowListLength = $('.news-group li').length;
+					loadNewsList(thisCategory, thisNewsType, nowListLength, 12, 'more');
+				}
+			}
+		});
 	});
 
-	function loadNewsList(idx, list_type, start_idx, load_length){
+	
+	function loadNewsList(idx, list_type, start_idx, load_length, load_type){
 		$('.loading').show();
+		connFlag = true;
 		$.ajax({
 			url: '{% url "list_data" %}',
 			type: 'GET',
@@ -258,19 +276,28 @@
 					newsItem += '</div>';
 					newsItem += '</li>';
 				}
-				$('.news-group').html(newsItem);
+				if(load_type == 'more'){
+					$('.news-group').append(newsItem);
+					var nowScrollTop = $('html, body').scrollTop();
+					// $('html, body').animate({scrollTop: nowScrollTop + 100}, 150);
+				}else{
+					$('.news-group').html(newsItem);
+					$('document, html').scrollTop(0);
+				}
+
 				//sub menu
 				$('.category-list ul').removeClass('show');
 				if(list_type == 'category'){
-					$('#wrap').addClass('category-news');
+					$('#wrap').prop('class', '').addClass('category');
 					$('.category-list ul.category').addClass('show');
 				}else if(list_type == 'media'){
-					$('#wrap').addClass('media-news');
+					$('#wrap').prop('class', '').addClass('media');
 					$('.category-list ul.media').addClass('show');
 				}
 				//close gnb box
 				$('.header .btn-gnb').removeClass('active');
 				$('.gnb-box, .header .fncs').removeClass('show');
+				connFlag = false;
 			},
 			error : function(request, status, error){
 				console.log(error)
