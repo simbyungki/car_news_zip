@@ -10,17 +10,17 @@
 	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0">
 	<!-- Summary -->
 	<meta name="Keywords" content="자동차, 자동차뉴스, 시승기, 중고차뉴스, 신차뉴스, 자동차업계, 자동차업계뉴스">
-	<meta name="Description" content="카뉴스집은 9개 자동차 언론사들의 뉴스를 모아 제공합니다. (신차, 중고차, 시승기, 자동차업계)">
-	<meta http-equiv="Author" content="카뉴스집">
-	<meta http-equiv="Other Agent" content="카뉴스집">
+	<meta name="Description" content="카뉴스.zip은 8개 자동차 언론사들의 뉴스를 모아 제공합니다. (신차, 중고차, 시승기, 자동차업계)">
+	<meta http-equiv="Author" content="카뉴스.zip">
+	<meta http-equiv="Other Agent" content="카뉴스.zip">
 	<meta http-equiv="Reply-To" content="naver@naver.com">
 	<meta http-equiv="Email" content="naver@naver.com">
 	<meta http-equiv="Build" content="2020.12" />
-	<meta property="og:title" content="카뉴스집">
-	<meta property="og:description" content="카뉴스집, 자동차 뉴스, 중고차 뉴스, 신차 뉴스, 자동차 시승기">
+	<meta property="og:title" content="카뉴스.zip">
+	<meta property="og:description" content="카뉴스.zip, 자동차 뉴스, 중고차 뉴스, 신차 뉴스, 자동차 시승기">
 	<meta name="naver-site-verification" content="c7ce06c9ed9736eb46db21ed102e4dea95dfe089" />
 	<meta name="google-site-verification" content="jt2p5-PNGgED4Z5xiMbyiENXRz7QGQtd6HxuQbAHYWw" />
-	<title>카뉴스집 🙈 | CAR_NEWS_ZIP</title>
+	<title>카뉴스.zip 🙈 | CAR_NEWS_ZIP</title>
 	<link rel="shortcut icon" href="{% static 'favico.png' %}">
 	<!-- CSS -->
 	<link rel="stylesheet" href="{% static 'css/reset.css' %}">
@@ -30,13 +30,22 @@
     <!--[if lt IE 9]>
 		<script src="../resources/js/html5shiv.min.js"></script>
 	<![endif]-->
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script data-ad-client="ca-pub-3984460457062336" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-T4CL1V9FXP"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'G-T4CL1V9FXP');
+	</script>
 </head>
 <body>
 <div id="wrap" class="category">
 	<header class="header">
 		<a href="javascript:;" class="btn-gnb" title="메뉴"></a>
 		<h1 class="service-name">
-			카뉴스집 🙈<sup>Beta!</sup><br>
+			카뉴스.zip 🙈<sup>Beta!</sup><br>
 			<span>
 				{% if user %}
 					{% if user == '심병기' %}
@@ -46,7 +55,7 @@
 					[{{ today_date }} {{ user }}님만을 위한 뉴스!]
 					{% endif %}	
 				{% else %}
-					[{{ today_date }} CAR NEWS ZIP!]
+					[{{ today_date }} CAR_NEWS.zip!]
 				{% endif %}
 			</span>
 		</h1>
@@ -80,13 +89,13 @@
 								<li>&middot;  <a href="javascript:;">찜한 뉴스 목록</a></li>
 							</ul>
 						</li> {% endcomment %}
-						{% comment %} <li>
-							<a href="javascript:;">카뉴스집</a>
+						<li>
+							<a href="javascript:;">카뉴스.zip</a>
 							<ul>
-								<li>&middot;  <a href="javascript:;">카뉴스집 소개</a></li>
-								<li>&middot;  <a href="mailto:dung8524@gmail.com">카뉴스집 문의하기</a></li>
+								{% comment %} <li>&middot;  <a href="javascript:;">카뉴스.zip 소개</a></li> {% endcomment %}
+								<li>&middot;  <a href="mailto:dung8524@gmail.com">카뉴스.zip 문의하기</a></li>
 							</ul>
-						</li> {% endcomment %}
+						</li>
 					</ul>
 				</nav>
 			</div>
@@ -139,16 +148,10 @@
 <script type="text/javascript" src="/static/js/jquery-ui.min.js"></script>
 <script type="text/javascript" src="/static/js/swiper.min.js"></script>
 <script type="text/javascript" src="/static/js/common.js"></script>
-<script data-ad-client="ca-pub-3984460457062336" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-T4CL1V9FXP"></script>
+
 <script>
 	var connFlag = false;
 	$(function(){
-		window.dataLayer = window.dataLayer || [];
-		function gtag(){dataLayer.push(arguments);}
-		gtag('js', new Date());
-		gtag('config', 'G-T4CL1V9FXP');
-
 		//최초 목록
 		loadNewsList(0, 'category', 0, 12);
 

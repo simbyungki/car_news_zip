@@ -22,7 +22,6 @@
 ---
 
 ### History
-
 #### 2020.12.15 (화)
 - 뉴스 목록 페이징 처리 (infinity scroll data load 방식)
   - 기능 구현
