@@ -68,10 +68,10 @@
 				<nav class="menu">
 					<ul>
 						<li class="active">
-							<a href="javascript:;" onclick="loadNewsList(0, 'category', 0, 12);">자동차 관련 뉴스 보기</a>
+							<a href="javascript:;" onclick="loadNewsList(0, 'category', 0, 12, 'default', 'change');">자동차 관련 뉴스 보기</a>
 							<ul>
-								<li class="active">&middot; <a href="javascript:;" onclick="loadNewsList(0, 'category', 0, 12);">뉴스 카테고리별 보기</a></li>
-								<li>&middot; <a href="javascript:;" onclick="loadNewsList(0, 'media', 0, 12);">언론사별 보기</a></li>
+								<li class="active">&middot; <a href="javascript:;" onclick="loadNewsList(0, 'category', 0, 12, 'default', 'change');">뉴스 카테고리별 보기</a></li>
+								<li>&middot; <a href="javascript:;" onclick="loadNewsList(0, 'media', 0, 12, 'default', 'change');">언론사별 보기</a></li>
 							</ul>
 						</li>
 						{% comment %} <li>
@@ -158,7 +158,8 @@
 				var idx = $(this).parent('li').index();
 				var categoryBeforeCurrIdx = $('.category-list ul li.active').index();
 				if(idx !== categoryBeforeCurrIdx){
-					$(this).closest('ul').find('li').removeClass('active').eq(idx).addClass('active');
+					$(this).closest('ul').find('li').removeClass('active');
+					$(this).parent('li').addClass('active');
 					if($(this).closest('ul').hasClass('category')){
 						loadNewsList(idx, 'category', 0, 12);
 					}else if($(this).closest('ul').hasClass('media')){
@@ -216,7 +217,7 @@
 	});
 
 	
-	function loadNewsList(idx, list_type, start_idx, load_length, load_type){
+	function loadNewsList(idx, list_type, start_idx, load_length, load_type, fnc_type){
 		$('.loading').show();
 		connFlag = true;
 		$.ajax({
@@ -289,14 +290,21 @@
 				}
 
 				//sub menu
-				$('.category-list ul').removeClass('show');
-				if(list_type == 'category'){
-					$('#wrap').prop('class', '').addClass('category');
-					$('.category-list ul.category').addClass('show');
-				}else if(list_type == 'media'){
-					$('#wrap').prop('class', '').addClass('media');
-					$('.category-list ul.media').addClass('show');
+				if(fnc_type == 'change'){
+					$('.category-list ul').removeClass('show');
+					$('.category-list ul li').removeClass('active');
+					if(list_type == 'category'){
+						$('#wrap').prop('class', '').addClass('category');
+						$('.category-list ul.category').addClass('show');
+					}else if(list_type == 'media'){
+						$('#wrap').prop('class', '').addClass('media');
+						$('.category-list ul.media').addClass('show');
+					}
+					$('.category-list ul.sub-menu.show li').eq(0).addClass('active');
+				}else{
+
 				}
+
 				//close gnb box
 				$('.header .btn-gnb').removeClass('active');
 				$('.gnb-box, .header .fncs').removeClass('show');
