@@ -8,7 +8,8 @@ from django.core import serializers
 
 from konlpy.tag import Kkma
 from wordcloud import WordCloud
-import matplotlib.pyplot as plt
+import regex
+# import matplotlib.pyplot as plt
 
 import requests
 import re
@@ -1758,40 +1759,35 @@ def view_count(request) :
 kkma = Kkma()
 def text_mining(request) :
 	car_news_list = TblTotalCarNewsList.objects.all()
+	except_word_list = []
 	except_keyword_list = []
 	context = {}
 	result_data = []
-	result_data2 = []
+	in_result_data = []
 
-	for idx in range(5) :
-		insert_data = []
-		insert_word_list = []
-		summary = car_news_list[idx].news_summary
-		insert_data.append(summary)
-		for keyword in kkma.pos(summary) :
-			if (keyword not in except_keyword_list) and len(keyword) > 1 :
-				insert_word_list.append(keyword)
-		insert_data.append(insert_word_list)
-	
-		result_data.append(insert_data)
-	
-	for idx in range(5) :
-		insert_data = []
-		insert_word_list = []
-		summary = car_news_list[idx].news_summary
-		insert_data.append(summary)
-		for keyword in kkma.nouns(summary) :
-			if (keyword not in except_keyword_list) and len(keyword) > 1 :
-				insert_word_list.append(keyword)
-		insert_data.append(insert_word_list)
-	
-		result_data2.append(insert_data)
-		
-	context['wordlist'] = result_data
-	context['wordlist2'] = result_data2
-		
+	print(car_news_list[0].news_summary)
+	for idx in range(1) :
+		re_summary = regex.findall(r'\p{Hangul}+', f'{car_news_list[idx].news_summary}')
+		print(re_summary)
+		# print('-'*50)
+		for word in re_summary :
+			in_result_word = []	
+			group = []
+			if (word not in except_word_list) and len(word) > 1 :
+				group.append(word)
+				# print(word)
+				# print('-'*50)
+				for keyword in kkma.pos(word) :
+					if (keyword not in except_keyword_list) and len(keyword[0]) > 1 :
+						# print(keyword)
+						# print('-'*50)
+						in_result_word.append(keyword)
 
-
+				group.append(in_result_word)
+			in_result_data.append(group)
+		result_data.append(in_result_data)
+	print(in_result_data)
+	
 	return render(request, 'website/text_mining.html', context)
 
 

@@ -39,7 +39,7 @@
 .header .gnb-box {position:fixed; left:0; top:0;}
 .header .gnb-box .dim {display:none; position:fixed; left:0; top:0; z-index:200; width:100%; height:100%; background:rgba(0,0,0,.7);}
 .header .gnb-box.show .dim {display:block;}
-.header .gnb-box .box {position:fixed; left:-20%; top:0; z-index:200; padding-top:140px; padding-left:40px; width:20%; height:100%; text-align:left; background:#fff; box-sizing:border-box; transition:all .3s;}
+.header .gnb-box .box {position:fixed; left:-25%; top:0; z-index:200; padding-top:140px; padding-left:40px; width:25%; height:100%; text-align:left; background:#fff; box-sizing:border-box; transition:all .3s;}
 .header .gnb-box.show .box {left:0;}
 .header .gnb-box .box .menu > ul > li + li {margin-top:38px;}
 .header .gnb-box .box .menu > ul > li.active > a {color:#00affa; text-decoration:underline;}
