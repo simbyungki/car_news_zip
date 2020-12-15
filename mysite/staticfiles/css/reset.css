@@ -1,0 +1,56 @@
+@charset "utf-8";
+/*
+    reset style
+*/
+html, body, div, span, applet, object, iframe,p, blockquote, pre, a, abbr, acronym, address, big, cite, code,del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, sub, sup, tt, var,b, u, i, center,dl, dt, dd, ol, ul, li,fieldset, form, label, legend,table, caption, tbody, tfoot, thead, tr, th, td,article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary,time, mark, audio, video {margin:0;padding:0;border:0;vertical-align:baseline;}
+html, body, div, applet, object, iframe,p, blockquote, pre, abbr, acronym, address, big, cite, code,del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, sub, sup, tt, var,b, u, i, center,dl, dt, dd, ol, ul, li,fieldset, form, legend,table, caption, tbody, tfoot, thead, tr, th, td,article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary,time, mark, audio, video {font-family:'NanumSquare', '돋움', dotum, Helvetica, sans-serif; color:#333; letter-spacing:0px; -webkit-text-size-adjust:100%;}
+h1, h2, h3, h4, h5, h6, label{margin:0; padding:0; border:0; vertical-align:baseline; font-family:'NanumSquare', '돋움', dotum, Helvetica, sans-serif; font-weight:bold; color:#333; letter-spacing:0px;}
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {display: block;}
+body {line-height:1;}
+ol, ul {list-style:none;}
+blockquote, q {quotes:none;}
+blockquote:before, blockquote:after,q:before, q:after {content:''; content:none;}
+table {border-collapse:collapse; border-spacing:0;}
+caption {width:0; height:0; visibility:hidden; line-height:0; font-size:0; overflow:hidden;}
+a,a:visited,a:hover,a:active{text-decoration:none;}
+input, select, textarea, button {margin:0; padding:0; letter-spacing:-1px; font-family:'NanumSquare', '돋움', dotum, Helvetica, sans-serif;}
+button {margin:0; padding:0; background:none; border:none; cursor:pointer;}
+
+/***** base *****/
+.clearFix {zoom:1;}
+.clearFix:after,
+.clearFix:before {display:block; content:'';}
+.clearFix:after {clear:both}
+
+.a11y {display:block; overflow:hidden; position:absolute; left:-9999px; width:1px; height:1px; font-size:0; line-height:0; text-indent:-9999px;}
+.noBg {background:none !important;}
+
+.ui-datepicker {display:none;}
+select {padding:0 42px 0 12px; height:38px; letter-spacing:0; font-size:14px; color:#999; background:#fff url('../images/common/bg_selectbox_arrow.png') no-repeat right 6px center; border:1px solid #ccc; appearance:none; -webkit-appearance:none; box-sizing:border-box;}
+select::-ms-expand {display:none;}
+
+/* placeholder color */
+::-webkit-input-placeholder {color:#999 !important}
+:-webkit-input-placeholder {color:#999 !important}
+::-moz-placeholder {color:#999 !important}
+:-moz-placeholder {color:#999 !important}
+:-ms-input-placeholder {color:#999 !important}
+
+/* disable blue highlight 
+a, button {
+	-webkit-tap-highlight-color: rgba(255,255,255,0);
+	-webkit-tap-highlight-color: transparent;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+*/

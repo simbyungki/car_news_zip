@@ -153,6 +153,7 @@
 		loadNewsList(0, 'category', 0, 12);
 
 		$('.category-list ul li a').on('click', function(){
+			console.log($(this).html())
 			if(!connFlag){
 				var idx = $(this).parent('li').index();
 				var categoryBeforeCurrIdx = $('.category-list ul li.active').index();
