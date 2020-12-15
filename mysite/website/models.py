@@ -33,6 +33,7 @@ class TblTotalCarNewsList(models.Model):
 	write_date = models.CharField(db_column='WRITE_DATE', max_length=30, blank=True, null=True)
 	add_date = models.DateTimeField(db_column='ADD_DATE', blank=True, null=True)
 	mining_status = models.CharField(db_column='MINING_STATUS', max_length=10, blank=True, null=True, verbose_name='텍스트 마이닝 여부')
+	view_count = models.CharField(db_column='VIEW_COUNT',  max_length=10, verbose_name='해당 기사 클릭 횟수')
 	class Meta:
 		managed = False
 		db_table = 'TBL_TOTAL_CAR_NEWS_LIST'

@@ -32,7 +32,7 @@
 	<![endif]-->
 </head>
 <body>
-<div id="wrap">
+<div id="wrap" class="category">
 	<header class="header">
 		<a href="javascript:;" class="btn-gnb" title="메뉴"></a>
 		<h1 class="service-name">
@@ -153,7 +153,6 @@
 		loadNewsList(0, 'category', 0, 12);
 
 		$('.category-list ul li a').on('click', function(){
-			console.log($(this).html())
 			if(!connFlag){
 				var idx = $(this).parent('li').index();
 				var categoryBeforeCurrIdx = $('.category-list ul li.active').index();
@@ -203,12 +202,20 @@
 				$('#wrap').removeClass('darkmode');
 			}
 		});
+
+
+		$(document).on('click', '.item-list ul li a', function(){
+			var idx = $(this).parent('li').index();
+			var nowCount = $(this).siblings('.infos').find('.view-cnt').children('strong').text();
+			var newsCode = $(this).parent('li').data('news-code');
+			viewCountUp(idx, nowCount, newsCode)
+		});
 		
 		$(window).on('scroll', function(e){
 			if(($(window).innerHeight() + $(window).scrollTop()) >= $('body').height()) {
 				if(!connFlag){
+					var thisCategory = $('.sub-menu li.active').index();
 					var thisNewsType = $('#wrap').prop('class');
-					var thisCategory = $('.sub-menu.category li.active').index();
 					var nowListLength = $('.news-group li').length;
 					loadNewsList(thisCategory, thisNewsType, nowListLength, 12, 'more');
 				}
@@ -216,8 +223,22 @@
 		});
 	});
 
-	
+	function viewCountUp(idx, nowCount, newsCode){
+		$.ajax({
+			url: '{% url "view_count" %}',
+			type: 'GET',
+			data: {
+				'now_count': nowCount,
+				'news_code': newsCode
+			},
+			dataType: 'json',
+			success: function(data){
+				$('.news-group.show li').eq(idx).find('.view-cnt').children('strong').text(data);
+			}
+		});
+	}
 	function loadNewsList(idx, list_type, start_idx, load_length, load_type, fnc_type){
+		console.log('@@@', list_type)
 		$('.loading').show();
 		connFlag = true;
 		$.ajax({
@@ -232,7 +253,8 @@
 			dataType: 'json',
 			success: function(data){
 				$('.loading').hide();
-				var newsItem = "";				
+				var newsItem = "";		
+				console.log(data)
 				for(i = 0; i < data.length; i++){
 					list = data[i].fields;
 					var media_name = '';
@@ -253,7 +275,7 @@
 					}else if(list.media_code == '800'){
 						media_name = 'drive'
 					}
-					newsItem += '<li>';
+					newsItem += '<li data-news-code="' + list.news_code + '">';
 					newsItem += '<a href="' + list.news_url + '" target="_blank" title="' + list.news_title + '">';
 					if(list.media_code == '200' || list.news_img_url == 'None' || list.news_img_url == ''){
 						newsItem += '<div class="picture">';
@@ -275,7 +297,7 @@
 					newsItem += '</a>';
 					newsItem += '<div class="infos">';
 					newsItem += '<span class="date">' + list.write_date + '</span>';
-					newsItem += '<span class="view-cnt" title="이 기사 조회수">👁 <strong>0</strong></span>'
+					newsItem += '<span class="view-cnt" title="이 기사 조회수">👁 <strong>' + list.view_count + '</strong></span>'
 					newsItem += '<button type="button" class="btn-like" title="이 기사 찜하기">👍 <strong>0</strong></button>';
 					newsItem += '</div>';
 					newsItem += '</li>';
@@ -283,16 +305,18 @@
 				if(load_type == 'more'){
 					$('.news-group').append(newsItem);
 					var nowScrollTop = $('html, body').scrollTop();
-					// $('html, body').animate({scrollTop: nowScrollTop + 100}, 150);
+					$('html, body').animate({scrollTop: nowScrollTop + 100}, 150);
 				}else{
 					$('.news-group').html(newsItem);
 					$('document, html').scrollTop(0);
 				}
 
 				//sub menu
+				console.log(list_type)
 				if(fnc_type == 'change'){
 					$('.category-list ul').removeClass('show');
 					$('.category-list ul li').removeClass('active');
+					
 					if(list_type == 'category'){
 						$('#wrap').prop('class', '').addClass('category');
 						$('.category-list ul.category').addClass('show');
@@ -301,8 +325,6 @@
 						$('.category-list ul.media').addClass('show');
 					}
 					$('.category-list ul.sub-menu.show li').eq(0).addClass('active');
-				}else{
-
 				}
 
 				//close gnb box

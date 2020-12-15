@@ -1696,6 +1696,19 @@ def news_list(request) :
 
 	return render(request, 'website/news_list.html', res_data)
 
+def view_count(request) : 
+	if request.method == 'GET' : 
+		now_count = int(request.GET.get('now_count'))
+		news_code = request.GET.get('news_code')
+		after_count = now_count + 1
+		execute(f"""
+			UPDATE TBL_TOTAL_CAR_NEWS_LIST 
+			SET VIEW_COUNT = "{after_count}"
+			WHERE NEWS_CODE = "{news_code}"
+		""")
+
+	return HttpResponse(after_count, content_type="text/json-comment-filtered")
+
 def list_data(request) :
 	if request.method == 'GET' :
 		idx = int(request.GET.get('list_idx'))
@@ -1734,7 +1747,7 @@ def list_data(request) :
 		elif idx == 3 :
 			category_num = 7
 		news = TblTotalCarNewsList.objects.filter(news_category=category_num).order_by('-write_date')[start_idx:start_idx+load_length]
-	
+
 	return HttpResponse(serializers.serialize('json', news), content_type="text/json-comment-filtered")
 
 
