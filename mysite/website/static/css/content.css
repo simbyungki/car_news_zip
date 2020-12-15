@@ -90,6 +90,10 @@
 .item-list ul li .infos .btn-like {position:absolute; right:5px; bottom:-4px; line-height:24px;}
 .item-list ul li .infos .btn-like:active {bottom:-5px;}
 .item-list ul li .infos .btn-like strong {position:relative; top:1px; margin-left:3px; font-size:16px;}
+.list-top {position:relative;}
+.list-top .list-type {position:absolute; right:0; top:-6px;}
+.list-top .list-type .btn {display:inline-block; width:30px; height:30px; border:1px solid #444;}
+.list-top .list-type .btn.active {background:#444;}
 
 .category-list {position:fixed; top:120px; left:0; z-index:100; width:100%; height:60px; background:#444; box-sizing:border-box;}
 .category-list ul {display:none; flex-wrap:wrap; margin-top:5px;}
@@ -145,8 +149,18 @@
     responsive 
                 */
 /*****
-     1280 < w 
-                */
+     1420 < w 
+				*/
+@media screen and (min-width: 1420px) {
+	.item-list ul li {width:18.8%;}
+	.item-list ul li + li,
+	.item-list ul li:nth-child(4n+1) {margin-left:1.5%;}
+	.item-list ul li:first-child,
+	.item-list ul li:nth-child(5n + 1) {margin-left:0;}
+}
+/*****
+     1280 > w 
+				*/
 @media screen and (max-width: 1280px) {
 	.item-list ul li {width:32%;}
 	.item-list ul li + li {margin-left:2%;}

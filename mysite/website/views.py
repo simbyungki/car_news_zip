@@ -6,6 +6,10 @@ from datetime import datetime
 from django.http import HttpResponse
 from django.core import serializers
 
+from konlpy.tag import Kkma
+from wordcloud import WordCloud
+import matplotlib.pyplot as plt
+
 import requests
 import re
 import time
@@ -1667,7 +1671,6 @@ def load_detail_content() :
 	# dbconn.close()
 	print('DB Close 완료!')
 
-
 # 데이터 다시 불러오기
 def reload_data(request) :
 	insert_used_db()
@@ -1696,19 +1699,7 @@ def news_list(request) :
 
 	return render(request, 'website/news_list.html', res_data)
 
-def view_count(request) : 
-	if request.method == 'GET' : 
-		now_count = int(request.GET.get('now_count'))
-		news_code = request.GET.get('news_code')
-		after_count = now_count + 1
-		execute(f"""
-			UPDATE TBL_TOTAL_CAR_NEWS_LIST 
-			SET VIEW_COUNT = "{after_count}"
-			WHERE NEWS_CODE = "{news_code}"
-		""")
-
-	return HttpResponse(after_count, content_type="text/json-comment-filtered")
-
+# 뉴스 목록 가져오기 ajax
 def list_data(request) :
 	if request.method == 'GET' :
 		idx = int(request.GET.get('list_idx'))
@@ -1750,10 +1741,66 @@ def list_data(request) :
 
 	return HttpResponse(serializers.serialize('json', news), content_type="text/json-comment-filtered")
 
+# 뉴스 클릭 수 ajax
+def view_count(request) : 
+	if request.method == 'GET' : 
+		now_count = int(request.GET.get('now_count'))
+		news_code = request.GET.get('news_code')
+		after_count = now_count + 1
+		execute(f"""
+			UPDATE TBL_TOTAL_CAR_NEWS_LIST 
+			SET VIEW_COUNT = "{after_count}"
+			WHERE NEWS_CODE = "{news_code}"
+		""")
+
+	return HttpResponse(after_count, content_type="text/json-comment-filtered")
+
+kkma = Kkma()
+def text_mining(request) :
+	car_news_list = TblTotalCarNewsList.objects.all()
+	except_keyword_list = []
+	context = {}
+	result_data = []
+	result_data2 = []
+
+	for idx in range(5) :
+		insert_data = []
+		insert_word_list = []
+		summary = car_news_list[idx].news_summary
+		insert_data.append(summary)
+		for keyword in kkma.pos(summary) :
+			if (keyword not in except_keyword_list) and len(keyword) > 1 :
+				insert_word_list.append(keyword)
+		insert_data.append(insert_word_list)
+	
+		result_data.append(insert_data)
+	
+	for idx in range(5) :
+		insert_data = []
+		insert_word_list = []
+		summary = car_news_list[idx].news_summary
+		insert_data.append(summary)
+		for keyword in kkma.nouns(summary) :
+			if (keyword not in except_keyword_list) and len(keyword) > 1 :
+				insert_word_list.append(keyword)
+		insert_data.append(insert_word_list)
+	
+		result_data2.append(insert_data)
+		
+	context['wordlist'] = result_data
+	context['wordlist2'] = result_data2
+		
+
+
+	return render(request, 'website/text_mining.html', context)
 
 
 # 회원
 def login(request) :
+
+	text_mining()
+
+
 	newsList = TblTotalCarNewsList.objects.all().filter(media_code=100)
 
 	if request.method == 'POST' : 

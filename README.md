@@ -1,23 +1,24 @@
-# 카뉴스집 (car_news.zip)
+# 카뉴스.zip 🙈 (car_news.zip)
 ### 8개 자동차 관련 언론사에서 뉴스 스크래핑 및 분석
 
 ### 정보
 - 접속 URL : <a href="http://carnewszip.com">http://carnewszip.com</a>
 - 테이블 명세서 : <a href="https://docs.google.com/spreadsheets/d/1TOZSDXpLZaXQhyP-K11WmGR_dQ1tswQc181uI90sgF4/edit#gid=0">https://docs.google.com/spreadsheets/d/1TOZSDXpLZaXQhyP-K11WmGR_dQ1tswQc181uI90sgF4/edit#gid=0</a>
-- 9개 자동차 언론사 : 오토헤럴드, 데일리카, 오토뷰, IT조선, 오토모닝, 오토다이어리, 카가이, 더드라이브
+- 8개 자동차 언론사 : 오토헤럴드, 데일리카, 오토뷰, IT조선, 오토모닝, 오토다이어리, 카가이, 더드라이브
 
 ---
 
 ### 추가해야할 기능
+- <del>뉴스 클릭 수 카운팅 (표시) >> 2020.12.15</del>
 - <del>뉴스 목록 페이징 처리 (스크롤 로드 방식) >> 2020.12.15</del>
 - <del>회원(회원가입) >> 2020.12.08</del>
 - <del>회원(로그인) >> 2020.12.07</del>
 - <del>테마 (light모드, dark모드) >> 2020.12.01</del>
 - <del>get_data.py 코드 리팩토링 >> 2020.12.01</del>
 - 좋아요 기능 (좋아요 테이블 추가)
-- 뉴스 클릭 수 카운팅 (표시)
 - 메뉴 기능 추가 (각 카테고리별 언론사 보기, 언론사별 뉴스 모아보기)
 - 카뉴스집 소개 구성 (간단하게)
+- Template 공통 코드 처리 (include)
 
 ---
 
@@ -27,6 +28,7 @@
   - 기능 구현
 - 네이버 서치어드바이저, 구글 서치콘솔 사이트 등록
 - 뉴스 카운트 기능 추가 (기사별 클릭 횟수)
+- 뉴스 list Template 개선 
 
 #### 2020.12.14 (월)
 > 현재 각 언론사 목록 페이지에서 뉴스 제목, 요약내용만 가져오고 있는 상황(기사별 2~3줄)  

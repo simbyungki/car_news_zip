@@ -19,7 +19,7 @@ class TblMemberList(models.Model) :
 
 # 통합 뉴스 TABLE
 class TblTotalCarNewsList(models.Model):
-	objects = models.Manager()
+	# objects = models.Manager()
 	news_no = models.AutoField(db_column='NEWS_NO', primary_key=True)
 	news_category = models.CharField(db_column='NEWS_CATEGORY', max_length=10, blank=True, null=True, verbose_name='뉴스 카테고리')
 	media_code = models.CharField(db_column='MEDIA_CODE', max_length=50, blank=True, null=True)
@@ -37,5 +37,5 @@ class TblTotalCarNewsList(models.Model):
 	class Meta:
 		managed = False
 		db_table = 'TBL_TOTAL_CAR_NEWS_LIST'
-		verbose_name = '자동차 뉴스 ZIP'
-		verbose_name_plural = '자동차 뉴스 ZIP'
+		verbose_name = '자동차 뉴스.zip'
+		verbose_name_plural = '자동차 뉴스.zip'

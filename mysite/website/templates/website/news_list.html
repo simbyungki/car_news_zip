@@ -124,7 +124,13 @@
 		</div>
 		<div class="item-list">
 			<div class="inner">
-				<p class="txt-guide">* 뉴스 기사를 클릭하면 해당 뉴스로 이동됩니다.</p>
+				<div class="list-top">
+					<p class="txt-guide">* 뉴스 기사를 클릭하면 해당 뉴스로 이동됩니다.</p>
+					<div class="list-type">
+						<button type="button" class="btn type01 active"></button>
+						<button type="button" class="btn type02"></button>
+					</div>
+				</div>
 				<ul class="news-group show"></ul>
 			</div>
 		</div>
@@ -212,6 +218,11 @@
 			var nowCount = $(this).siblings('.infos').find('.view-cnt').children('strong').text();
 			var newsCode = $(this).parent('li').data('news-code');
 			viewCountUp(idx, nowCount, newsCode)
+		});
+
+		$(document).on('click', '.item-list ul li .btn-like', function(){
+			alert('카뉴스.zip 회원 전용 기능입니다.');
+			location.href='/login';
 		});
 		
 		$(window).on('scroll', function(e){

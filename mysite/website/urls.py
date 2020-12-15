@@ -10,4 +10,6 @@ urlpatterns = [
 	path('join/', views.join, name='join'),
 	path('list_data', views.list_data, name='list_data'),
 	path('view_count', views.view_count, name='view_count'),
+	path('text_mining', views.text_mining, name='text_mining'),
+	
 ]
