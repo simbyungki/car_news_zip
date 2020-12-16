@@ -27,7 +27,12 @@
 
 ### History
 #### 2020.12.16 (수)
-- 뉴스 기사 분석을 위한 테이블 설계
+> 테이블 추가 및 컬럼 변경으로 인한 DB정리  ,
+inspectdb > local, server migration 완료..  
+(작업 환경마다 꼬여있어서 migrations 못하고 있었음..) 
+DB수정할때마다 잊지말고 inspectdb!
+- DB정리 (local,server migrations)
+- 뉴스 기사 분석을 위한 테이블 설계/생성
 - 뉴스 본문 어절 분리
 - 형태소 분석 테스트 (Konlpy, Kkma)
 
