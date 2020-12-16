@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import auth
-from .models import TblTotalCarNewsList
-from .models import TblMemberList
+from .models import TblTotalCarNewsList, TblMemberList, TblNewsKeywordList, TblNewsKeywordMap
 from datetime import datetime
 from django.http import HttpResponse
 from django.core import serializers
@@ -972,7 +971,6 @@ def execute(query, bufferd=True) :
 	try :
 		cursor = dbconn.cursor(buffered=bufferd)
 		cursor.execute(query)
-		dbconn.commit()
 	except Exception as e :
 		dbconn.rollback()
 		raise e
@@ -1389,7 +1387,9 @@ def insert_industry_db() :
 # 뉴스 기사 상세 크롤링 > INSERT 
 # 오토헤럴드
 def get_auto_h_detail() :
-	newsList = TblTotalCarNewsList.objects.all().filter(media_code=100)	
+	newsList = TblTotalCarNewsList.objects.all().filter(media_code=100).filter(news_content='')
+	print('-'*30)
+	print('오토헤럴드')
 	try :
 		print('ㅡㅡㅡ'*30)
 		for idx in range(len(newsList)) : 
@@ -1411,19 +1411,19 @@ def get_auto_h_detail() :
 				time.sleep(3)
 				print(f'{newsList.values()[idx].get("news_code")} :: 기사 본문 스크랩 완료! [{idx + 1} / {len(newsList)}]')
 			except Exception as e :
-				print(f'***** + error! >> {e}')	
+				print(f'*+++++ + error! >> {e}')	
 			print('ㅡㅡㅡ'*30)
 	except Exception as e :
 		print(f'***** + error! >> {e}')	
 	finally : 
-		print('DB Commit 완료!')
-		print('DB Close 완료!')
 
 		return redirect('/')
 
 # 데일리카
 def get_dailycar_detail() :
-	newsList = TblTotalCarNewsList.objects.all().filter(media_code=200)	
+	newsList = TblTotalCarNewsList.objects.all().filter(media_code=200).filter(news_content='')
+	print('-'*30)
+	print('데일리카')
 	try :
 		print('ㅡㅡㅡ'*30)
 		for idx in range(len(newsList)) : 
@@ -1445,19 +1445,21 @@ def get_dailycar_detail() :
 				time.sleep(3)
 				print(f'{newsList.values()[idx].get("news_code")} :: 기사 본문 스크랩 완료! [{idx + 1} / {len(newsList)}]')
 			except Exception as e :
-				print(f'***** + error! >> {e}')	
+				print(f'*+++++ + error! >> {e}')	
 			print('ㅡㅡㅡ'*30)
 	except Exception as e :
 		print(f'***** + error! >> {e}')	
 	finally : 
+		dbconn.commit()
 		print('DB Commit 완료!')
-		print('DB Close 완료!')
 
 		return redirect('/')
 
 # 오토뷰
 def get_autoview_detail() :
-	newsList = TblTotalCarNewsList.objects.all().filter(media_code=300)	
+	newsList = TblTotalCarNewsList.objects.all().filter(media_code=300).filter(news_content='')
+	print('-'*30)
+	print('오토뷰')
 	try :
 		print('ㅡㅡㅡ'*30)
 		for idx in range(len(newsList)) : 
@@ -1479,19 +1481,21 @@ def get_autoview_detail() :
 				time.sleep(3)
 				print(f'{newsList.values()[idx].get("news_code")} :: 기사 본문 스크랩 완료! [{idx + 1} / {len(newsList)}]')
 			except Exception as e :
-				print(f'***** + error! >> {e}')	
+				print(f'*+++++ + error! >> {e}')	
 			print('ㅡㅡㅡ'*30)
 	except Exception as e :
 		print(f'***** + error! >> {e}')	
 	finally : 
+		dbconn.commit()
 		print('DB Commit 완료!')
-		print('DB Close 완료!')
-
+		
 		return redirect('/')
 
 # IT조선
 def get_it_chosun_detail() :
-	newsList = TblTotalCarNewsList.objects.all().filter(media_code=400)	
+	newsList = TblTotalCarNewsList.objects.all().filter(media_code=400).filter(news_content='')
+	print('-'*30)
+	print('IT조선')
 	try :
 		print('ㅡㅡㅡ'*30)
 		for idx in range(len(newsList)) : 
@@ -1513,19 +1517,21 @@ def get_it_chosun_detail() :
 				time.sleep(3)
 				print(f'{newsList.values()[idx].get("news_code")} :: 기사 본문 스크랩 완료! [{idx + 1} / {len(newsList)}]')
 			except Exception as e :
-				print(f'***** + error! >> {e}')	
+				print(f'*+++++ + error! >> {e}')	
 			print('ㅡㅡㅡ'*30)
 	except Exception as e :
 		print(f'***** + error! >> {e}')	
 	finally : 
+		dbconn.commit()
 		print('DB Commit 완료!')
-		print('DB Close 완료!')
-
+		
 		return redirect('/')
 
 # 오토모닝
 def get_auto_morning_detail() :
-	newsList = TblTotalCarNewsList.objects.all().filter(media_code=500)	
+	newsList = TblTotalCarNewsList.objects.all().filter(media_code=500).filter(news_content='')
+	print('-'*30)
+	print('오토모닝')
 	try :
 		print('ㅡㅡㅡ'*30)
 		for idx in range(len(newsList)) : 
@@ -1547,19 +1553,21 @@ def get_auto_morning_detail() :
 				time.sleep(3)
 				print(f'{newsList.values()[idx].get("news_code")} :: 기사 본문 스크랩 완료! [{idx + 1} / {len(newsList)}]')
 			except Exception as e :
-				print(f'***** + error! >> {e}')	
+				print(f'*+++++ + error! >> {e}')	
 			print('ㅡㅡㅡ'*30)
 	except Exception as e :
 		print(f'***** + error! >> {e}')	
 	finally : 
+		dbconn.commit()
 		print('DB Commit 완료!')
-		print('DB Close 완료!')
-
+		
 		return redirect('/')
 
 # 오토다이어리
 def get_auto_diary_detail() :
-	newsList = TblTotalCarNewsList.objects.all().filter(media_code=600)	
+	newsList = TblTotalCarNewsList.objects.all().filter(media_code=600).filter(news_content='')
+	print('-'*30)
+	print('오토다이어리')
 	try :
 		print('ㅡㅡㅡ'*30)
 		for idx in range(len(newsList)) : 
@@ -1580,19 +1588,21 @@ def get_auto_diary_detail() :
 				time.sleep(3)
 				print(f'{newsList.values()[idx].get("news_code")} :: 기사 본문 스크랩 완료! [{idx + 1} / {len(newsList)}]')
 			except Exception as e :
-				print(f'***** + error! >> {e}')	
+				print(f'*+++++ + error! >> {e}')	
 			print('ㅡㅡㅡ'*30)
 	except Exception as e :
 		print(f'***** + error! >> {e}')	
 	finally : 
+		dbconn.commit()
 		print('DB Commit 완료!')
-		print('DB Close 완료!')
-
+		
 		return redirect('/')
 
 # 카가이
 def get_carguy_detail() :
-	newsList = TblTotalCarNewsList.objects.all().filter(media_code=700)	
+	newsList = TblTotalCarNewsList.objects.all().filter(media_code=700).filter(news_content='')
+	print('-'*30)
+	print('카가이')
 	try :
 		print('ㅡㅡㅡ'*30)
 		for idx in range(len(newsList)) : 
@@ -1613,19 +1623,21 @@ def get_carguy_detail() :
 				time.sleep(3)
 				print(f'{newsList.values()[idx].get("news_code")} :: 기사 본문 스크랩 완료! [{idx + 1} / {len(newsList)}]')
 			except Exception as e :
-				print(f'***** + error! >> {e}')	
+				print(f'*+++++ + error! >> {e}')	
 			print('ㅡㅡㅡ'*30)
 	except Exception as e :
 		print(f'***** + error! >> {e}')	
 	finally : 
+		dbconn.commit()
 		print('DB Commit 완료!')
-		print('DB Close 완료!')
-
+		
 		return redirect('/')
 
 # 더드라이브
 def get_the_drive_detail() :
-	newsList = TblTotalCarNewsList.objects.all().filter(media_code=800)	
+	newsList = TblTotalCarNewsList.objects.all().filter(media_code=800).filter(news_content='')
+	print('-'*30)
+	print('더드라이브')
 	try :
 		print('ㅡㅡㅡ'*30)
 		for idx in range(len(newsList)) : 
@@ -1646,18 +1658,33 @@ def get_the_drive_detail() :
 				time.sleep(3)
 				print(f'{newsList.values()[idx].get("news_code")} :: 기사 본문 스크랩 완료! [{idx + 1} / {len(newsList)}]')
 			except Exception as e :
-				print(f'***** + error! >> {e}')	
+				print(f'*+++++ + error! >> {e}')	
 			print('ㅡㅡㅡ'*30)
 	except Exception as e :
 		print(f'***** + error! >> {e}')	
 	finally : 
+		dbconn.commit()
 		print('DB Commit 완료!')
-		print('DB Close 완료!')
-
+		
 		return redirect('/')
 
-# 상세 뉴스 불러오기
-def load_detail_content() :
+
+# 목록 데이터 다시 불러오기
+def reload_list_data(request) :
+	insert_used_db()
+	insert_new_db()
+	insert_review_db()
+	insert_industry_db()
+
+	dbconn.commit()
+	print('DB Commit 완료!')
+	dbconn.close()
+	print('DB Close 완료!')
+
+	return redirect('/')
+
+# 뉴스 상세 내용 가져오기
+def load_detail_data(request) :
 	get_auto_h_detail()
 	get_dailycar_detail()
 	get_autoview_detail()
@@ -1667,24 +1694,11 @@ def load_detail_content() :
 	get_carguy_detail()
 	get_the_drive_detail()
 
-	# dbconn.commit()
-	print('DB Commit 완료!')
-	# dbconn.close()
-	print('DB Close 완료!')
-
-# 데이터 다시 불러오기
-def reload_data(request) :
-	insert_used_db()
-	insert_new_db()
-	insert_review_db()
-	insert_industry_db()
-
-	# dbconn.commit()
-	print('DB Commit 완료!')
-	# dbconn.close()
+	dbconn.close()
 	print('DB Close 완료!')
 
 	return redirect('/')
+
 
 
 # 목록
@@ -1756,29 +1770,31 @@ def view_count(request) :
 
 	return HttpResponse(after_count, content_type="text/json-comment-filtered")
 
-kkma = Kkma()
 def text_mining(request) :
+	kkma = Kkma()
 	car_news_list = TblTotalCarNewsList.objects.all()
 	except_word_list = []
 	except_keyword_list = []
 	context = {}
 	result_data = []
-	in_result_data = []
+	origin_sentence_list = []
 
-	print(car_news_list[0].news_summary)
-	for idx in range(1) :
+	# print(car_news_list[0].news_summary)
+	for idx in range(3) :
 		re_summary = regex.findall(r'\p{Hangul}+', f'{car_news_list[idx].news_summary}')
+		origin_sentence_list.append(car_news_list[idx].news_summary)
 		print(re_summary)
 		# print('-'*50)
+		in_result_data = []
 		for word in re_summary :
 			in_result_word = []	
 			group = []
-			if (word not in except_word_list) and len(word) > 1 :
+			if (word not in except_word_list) :
 				group.append(word)
 				# print(word)
 				# print('-'*50)
 				for keyword in kkma.pos(word) :
-					if (keyword not in except_keyword_list) and len(keyword[0]) > 1 :
+					if (keyword not in except_keyword_list) :
 						# print(keyword)
 						# print('-'*50)
 						in_result_word.append(keyword)
@@ -1786,7 +1802,10 @@ def text_mining(request) :
 				group.append(in_result_word)
 			in_result_data.append(group)
 		result_data.append(in_result_data)
-	print(in_result_data)
+
+	print(result_data)
+	context['mining_result_list'] = result_data
+	context['origin_sentence_list'] = origin_sentence_list
 	
 	return render(request, 'website/text_mining.html', context)
 

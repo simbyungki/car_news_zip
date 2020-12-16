@@ -49,7 +49,7 @@
 			<span>
 				{% if user %}
 					{% if user == '심병기' %}
-					<a href="{% url 'reload_data' %}" title="숨은기능 : 데이터 새로 받아오기 (약 1분 소요)" class="btn-reload-data">
+					<a href="{% url 'reload_list_data' %}" title="숨은기능 : 데이터 새로 받아오기 (약 1분 소요)" class="btn-reload-data">
 					[{{ today_date }} {{ user }}님만을 위한 뉴스!]</a>
 					{% else %}
 					[{{ today_date }} {{ user }}님만을 위한 뉴스!]
