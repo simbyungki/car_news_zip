@@ -1793,10 +1793,6 @@ def text_mining(request) :
 
 # 회원
 def login(request) :
-
-	text_mining()
-
-
 	newsList = TblTotalCarNewsList.objects.all().filter(media_code=100)
 
 	if request.method == 'POST' : 
