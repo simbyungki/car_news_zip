@@ -1786,6 +1786,7 @@ def text_mining(request) :
 		print(re_summary)
 		# print('-'*50)
 		in_result_data = []
+		in_result_data.append(car_news_list[idx].news_no)
 		for word in re_summary :
 			in_result_word = []	
 			group = []

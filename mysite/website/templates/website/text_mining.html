@@ -66,10 +66,10 @@
 				<ul>
 					{% for mining_result in mining_result_list %}
 						<li>
-							<p class="origin">{{ origin_sentence_list | get_at_index:forloop.counter0 }}</p>
+							<p class="origin">{{ mining_result.0 }}. {{ origin_sentence_list | get_at_index:forloop.counter0 }}</p>
 							<div class="result">
 							{% for mining in mining_result %}
-								<strong>{{ mining.0 }} : </strong>
+								<strong> {{ mining.0 }} : </strong>
 								<p>{{ mining.1 }}</p>
 							{% endfor %}	
 							</div>
