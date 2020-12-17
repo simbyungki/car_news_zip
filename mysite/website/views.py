@@ -1451,7 +1451,7 @@ def get_dailycar_detail() :
 		print(f'***** + error! >> {e}')	
 	finally : 
 		dbconn.commit()
-		print('DB Commit 완료!')
+		print('DB Commit / Close 완료!')
 
 		return redirect('/')
 
@@ -1773,7 +1773,7 @@ def view_count(request) :
 # 뉴스 분석
 def text_mining(request) :
 	kkma = Kkma()
-	car_news_list = TblTotalCarNewsList.objects.all()
+	car_news_list = TblTotalCarNewsList.objects.all().filter(mining_status=1)
 	news_keyword_map = TblNewsKeywordMap.objects.all()
 	except_word_list = []
 	except_keyword_list = []
@@ -1784,7 +1784,7 @@ def text_mining(request) :
 
 	# print(car_news_list[0].news_summary)
 	try :
-		for idx in range(10) :
+		for idx in range(3) :
 			re_content = regex.findall(r'\p{Hangul}+', f'{car_news_list[idx].news_content}')
 			origin_sentence_list.append(car_news_list[idx].news_summary)
 			# print(re_summary)
@@ -1821,37 +1821,48 @@ def text_mining(request) :
 					print('*** : ', data[0])
 					origin_word = re.sub('[-=.#/?:$}\"\']', '', str(data[0])).replace('[','').replace(']','')
 					for word in data[1] :
-						# print('>>> : ', word[0])
-						# print('>>> : ', word[1])
-						print(f'{word[0]} / {word[1]} >>> INSERT')
-						# INSERT
-						execute(f"""
-							INSERT IGNORE INTO TBL_NEWS_KEYWORD_LIST 
-							(
-								WORD_MORPHEME, WORD_CLASS
-							) 
-							VALUES (
-								"{word[0]}", "{word[1]}"
-							)
-						""")
-						time.sleep(0.3)
-						execute(f"""
-							INSERT IGNORE INTO TBL_NEWS_KEYWORD_MAP 
-							(
-								WORD_ORIGIN, WORD_MORPHEME,
-								NEWS_NO, WORD_COUNT
-							) 
-							VALUES (
-								"{origin_word}", "{word[0]}",
-								"{news_no}", 1
-							)
-						""")
-						dbconn.commit()
-						print(f'{car_news_list[idx].news_no} : 분석 / INSER 완료')
+						try : 
+							# print('>>> : ', word[0])
+							# print('>>> : ', word[1])
+							# print(f'{word[0]} / {word[1]} >>> INSERT')
+							# INSERT
+							execute(f"""
+								INSERT IGNORE INTO TBL_NEWS_KEYWORD_LIST 
+								(
+									WORD_MORPHEME, WORD_CLASS
+								) 
+								VALUES (
+									"{word[0]}", "{word[1]}"
+								)
+							""")
+							print(f'{word[0]} / {word[1]} KEYWORD 추가 완료!')
+							execute(f"""
+								INSERT IGNORE INTO TBL_NEWS_KEYWORD_MAP 
+								(
+									WORD_ORIGIN, WORD_MORPHEME,
+									NEWS_NO, WORD_COUNT
+								) 
+								VALUES (
+									"{origin_word}", "{word[0]}",
+									"{news_no}", 1
+								)
+							""")
+							print(f'{word[0]} / {word[1]} KEYWORD 매핑 완료!')
+							execute(f"""
+								UPDATE TBL_TOTAL_CAR_NEWS_LIST
+								SET MINING_STATUS = 3
+								WHERE NEWS_NO = {news_no}
+							""")
+							dbconn.commit()
+							
+							print(f'[{car_news_list[idx].news_no}] >> 분석 / INSERT 완료')
+						except Exception as e :
+							print(f'****** + error! >> {e}')
 	except Exception as e :
 		print(f'*+++++ + error! >> {e}')	
 	finally : 
 		# dbconn.commit()
+		dbconn.close()
 		print('전체 완료!')
 							
 		context['mining_result_list'] = result_data
