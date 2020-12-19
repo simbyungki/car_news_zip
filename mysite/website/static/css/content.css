@@ -17,7 +17,7 @@
 #wrap.darkmode .header .gnb-box .box .menu > ul > li > ul,
 #wrap.darkmode .header .gnb-box .box .menu > ul > li > li a {color:#999;}
 
-.header {position:fixed; top:0; left:0; z-index:200; padding-top:24px; width:100%; height:120px; text-align:center; border-bottom:1px solid #ddd; background:#fff; box-sizing:border-box; border:2px solid #fff;}
+.header {position:fixed; top:0; left:0; z-index:200; padding-top:24px; width:100%; height:120px; text-align:center; border-bottom:1px solid #ddd; background:#fff; box-sizing:border-box;}
 .header .btn-gnb {position:absolute; left:5%; z-index:100; width:60px; height:60px; -webkit-box-sizing:border-box; box-sizing:border-box; background:#fff; transition:all .3s; border:3px solid #444;}
 .header .btn-gnb:before, 
 .header .btn-gnb:after {display:block; content:""; position:absolute; left:50%; top:50%; width:36px; height:3px; background:#000; -webkit-transform:translateX(-50%); transform:translateX(-50%); -webkit-transition:all 0.35s cubic-bezier(0.23, 1, 0.32, 1); transition:all 0.35s cubic-bezier(0.23, 1, 0.32, 1);}

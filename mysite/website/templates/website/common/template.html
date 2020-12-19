@@ -1,5 +1,4 @@
 {% load static %}
-{% load custom_tags %}
 
 <!DOCTYPE html>
 <html lang="ko">
@@ -26,7 +25,7 @@
 	<meta property="og:description" content="카뉴스.zip, 자동차 뉴스, 중고차 뉴스, 신차 뉴스, 자동차 시승기">
 	<meta name="naver-site-verification" content="c7ce06c9ed9736eb46db21ed102e4dea95dfe089" />
 	<meta name="google-site-verification" content="jt2p5-PNGgED4Z5xiMbyiENXRz7QGQtd6HxuQbAHYWw" />
-	<title>텍스트 분석 | 카뉴스.zip 🙈</title>
+	<title>카뉴스.zip 🙈</title>
 	<link rel="shortcut icon" href="{% static 'favico.png' %}" />
 	<!-- CSS -->
 	<link rel="stylesheet" href="{% static 'css/reset.css' %}">
@@ -107,63 +106,13 @@
 			</div>
 		</section>
 	</header>
-	<section class="container" style="padding:40px 0;">
-<style>
-.box {margin:0 auto; width:1100px; zoom:1;}
-.box .title {display:block; height:55px; line-height:55px;  font-size:30px; text-align:center;}
-.box .origin {margin-top:10px; font-size:26px;}
-.word-list {border-bottom:1px solid #ddd;}
-.word-list li {padding:20px; border-top:1px solid #ddd; zoom:1;}
-.word-list li:after {display:block; content:""; clear:both;}
-.word-list li .result {margin-top:10px;}
-.word-list li .result strong {float:left; line-height:26px; font-size:20px;}
-.word-list li .result p {float:left; margin:0 6px 0 4px; line-height:26px; font-size:16px;}
-</style>
-		<div class="box">
-			<div class="word-list left">
-				<strong class="title">Kkma.pos()</strong>
-				{% comment %} {{ mining_result_list.0 }} {% endcomment %}
-				<ul>
-					{% for mining_result in mining_result_list %}
-						<li>
-							<p class="origin">{{ mining_result.0 }}. {{ origin_sentence_list | get_at_index:forloop.counter0 }}</p>
-							<div class="result">
-							{% for mining in mining_result %}
-								<strong> {{ mining.0 }} : </strong>
-								<p>{{ mining.1 }}</p>
-							{% endfor %}	
-							</div>
-						</li>
-					{% endfor %}
-				</ul>
-				<!-- <ul>
-			{% for words in wordlist %}
-					<li>
-						<strong>{{ words.0 }}</strong>
-						<p>{{ words.1 }}</p>
-					</li>
-			{% endfor %}
-				</ul>
-			</div>
-			<div class="word-list right">
-				<strong class="title">Kkma.nouns()</strong>
-				<ul>
-			{% for words in wordlist2 %}
-					<li>
-						<strong>{{ words.0 }}</strong>
-						<p>{{ words.1 }}</p>
-					</li>
-			{% endfor %}
-				</ul> -->
-			</div>
-		</div>
-	</section>
-</div>
 
+	{% block content %}{% endblock %}
+	
 <!-- Javascript -->
-<script type="text/javascript" src="/static/js/jquery-1.12.4.min.js"></script>
-<script type="text/javascript" src="/static/js/jquery-ui.min.js"></script>
-<script type="text/javascript" src="/static/js/swiper.min.js"></script>
-<script type="text/javascript" src="/static/js/common.js"></script>
+<script type="text/javascript" src="{% static 'js/jquery-1.12.4.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery-ui.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/swiper.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/common.js' %}"></script>
 </body>
 </html>
