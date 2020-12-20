@@ -971,6 +971,7 @@ def execute(query, bufferd=True) :
 	try :
 		cursor = dbconn.cursor(buffered=bufferd)
 		cursor.execute(query)
+		dbconn.close()
 	except Exception as e :
 		dbconn.rollback()
 		raise e
@@ -1678,7 +1679,6 @@ def reload_list_data(request) :
 
 	dbconn.commit()
 	print('목록 데이터 다시 불러오기 DB Commit 완료!')
-	dbconn.close()
 	print('목록 데이터 다시 불러오기 DB Close 완료!')
 
 	return redirect('/')
@@ -1696,7 +1696,6 @@ def load_detail_data(request) :
 	
 	dbconn.commit()
 	print('뉴스 상세 내용 가져오기 DB Commit 완료!')
-	dbconn.close()
 	print('뉴스 상세 내용 가져오기 DB Close 완료!')
 
 	return redirect('/')
@@ -1871,11 +1870,9 @@ def text_mining(request) :
 	except Exception as e :
 		print(f'+++[{out_idx}]+++ + error! >> {e}')
 		print('오류로 프로그램 종료됨!')
-		pass
 	finally : 
-		dbconn.close()
 		print('ㅡㅡ'*50)
-		print('작업 완료!')
+		print('DB CLOSE / 작업 완료!')
 		print('ㅡㅡ'*50)
 		
 		return redirect('/text_mining_result/')
