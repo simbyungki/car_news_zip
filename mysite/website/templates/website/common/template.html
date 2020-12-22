@@ -1,5 +1,4 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -46,7 +45,11 @@
 	</script>	
 </head>
 <body>
+{% if page_group == 'login-p' or page_group == 'join-p' %}
+<div id="wrap" class="member-p">
+{% else %}
 <div id="wrap">
+{% endif %}
 	<header class="header">
 		<a href="javascript:;" class="btn-gnb" title="메뉴"></a>
 		<h1 class="service-name">
@@ -71,10 +74,18 @@
 				<a href="/join/" class="btn-logout">회원가입</a>
 				<a href="/login/" class="btn-logout">로그인</a>
 			{% endif %}
-			<select name="" id="" class="view-mode-changer">
-				<option value="dark">Dark mode</option>
-				<option value="light" selected>Light mode</option>
-			</select>
+			<div class="box">
+				<select name="" id="" class="view-mode-changer">
+					<option value="dark">Dark mode</option>
+					<option value="light" selected>Light mode</option>
+				</select>
+				<button type="button" title="검색창 열기" class="btn-open-search">🔍</button>
+			</div>
+			<div class="search-box">
+				<button type="button" class="btn-close">X</button>
+				<input type="text" id="" name="" placeholder="검색할 단어를 입력해주세요.">
+				<button type="button" class="btn-search">검색</button>
+			</div>
 		</div>
 		<section class="gnb-box">
 			<div class="dim"></div>
@@ -109,10 +120,3 @@
 
 	{% block content %}{% endblock %}
 	
-<!-- Javascript -->
-<script type="text/javascript" src="{% static 'js/jquery-1.12.4.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/jquery-ui.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/swiper.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/common.js' %}"></script>
-</body>
-</html>

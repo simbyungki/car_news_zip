@@ -971,10 +971,20 @@ def execute(query, bufferd=True) :
 	try :
 		cursor = dbconn.cursor(buffered=bufferd)
 		cursor.execute(query)
-		dbconn.close()
 	except Exception as e :
 		dbconn.rollback()
 		raise e
+
+def execute2(query, bufferd=True) :
+	global dbconn
+	cursor = dbconn.cursor(buffered=bufferd)
+	try :
+		cursor.execute(query)
+	except Exception as e :
+		dbconn.rollback()
+		raise e
+
+
 
 # 중고차 뉴스 INSERT
 def insert_used_db() :
@@ -1049,13 +1059,14 @@ def insert_used_db() :
 						) 
 					""")
 		
-		print('ㅡ'*50)
-		print('중고차 관련 기사 수집 및 DB저장 완료!')
-		print('ㅡ'*50)
 	except Exception as e :
 		print(f'***** + error! >> {e}')	
 	finally : 
-		pass
+		dbconn.commit()
+		
+		print('ㅡ'*50)
+		print('중고차 관련 기사 수집 및 DB저장 완료!')
+		print('ㅡ'*50)
 
 # 신차 뉴스 INSERT
 def insert_new_db() :
@@ -1145,13 +1156,13 @@ def insert_new_db() :
 						) 
 					""")
 
-		print('ㅡ'*50)
-		print('신차 관련 기사 수집 및 DB저장 완료!')
-		print('ㅡ'*50)
 	except Exception as e :
 		print(f'***** + error! >> {e}')	
 	finally : 
-		pass
+		dbconn.commit()
+		print('ㅡ'*50)
+		print('신차 관련 기사 수집 및 DB저장 완료!')
+		print('ㅡ'*50)
 	
 # 시승기 INSERT
 def insert_review_db() :
@@ -1265,13 +1276,14 @@ def insert_review_db() :
 							NOW(), 1
 						) 
 					""")
-		print('ㅡ'*50)
-		print('시승기 수집 및 DB저장 완료!')
-		print('ㅡ'*50)
+		
 	except Exception as e :
 		print(f'***** + error! >> {e}')	
 	finally : 
-		pass
+		dbconn.commit()
+		print('ㅡ'*50)
+		print('시승기 수집 및 DB저장 완료!')
+		print('ㅡ'*50)
 
 # 자동차 업계 뉴스 INSERT
 def insert_industry_db() :
@@ -1376,13 +1388,14 @@ def insert_industry_db() :
 							NOW(), 1
 						) 
 					""")
-		print('ㅡ'*50)
-		print('자동차 업계 뉴스 수집 및 DB저장 완료!')
-		print('ㅡ'*50)
+		
 	except Exception as e :
 		print(f'***** + error! >> {e}')	
 	finally : 
-		pass
+		dbconn.commit()
+		print('ㅡ'*50)
+		print('자동차 업계 뉴스 수집 및 DB저장 완료!')
+		print('ㅡ'*50)
 
 
 # 뉴스 기사 상세 크롤링 > INSERT 
@@ -1677,7 +1690,7 @@ def reload_list_data(request) :
 	insert_review_db()
 	insert_industry_db()
 
-	dbconn.commit()
+	dbconn.close()
 	print('목록 데이터 다시 불러오기 DB Commit 완료!')
 	print('목록 데이터 다시 불러오기 DB Close 완료!')
 
@@ -1696,6 +1709,7 @@ def load_detail_data(request) :
 	
 	dbconn.commit()
 	print('뉴스 상세 내용 가져오기 DB Commit 완료!')
+	dbconn.close()
 	print('뉴스 상세 내용 가져오기 DB Close 완료!')
 
 	return redirect('/')
@@ -1705,15 +1719,15 @@ def load_detail_data(request) :
 # 목록
 def news_list(request) :
 	today_date = datetime.today().strftime('%Y-%m-%d')
-	res_data = {'today_date': today_date}
+	context = {'today_date': today_date}
 	user_id = request.session.get('user')
 	if user_id :
 		memb_name = TblMemberList.objects.filter(memb_id=user_id).values()[0].get('memb_name')
-		res_data['user'] = memb_name
+		context['user'] = memb_name
 	else : 
-		res_data['user'] = None
+		context['user'] = None
 
-	return render(request, 'website/news_list.html', res_data)
+	return render(request, 'website/news_list.html', context)
 
 # 뉴스 목록 가져오기 ajax
 def list_data(request) :
@@ -1783,10 +1797,16 @@ def text_mining(request) :
 	context = {}
 	origin_sentence_list = []
 	news_no = 0
+	user_id = request.session.get('user')
+	if user_id :
+		memb_name = TblMemberList.objects.filter(memb_id=user_id).values()[0].get('memb_name')
+		context['user'] = memb_name
+	else : 
+		context['user'] = None
 
 	# print(car_news_list[0].news_summary)
 	for idx in range(20) :
-		re_content = regex.findall(r'\p{Hangul}+', f'{car_news_list[idx].news_content}')
+		re_content = regex.findall(r'[\p{Hangul}|\p{Latin}|\p{Han}]+', f'{car_news_list[idx].news_content}')
 		origin_sentence_list.append(car_news_list[idx].news_summary)
 		# print(re_summary)
 		# print('-'*50)
@@ -1811,109 +1831,128 @@ def text_mining(request) :
 		mining_result_data.append(in_result_data)
 
 	# print(mining_result_data)
-	try :
-		for out_idx, data_list in enumerate(mining_result_data) :
-			try : 
+	
+	for out_idx, data_list in enumerate(mining_result_data) :
+		try :
+			# print(data_list)
+			if out_idx == (len(mining_result_data) -1) :
+				print('ㅡ'*50)
+				print('바깥쪽 break!')
+				break
+			else :
 				for idx, data in enumerate(data_list) :
-					# idx = 0 >> 형태소 분석 전 단어
-					if idx == 0 :
-						news_no = data_list[0]
-					elif idx == (len(data_list) -1) :
-						pass
-					else : 
-						origin_word = re.sub('[-=.#/?:$}\"\']', '', str(data[0])).replace('[','').replace(']','')
-						print(f'*** : [{out_idx}/{len(mining_result_data)}][{idx}/{len(data_list)}][{news_no}][{origin_word}]')
-						# print('-'*50)
-						# print(f'[{car_news_list[idx].news_no}] >> 분석 / INSERT / DB COMMIT 완료')
-						# print('-'*50)
-						for word in data[1] :
-							# print('>>> : ', word[0])
-							# print('>>> : ', word[1])
-							# print(f'{word[0]} / {word[1]} >>> INSERT')
-							# INSERT
-							execute(f"""
-								INSERT IGNORE INTO TBL_NEWS_KEYWORD_LIST 
-								(
-									WORD_MORPHEME, WORD_CLASS
-								) 
-								VALUES (
-									"{word[0]}", "{word[1]}"
-								)
-							""")
-							execute(f"""
-								INSERT IGNORE INTO TBL_NEWS_KEYWORD_MAP 
-								(
-									WORD_ORIGIN, WORD_MORPHEME,
-									NEWS_NO, WORD_COUNT
-								) 
-								VALUES (
-									"{origin_word}", "{word[0]}",
-									"{news_no}", 1
-								)
-							""")
-							print(f'[{idx}/{len(data_list)}][{origin_word}] >> {word[0]} / {word[1]} / KEYWORD 추가 및 뉴스 매핑 완료!')
-							execute(f"""
-								UPDATE TBL_TOTAL_CAR_NEWS_LIST
-								SET MINING_STATUS = 3
-								WHERE NEWS_NO = {news_no}
-							""")
-							
-			except Exception as e :
-				print(f'****** + error! >> {e}')
+					try : 
+						# idx = 0 >> 형태소 분석 전 단어
+						if idx == 0 :
+							news_no = data_list[0]
+						elif idx == (len(data_list) -2) :
+							print('ㅡ'*50)
+							print('안쪽 break!')
+							break
+						else : 
+							origin_word = re.sub('[-=.#/?:$}\"\']', '', str(data[0])).replace('[','').replace(']','')
+							print(f'*** : [{out_idx}/{len(mining_result_data)}][{idx}/{len(data_list)}][{news_no}][{origin_word}]')
+							print('-'*50)
+							print(f'[{car_news_list[idx].news_no}] >> 분석 / INSERT / DB COMMIT 완료')
+							print('-'*50)
+							for word in data[1] :
+								# print('>>> : ', word[0])
+								# print('>>> : ', word[1])
+								# print(f'{word[0]} / {word[1]} >>> INSERT')
+								# INSERT
+								execute2(f"""
+									INSERT IGNORE INTO TBL_NEWS_KEYWORD_LIST 
+									(
+										WORD_MORPHEME, WORD_CLASS
+									) 
+									VALUES (
+										"{word[0]}", "{word[1]}"
+									)
+								""")
+								execute2(f"""
+									INSERT IGNORE INTO TBL_NEWS_KEYWORD_MAP 
+									(
+										WORD_ORIGIN, WORD_MORPHEME,
+										NEWS_NO, WORD_COUNT
+									) 
+									VALUES (
+										"{origin_word}", "{word[0]}",
+										"{news_no}", 1
+									)
+								""")
+								print(f'[{idx}/{len(data_list)}][{origin_word}] >> {word[0]} / {word[1]} / KEYWORD 추가 및 뉴스 매핑 완료!')
+								execute2(f"""
+									UPDATE TBL_TOTAL_CAR_NEWS_LIST
+									SET MINING_STATUS = 3
+									WHERE NEWS_NO = {news_no}
+								""")
 
-			finally : 
-				print('ㅡㅡ'*50)
-				dbconn.commit()
-				print(f'[{out_idx}/{len(mining_result_data)}]>[{car_news_list[idx].news_no}] >> 분석 / INSERT / DB COMMIT 완료')
-				print('ㅡㅡ'*50)
+								dbconn.commit()
 					
-	except Exception as e :
-		print(f'+++[{out_idx}]+++ + error! >> {e}')
-		print('오류로 프로그램 종료됨!')
-	finally : 
-		print('ㅡㅡ'*50)
-		print('DB CLOSE / 작업 완료!')
-		print('ㅡㅡ'*50)
-		
-		return redirect('/text_mining_result/')
+					except Exception as e :
+						print(f'****** + error! >> {e}')
+						print('안쪽 오류로 프로그램 종료됨!')
+					finally : 
+						print('ㅡ'*50)
+						print(f'[{out_idx}/{len(mining_result_data)}]>[{car_news_list[idx].news_no}] >> 분석 / INSERT / DB COMMIT 완료')
+						print('ㅡ'*50)	
+					
+		except Exception as e :
+			print(f'+++[{out_idx}/{len(mining_result_data)}]+++ + error! >> {e}')
+			print('바깥쪽 오류로 프로그램 종료됨!')
+		finally : 
+			print('ㅡ'*50)
+			print('바깥쪽 for문 종료')
+			print('ㅡ'*50)
+	
+	dbconn.close()
+	print('ㅡ'*50)
+	print('DB CLOSE / 작업 완료!')
+	return redirect('/text_mining_result/')
 
 def text_mining_result(request) :
 	global mining_result_data
 	car_news_list = TblTotalCarNewsList.objects.all().filter(mining_status=1)
 	today_date = datetime.today().strftime('%Y-%m-%d')
-	res_data = {'today_date': today_date}
+	context = {'today_date': today_date}
 	user_id = request.session.get('user')
 	if user_id :
 		memb_name = TblMemberList.objects.filter(memb_id=user_id).values()[0].get('memb_name')
-		res_data['user'] = memb_name
+		context['user'] = memb_name
 	else : 
-		res_data['user'] = None
+		context['user'] = None
 	
 	origin_sentence_list = []
 
 	for idx in range(len(car_news_list)) :
 		origin_sentence_list.append(car_news_list[idx].news_summary)
 
-	res_data['mining_result_list'] = mining_result_data
-	res_data['origin_sentence_list'] = origin_sentence_list
-	return render(request, 'website/text_mining_result.html', res_data)
+	context['mining_result_list'] = mining_result_data
+	context['origin_sentence_list'] = origin_sentence_list
+	return render(request, 'website/text_mining_result.html', context)
 
 # 회원
 def login(request) :
 	newsList = TblTotalCarNewsList.objects.all().filter(media_code=100)
+	context = {'page_group': 'login-p'}
+	user_id = request.session.get('user')
+	if user_id :
+		memb_name = TblMemberList.objects.filter(memb_id=user_id).values()[0].get('memb_name')
+		context['user'] = memb_name
+	else : 
+		context['user'] = None
 
 	if request.method == 'POST' : 
 		memb_id = request.POST['memb-id']
 		password = request.POST['pw']
-		res_data = {}
 		
 		if TblMemberList.objects.filter(memb_id = memb_id, password = password).exists() == True :
 			request.session['user'] = memb_id
 			return redirect('/')
 		else :
-			return render(request, 'website/login.html', {'error': '아이디 또는 비밀번호를 확인해주세요.'})
+			return render(request, 'website/login.html', context)
 	else :
-		return render(request, 'website/login.html')
+		return render(request, 'website/login.html', context)
 
 def logout(request) : 
 	if request.session.get('user') : 
@@ -1922,32 +1961,38 @@ def logout(request) :
 	return redirect('/')
 
 def join(request) : 
+	context = {'page_group': 'join-p'}
+	user_id = request.session.get('user')
+	if user_id :
+		memb_name = TblMemberList.objects.filter(memb_id=user_id).values()[0].get('memb_name')
+		context['user'] = memb_name
+	else : 
+		context['user'] = None
+		
 	if request.method == 'POST' : 
 		memb_id = request.POST.get('memb-id', None)
 		memb_name = request.POST.get('memb-name', None)
 		gender = request.POST.get('gender', None)
 		password = request.POST.get('pw', None)
 		re_password = request.POST.get('re-pw', None)
-		res_data = {}
 		if not (memb_id and gender and password and re_password) : 
-			res_data['error'] = '* 모든 값을 입력해주세요.'
-			return render(request, 'website/join.html', res_data)
+			context['error'] = '* 모든 값을 입력해주세요.'
+			return render(request, 'website/join.html', context)
 		elif password != re_password : 
-			res_data['error'] = '* 비밀번호가 다릅니다.'
-			res_data = {
+			context['error'] = '* 비밀번호가 다릅니다.'
+			context = {
 				'memb_id': memb_id,
 				'memb_name': memb_name,
 				'gender': gender
 			}
-			print(res_data)
-			return render(request, 'website/join.html', res_data)
+			return render(request, 'website/join.html', context)
 		elif TblMemberList.objects.filter(memb_id = memb_id).exists() == True : 
-			res_data['error'] = '* 이미 존재하는 아이디입니다.'
-			res_data = {
+			context['error'] = '* 이미 존재하는 아이디입니다.'
+			context = {
 				'memb_name': memb_name,
 				'gender': gender
 			}
-			return render(request, 'website/join.html', res_data)
+			return render(request, 'website/join.html', context)
 		else :
 			new_member = TblMemberList(
 				memb_id = memb_id,
@@ -1957,11 +2002,11 @@ def join(request) :
 			)
 			new_member.save()
 
-			res_data['join_result'] = 'success'
+			context['join_result'] = 'success'
 
 			print(f'회원가입 완료! >> {memb_id}({gender})')
 			return redirect('/login/')
 	else : 
-		return render(request, 'website/join.html')
+		return render(request, 'website/join.html', context)
 
 

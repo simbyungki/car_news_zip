@@ -35,6 +35,13 @@
 .header .fncs {position:absolute; right:5%; top:20px;}
 .header .fncs a {margin-right:14px; line-height:38px; color:#888; font-size:14px; font-weight:600; text-align:right;}
 .header .fncs a:hover {color:#000;}
+.header .fncs .box {display:inline-block;}
+.header .btn-open-search {display:inline-block; width:38px; height:38px; font-size:18px; vertical-align:middle; border:1px solid #ccc; background:#fff;}
+.header .search-box {position:fixed; left:50%; top:-180px; margin-left:-20%; padding:40px 15px 15px; width:40%; background:#fff; border:1px solid #ccc; box-sizing:border-box; box-shadow:0px 4px 12px rgba(0,0,0,0.2); transition:all .35s;}
+.header .search-box.show {top:90px;}
+.header .search-box input[type="text"] {padding:0 12px; width:100%; height:45px; font-size:16px; border:0; border:1px solid #ddd; box-sizing:border-box;}
+.header .search-box .btn-search {display:block; margin-top:5px; width:100%; height:50px; color:#fff; font-size:18px; font-weight:600; background:#444;}
+.header .search-box .btn-close {display:block; position:absolute; right:10px; top:4px; width:30px; height:30px; font-size:25px; font-weight:600; font-family:sans-serif; text-align:center;}
 
 .header .gnb-box {position:fixed; left:0; top:0;}
 .header .gnb-box .dim {display:none; position:fixed; left:0; top:0; z-index:200; width:100%; height:100%; background:rgba(0,0,0,.7);}
@@ -134,9 +141,9 @@
 
 /* login */
 .member-p {margin:0 auto; width:90%; max-width:400px;}
-.member-p .service-name {font-size:35px; font-weight:400; text-align:center;}
-.member-p .service-name a {color:#999;}
-.member-p .service-name span {color:#444; font-weight:600;}
+.member-p .container .service-name {font-size:35px; font-weight:400; text-align:center;}
+.member-p .container .service-name a {color:#999;}
+.member-p .container .service-name span {color:#444; font-weight:600;}
 .member-p .member-box {margin-top:15px; padding:15px 0;}
 .member-p .member-box select {margin-top:5px; width:100%; border:1px solid #ddd;}
 .default-form input[name='memb-name'],
@@ -173,6 +180,7 @@
      1024 > w 
                 */
 @media screen and (max-width: 1040px) {
+	.header .fncs .box {display:block;}
 	.header .gnb-box .box {left:-40%; padding-top:140px; padding-left:40px; width:40%;}
 	.category-list {height:50px;}
 	.category-list ul li a {font-size:21px;}
@@ -181,6 +189,7 @@
      880 > w 
                 */
 @media screen and (max-width: 880px) {
+	.header .search-box {margin-left:-40%; width:80%;}
 	.category-list ul li a {font-size:18px;}
     .item-list ul li {width:48.5%;}
 	.item-list ul li + li,
@@ -200,8 +209,10 @@
 	.header .service-name {text-align:center;}
 	.header .service-name span {font-size:20px;}
 	.header .service-name sup {font-size:13px;}
-	.header .fncs {opacity:0; z-index:200; transition:all .4s;}
+	.header .fncs {opacity:0; z-index:200;}
 	.header .fncs.show {opacity:1;}
+	.header .fncs .box {display:inline-block;}
+	.header .search-box.show {top:20px;}
 	.header .btn-gnb.active {left:20px;}
 	.header .btn-gnb {left:2%; top:20px; width:40px; height:40px; border:2px solid #444;}
 	.header .btn-gnb:before, 
@@ -229,8 +240,10 @@
 	.header .service-name {font-size:32px;}
 	.header .service-name span {display:block; margin-top:14px; font-size:18px;}
 	.header .btn-gnb {top:14px;}
+	.header .fncs {top:14px;}
 	/* .header .fncs a {display:block; position:fixed; bottom:0; left:0; width:100%; height:50px; line-height:50px; color:#fff; font-size:18px; font-weight:600; text-align:center; background:#444;} */
 	.header .gnb-box .box {left:-90%; width:90%;}
+	.header .search-box {margin-left:-45%; width:90%;}
 	.container .inner {width:96%;}
 	.item-list {padding-bottom:40px;}
 	.item-list .txt-guide {font-size:14px;}

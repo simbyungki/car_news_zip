@@ -18,6 +18,16 @@ $(function(){
 		}
 	});
 
+	//검색박스 열기
+	$('.header .btn-open-search').on('click', function(){
+		$('.search-box').addClass('show');
+		$('.search-box input[type="text"]').focus();
+	});
+	$('.header .search-box .btn-close').on('click', function(){
+		$('.search-box').removeClass('show');
+		$('.search-box input[type="text"]').focusout();
+	});
+
 	//메뉴 이동
 	$('.gnb-box .menu ul ul a').on('click', function(){
 		$('.gnb-box .menu ul ul li').removeClass('active');
