@@ -3,32 +3,8 @@
 {% load custom_tags %}
 {% block content %}
 	<section class="container">
-		<div class="category-list">
-			<div class="inner">
-				<!-- 카테고리별 뉴스 -->
-				<ul class="sub-menu category show">
-					<li class="active"><a href="javascript:;">중고차 뉴스</a></li>
-					<li><a href="javascript:;">신차 뉴스</a></li>
-					<li><a href="javascript:;">시승기</a></li>
-					<li><a href="javascript:;">자동차 업계 뉴스</a></li>
-				</ul>
-				<!-- 언론사별 뉴스 -->
-				<ul class="sub-menu media">
-					<li class="active"><a href="javascript:;">오토헤럴드</a></li>
-					<li><a href="javascript:;">데일리카</a></li>
-					<li><a href="javascript:;">오토뷰</a></li>
-					<li><a href="javascript:;">IT조선</a></li>
-					<li><a href="javascript:;">오토모닝</a></li>
-					<li><a href="javascript:;">오토다이어리</a></li>
-					<li><a href="javascript:;">카가이</a></li>
-					<li><a href="javascript:;">더드라이브</a></li>
-				</ul>
-				<!-- 검색 -->
-				<div class="result-info">
-					<p>검색결과가 총 <strong></strong>건 있습니다.</p>
-					<a href="javascript:;" onclick="loadNewsList(0, 'category', 0, 12, 'default', 'change');"><span>🔙</span> 돌아가기</a>
-				</div>
-			</div>
+		<div class="result-info">
+			<p>총 <strong>{{ total_length }}</strong>건의 검색결과가 있습니다.</p>
 		</div>
 		<div class="item-list">
 			<div class="inner">
@@ -65,28 +41,8 @@
 <script>
 var connFlag = false;
 $(function(){
-	//최초 목록
-	loadNewsList(0, 'category', 0, 12);
-	$('#wrap').addClass('category');
-	//카테고리 클릭
-	$('.category-list ul li a').on('click', function(){
-		var choicedListType = $(this).closest('.sub-menu').hasClass('category') ? 'category' : 'media'
-		$('#wrap').prop('class', '').addClass(choicedListType);
-		if(!connFlag){
-			var idx = $(this).parent('li').index();
-			var categoryBeforeCurrIdx = $('.category-list ul li.active').index();
-			if(idx !== categoryBeforeCurrIdx){
-				$(this).closest('ul').find('li').removeClass('active');
-				$(this).parent('li').addClass('active');
-				if($(this).closest('ul').hasClass('category')){
-					loadNewsList(idx, 'category', 0, 12);
-				}else if($(this).closest('ul').hasClass('media')){
-					loadNewsList(idx, 'media', 0, 12);
-				}
-			}
-			
-		}
-	});
+	{% comment %} //최초 목록
+	loadSearchResultList(0, 12);
 	//좋아요(찜)
 	$(document).on('click', '.item-list ul li .btn-like', function(){
 		alert('카뉴스.zip 회원 전용 기능입니다.');
@@ -96,22 +52,14 @@ $(function(){
 	$(window).on('scroll', function(e){
 		if(($(window).innerHeight() + $(window).scrollTop()) >= $('body').height()) {
 			if(!connFlag){
-				var thisCategory = $('.sub-menu.show li.active').index();
-				var thisNewsType = $('#wrap').prop('class');
 				var nowListLength = $('.news-group li').length;
-				if($('#wrap').hasClass('search-result')){
-					var keyword = $('#search_keyword').val();
-					loadNewsList(99, 'all', nowListLength, 12, 'more', null, keyword);
-				}else{
-					loadNewsList(thisCategory, thisNewsType, nowListLength, 12, 'more');
-				}
+				loadSearchResultList(nowListLength, 12, 'more');
 			}
 		}
-	});
+	}); {% endcomment %}
 });
-	
 //news list > view count
-function viewCountUp(idx, nowCount, newsCode){
+{% comment %} function viewCountUp(idx, nowCount, newsCode){
 	$.ajax({
 		url: '{% url "view_count" %}',
 		type: 'GET',
@@ -125,20 +73,17 @@ function viewCountUp(idx, nowCount, newsCode){
 		}
 	});
 }
-//news load
-function loadNewsList(idx, list_type, start_idx, load_length, load_type, fnc_type, search_keyword){
+
+function loadSearchResultList(start_idx, load_length, load_type){
 	console.log('@@@', list_type)
 	$('.loading').show();
-	connFlag = true;
+	connFlag == true;
 	$.ajax({
 		url: '{% url "list_data" %}',
 		type: 'GET',
 		data: {
-			'list_idx': idx,
-			'list_type': list_type,
 			'start_idx': start_idx,
-			'load_length': load_length,
-			'search_keyword': search_keyword
+			'load_length': load_length
 		},
 		dataType: 'json',
 		success: function(data){
@@ -196,44 +141,15 @@ function loadNewsList(idx, list_type, start_idx, load_length, load_type, fnc_typ
 				$('.news-group').append(newsItem);
 				var nowScrollTop = $('html, body').scrollTop();
 				$('html, body').animate({scrollTop: nowScrollTop + 100}, 150);
-			}else{
-				$('.news-group').html(newsItem);
-				$('document, html').scrollTop(0);
 			}
 
-			if(load_type == 'search'){
-				$('.result-info p strong').text(data.length);
-				$('.category-list .sub-menu').removeClass('show');
-				$('.category-list .result-info').addClass('show');
-			}
-
-			//sub menu
-			console.log(list_type)
-			if(fnc_type == 'change'){
-				$('.category-list ul').removeClass('show');
-				$('.category-list ul li').removeClass('active');
-				$('.category-list .result-info').removeClass('show');
-
-				if(list_type == 'category'){
-					$('#wrap').prop('class', '').addClass('category');
-					$('.category-list ul.category').addClass('show');
-				}else if(fnc_type == 'media'){
-					$('#wrap').prop('class', '').addClass('media');
-					$('.category-list ul.media').addClass('show');
-				}
-				$('.category-list ul.sub-menu.show li').eq(0).addClass('active');
-			}
-
-			//close gnb box
-			$('.header .btn-gnb').removeClass('active');
-			$('.gnb-box, .header .fncs').removeClass('show');
 			connFlag = false;
 		},
 		error : function(request, status, error){
 			console.log(error)
 		},
 	});
-}
+} {% endcomment %}
 </script>
 </body>
 </html>

@@ -42,6 +42,14 @@
 		function gtag(){dataLayer.push(arguments);}
 		gtag('js', new Date());
 		gtag('config', 'G-T4CL1V9FXP');
+
+		function keywordSearch(){
+			var nowListLength = $('.news-group li').length;
+			var keyword = $('#search_keyword').val();
+			loadNewsList(99, 'all', 0, 12, 'search', null, keyword);
+			$('#wrap').prop('class', '').addClass('search-result');
+			$('.search-box').removeClass('show');
+		}
 	</script>	
 </head>
 <body>
@@ -53,7 +61,7 @@
 	<header class="header">
 		<a href="javascript:;" class="btn-gnb" title="메뉴"></a>
 		<h1 class="service-name">
-			카뉴스.zip 🙈<sup>Beta!</sup><br>
+			<a href="/">카뉴스.zip 🙈</a><sup>Beta!</sup><br>
 			<span>
 				{% if user %}
 					{% if user == '심병기' %}
@@ -83,8 +91,9 @@
 			</div>
 			<div class="search-box">
 				<button type="button" class="btn-close">X</button>
-				<input type="text" id="" name="" placeholder="검색할 단어를 입력해주세요.">
-				<button type="button" class="btn-search">검색</button>
+				{% csrf_token %}
+				<input type="text" id="search_keyword" name="" placeholder="검색할 단어를 입력해주세요.">
+				<button type="button" class="btn-search" onclick="keywordSearch();">검색</button>
 			</div>
 		</div>
 		<section class="gnb-box">

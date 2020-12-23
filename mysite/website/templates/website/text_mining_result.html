@@ -1,11 +1,12 @@
 {% extends 'website/common/template.html' %}
+{% load static %}
 {% load custom_tags %}
 {% block content %}
 	<section class="container" style="padding:40px 0;">
 		<style>
-		.box {margin:0 auto; width:1100px; zoom:1;}
-		.box .title {display:block; height:55px; line-height:55px;  font-size:30px; text-align:center;}
-		.box .origin {margin-top:10px; font-size:26px;}
+		.container .box {margin:0 auto; width:1100px; zoom:1;}
+		.container .box .title {display:block; height:55px; line-height:55px;  font-size:30px; text-align:center;}
+		.container .box .origin {margin-top:10px; font-size:26px;}
 		.word-list {border-bottom:1px solid #ddd;}
 		.word-list li {padding:20px; border-top:1px solid #ddd; zoom:1;}
 		.word-list li:after {display:block; content:""; clear:both;}

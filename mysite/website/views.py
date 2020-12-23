@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.http import JsonResponse
 from django.contrib import auth
 from .models import TblTotalCarNewsList, TblMemberList, TblNewsKeywordList, TblNewsKeywordMap
 from datetime import datetime
@@ -8,6 +9,7 @@ from django.core import serializers
 from konlpy.tag import Kkma
 from wordcloud import WordCloud
 import regex
+import json
 # import matplotlib.pyplot as plt
 
 import requests
@@ -1731,11 +1733,13 @@ def news_list(request) :
 
 # 뉴스 목록 가져오기 ajax
 def list_data(request) :
+	news_list = TblTotalCarNewsList.objects.all()
 	if request.method == 'GET' :
 		idx = int(request.GET.get('list_idx'))
 		list_type = request.GET.get('list_type')
 		start_idx = int(request.GET.get('start_idx'))
 		load_length = int(request.GET.get('load_length'))
+		search_keyword = request.GET.get('search_keyword')
 		category_num = 1
 		
 	news = ''
@@ -1757,7 +1761,7 @@ def list_data(request) :
 			category_num = 700
 		elif idx == 7 :
 			category_num = 800
-		news = TblTotalCarNewsList.objects.filter(media_code=category_num).order_by('-write_date')[start_idx:start_idx+load_length]
+		news = news_list.filter(media_code=category_num).order_by('-write_date')[start_idx:start_idx+load_length]
 	elif list_type == 'category' :
 		if idx == 0 :
 			category_num = 1
@@ -1767,9 +1771,14 @@ def list_data(request) :
 			category_num = 5
 		elif idx == 3 :
 			category_num = 7
-		news = TblTotalCarNewsList.objects.filter(news_category=category_num).order_by('-write_date')[start_idx:start_idx+load_length]
+		news = news_list.filter(news_category=category_num).order_by('-write_date')[start_idx:start_idx+load_length]
+	elif list_type == 'all' : 
+		news = news_list.filter(news_content__icontains=search_keyword).order_by('-write_date')[start_idx:start_idx+load_length]
+	
+	set_news = serializers.serialize('json', news)
 
-	return HttpResponse(serializers.serialize('json', news), content_type="text/json-comment-filtered")
+	return JsonResponse({'news': set_news}, status=200)
+	# return HttpResponse(serializers.serialize('json', news[start_idx:start_idx+load_length]), content_type="text/json-comment-filtered")
 
 # 뉴스 클릭 수 ajax
 def view_count(request) : 
@@ -1805,7 +1814,7 @@ def text_mining(request) :
 		context['user'] = None
 
 	# print(car_news_list[0].news_summary)
-	for idx in range(20) :
+	for idx in range(6) :
 		re_content = regex.findall(r'[\p{Hangul}|\p{Latin}|\p{Han}]+', f'{car_news_list[idx].news_content}')
 		origin_sentence_list.append(car_news_list[idx].news_summary)
 		# print(re_summary)
@@ -1968,7 +1977,7 @@ def join(request) :
 		context['user'] = memb_name
 	else : 
 		context['user'] = None
-		
+
 	if request.method == 'POST' : 
 		memb_id = request.POST.get('memb-id', None)
 		memb_name = request.POST.get('memb-name', None)
