@@ -1761,7 +1761,7 @@ def list_data(request) :
 			category_num = 700
 		elif idx == 7 :
 			category_num = 800
-		news = news_list.filter(media_code=category_num).order_by('-write_date')[start_idx:start_idx+load_length]
+		news = news_list.filter(media_code=category_num).order_by('-write_date')
 	elif list_type == 'category' :
 		if idx == 0 :
 			category_num = 1
@@ -1771,13 +1771,12 @@ def list_data(request) :
 			category_num = 5
 		elif idx == 3 :
 			category_num = 7
-		news = news_list.filter(news_category=category_num).order_by('-write_date')[start_idx:start_idx+load_length]
+		news = news_list.filter(news_category=category_num).order_by('-write_date')
 	elif list_type == 'all' : 
-		news = news_list.filter(news_content__icontains=search_keyword).order_by('-write_date')[start_idx:start_idx+load_length]
+		news = news_list.filter(news_content__icontains=search_keyword).order_by('-write_date')
 	
-	set_news = serializers.serialize('json', news)
-
-	return JsonResponse({'news': set_news}, status=200)
+	set_news = serializers.serialize('json', news[start_idx:start_idx+load_length])
+	return JsonResponse({'news': set_news, 'total_length': len(news)}, status=200)
 	# return HttpResponse(serializers.serialize('json', news[start_idx:start_idx+load_length]), content_type="text/json-comment-filtered")
 
 # 뉴스 클릭 수 ajax
@@ -1814,7 +1813,7 @@ def text_mining(request) :
 		context['user'] = None
 
 	# print(car_news_list[0].news_summary)
-	for idx in range(6) :
+	for idx in range(50) :
 		re_content = regex.findall(r'[\p{Hangul}|\p{Latin}|\p{Han}]+', f'{car_news_list[idx].news_content}')
 		origin_sentence_list.append(car_news_list[idx].news_summary)
 		# print(re_summary)
@@ -2017,5 +2016,3 @@ def join(request) :
 			return redirect('/login/')
 	else : 
 		return render(request, 'website/join.html', context)
-
-

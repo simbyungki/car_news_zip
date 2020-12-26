@@ -25,7 +25,7 @@
 				</ul>
 				<!-- 검색 -->
 				<div class="result-info">
-					<p>검색결과가 총 <strong></strong>건 있습니다.</p>
+					<p>"<span></span>"에 대한 검색결과가 총 <strong></strong>건 있습니다.</p>
 					<a href="javascript:;" onclick="loadNewsList(0, 'category', 0, 12, 'default', 'change');"><span>🔙</span> 돌아가기</a>
 				</div>
 			</div>
@@ -34,10 +34,13 @@
 			<div class="inner">
 				<div class="list-top">
 					<p class="txt-guide">* 뉴스 기사를 클릭하면 해당 뉴스로 이동됩니다.</p>
+					{% comment %} 
+					목록 타입 (스타일) 변경
 					<div class="list-type">
 						<button type="button" class="btn type01 active"></button>
 						<button type="button" class="btn type02"></button>
-					</div>
+					</div> 
+					{% endcomment %}
 				</div>
 				<ul class="news-group show"></ul>
 			</div>
@@ -144,9 +147,11 @@ function loadNewsList(idx, list_type, start_idx, load_length, load_type, fnc_typ
 		success: function(data){
 			$('.loading').hide();
 			var newsItem = "";		
-			console.log(data)
-			for(i = 0; i < data.length; i++){
-				list = data[i].fields;
+			json_data = JSON.parse(data.news)
+			total_length = data.total_length
+			console.log(total_length)
+			for(i = 0; i < json_data.length; i++){
+				list = json_data[i].fields;
 				var media_name = '';
 				if(list.media_code == '100'){
 					media_name = 'ah'
@@ -202,7 +207,9 @@ function loadNewsList(idx, list_type, start_idx, load_length, load_type, fnc_typ
 			}
 
 			if(load_type == 'search'){
-				$('.result-info p strong').text(data.length);
+				var keyword = $('#search_keyword').val();
+				$('.result-info p span').text(keyword);
+				$('.result-info p strong').text(total_length);
 				$('.category-list .sub-menu').removeClass('show');
 				$('.category-list .result-info').addClass('show');
 			}
