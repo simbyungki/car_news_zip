@@ -186,7 +186,7 @@ class GetAutoview() :
 		return_data_dic['autoview_review'] = data_list
 		review_list.append(return_data_dic)
 
-# IT조선
+# IT조선 #
 class GetItChosun() :
 	# IT조선 신차	
 	def new() :
@@ -204,12 +204,14 @@ class GetItChosun() :
 		img_url = h_news.find('img')['src']
 		subject = h_news.find('span', attrs={'class': 'tt'}).get_text().strip()
 		summary = h_news.find('span', attrs={'class': 'txt'}).get_text().strip()
+		reporter = h_news.find('span', attrs={'class': 'name'}).get_text().strip()
 		date = h_news.find('span', attrs={'class': 'date'}).get_text().strip()
 		data_group = {}
 		data_group['link'] = link
 		data_group['img_url'] = img_url
 		data_group['subject'] = subject
 		data_group['summary'] = summary
+		data_group['reporter'] = reporter
 		data_group['date'] = date
 		data_list.append(data_group)
 
@@ -219,12 +221,14 @@ class GetItChosun() :
 			img_url = news.find('img')['src']
 			subject = news.find('div', attrs={'class': 'txt_dot1'}).get_text().strip()
 			summary = news.find('span', attrs={'class': 'txt_dot2'}).get_text().strip()
+			reporter = news.find('span', attrs={'class': 'name'}).get_text().strip()
 			date = news.find('span', attrs={'class': 'date'}).get_text().strip()
 			data_group = {}
 			data_group['link'] = link
 			data_group['img_url'] = img_url
 			data_group['subject'] = subject
 			data_group['summary'] = summary
+			data_group['reporter'] = reporter
 			data_group['date'] = date
 
 			data_list.append(data_group)
@@ -248,12 +252,14 @@ class GetItChosun() :
 		img_url = h_news.find('img')['src']
 		subject = h_news.find('span', attrs={'class': 'tt'}).get_text().strip()
 		summary = h_news.find('span', attrs={'class': 'txt'}).get_text().strip()
+		reporter = h_news.find('span', attrs={'class': 'name'}).get_text().strip()
 		date = h_news.find('span', attrs={'class': 'date'}).get_text().strip()
 		data_group = {}
 		data_group['link'] = link
 		data_group['img_url'] = img_url
 		data_group['subject'] = subject
 		data_group['summary'] = summary
+		data_group['reporter'] = reporter
 		data_group['date'] = date
 		data_list.append(data_group)
 
@@ -263,12 +269,14 @@ class GetItChosun() :
 			img_url = news.find('img')['src']
 			subject = news.find('div', attrs={'class': 'txt_dot1'}).get_text().strip()
 			summary = news.find('span', attrs={'class': 'txt_dot2'}).get_text().strip()
+			reporter = news.find('span', attrs={'class': 'name'}).get_text().strip()
 			date = news.find('span', attrs={'class': 'date'}).get_text().strip()
 			data_group = {}
 			data_group['link'] = link
 			data_group['img_url'] = img_url
 			data_group['subject'] = subject
 			data_group['summary'] = summary
+			data_group['reporter'] = reporter
 			data_group['date'] = date
 
 			data_list.append(data_group)
@@ -292,12 +300,14 @@ class GetItChosun() :
 		img_url = h_news.find('img')['src']
 		subject = h_news.find('span', attrs={'class': 'tt'}).get_text().strip()
 		summary = h_news.find('span', attrs={'class': 'txt'}).get_text().strip()
+		reporter = h_news.find('span', attrs={'class': 'name'}).get_text().strip()
 		date = h_news.find('span', attrs={'class': 'date'}).get_text().strip()
 		data_group = {}
 		data_group['link'] = link
 		data_group['img_url'] = img_url
 		data_group['subject'] = subject
 		data_group['summary'] = summary
+		data_group['reporter'] = reporter
 		data_group['date'] = date
 		data_list.append(data_group)
 
@@ -307,12 +317,14 @@ class GetItChosun() :
 			img_url = news.find('img')['src']
 			subject = news.find('div', attrs={'class': 'txt_dot1'}).get_text().strip()
 			summary = news.find('span', attrs={'class': 'txt_dot2'}).get_text().strip()
+			reporter = news.find('span', attrs={'class': 'name'}).get_text().strip()
 			date = news.find('span', attrs={'class': 'date'}).get_text().strip()
 			data_group = {}
 			data_group['link'] = link
 			data_group['img_url'] = img_url
 			data_group['subject'] = subject
 			data_group['summary'] = summary
+			data_group['reporter'] = reporter
 			data_group['date'] = date
 
 			data_list.append(data_group)
@@ -513,7 +525,7 @@ class GetAutoH() :
 		return_data_dic['autoh_industry'] = data_list
 		industry_list.append(return_data_dic)
 
-# 데일리카
+# 데일리카 #
 class GetDailyCar() :
 	# 데일리카 중고차
 	def used() :
@@ -629,7 +641,7 @@ class GetDailyCar() :
 		return_data_dic['daily_industry'] = data_list
 		industry_list.append(return_data_dic)
 
-# 오토모닝
+# 오토모닝 # 
 class GetAutoMorning() :
 	# 오토모닝 신차
 	def new() :
@@ -646,12 +658,14 @@ class GetAutoMorning() :
 			img_url = news.find('img')['src']
 			subject = news.find('h2', attrs={'class': 'clamp c2'}).get_text().strip()
 			summary = news.find('p', attrs={'class': 'ffd clamp c2'}).get_text().strip()
+			reporter = summary[6:12]
 			date = news.find('li', attrs={'class': 'date'}).get_text().strip()
 			data_group = {}
 			data_group['link'] = link
 			data_group['img_url'] = img_url
 			data_group['subject'] = subject
 			data_group['summary'] = summary
+			data_group['reporter'] = reporter
 			data_group['date'] = date[:10]
 
 			data_list.append(data_group)
@@ -674,12 +688,14 @@ class GetAutoMorning() :
 			img_url = news.find('img')['src']
 			subject = news.find('h2', attrs={'class': 'clamp c2'}).get_text().strip()
 			summary = news.find('p', attrs={'class': 'ffd clamp c2'}).get_text().strip()
+			reporter = summary[6:12]
 			date = news.find('li', attrs={'class': 'date'}).get_text().strip()
 			data_group = {}
 			data_group['link'] = link
 			data_group['img_url'] = img_url
 			data_group['subject'] = subject
 			data_group['summary'] = summary
+			data_group['reporter'] = reporter
 			data_group['date'] = date[:10]
 
 			data_list.append(data_group)
@@ -702,12 +718,14 @@ class GetAutoMorning() :
 			img_url = news.find('img')['src']
 			subject = news.find('h2', attrs={'class': 'clamp c2'}).get_text().strip()
 			summary = news.find('p', attrs={'class': 'ffd clamp c2'}).get_text().strip()
+			reporter = summary[6:12]
 			date = news.find('li', attrs={'class': 'date'}).get_text().strip()
 			data_group = {}
 			data_group['link'] = link
 			data_group['img_url'] = img_url
 			data_group['subject'] = subject
 			data_group['summary'] = summary
+			data_group['reporter'] = reporter
 			data_group['date'] = date[:10]
 
 			data_list.append(data_group)
@@ -715,7 +733,7 @@ class GetAutoMorning() :
 		return_data_dic['automoring_review'] = data_list
 		review_list.append(return_data_dic)
 
-# 오토다이어리
+# 오토다이어리 #
 class GetAutoDiary() :
 	# 오토다이어리 신차
 	def new() :
@@ -804,7 +822,7 @@ class GetAutoDiary() :
 		return_data_dic['autodiary_review'] = data_list
 		review_list.append(return_data_dic)
 
-# 카가이
+# 카가이 #
 class GetCarguy() :
 	# 카가이 자동차 업계
 	def industry() :
@@ -821,13 +839,14 @@ class GetCarguy() :
 			img_url = news.find('div', attrs={'class': 'list-image'})['style']
 			subject = news.find('div', attrs={'class': 'list-titles'}).get_text().strip()
 			summary = news.find('p', attrs={'class': 'list-summary'}).get_text().strip()
-			date = news.find('div', attrs={'class': 'list-dated'}).get_text().strip()
+			info = news.find('div', attrs={'class': 'list-dated'}).get_text().strip()
 			data_group = {}
 			data_group['link'] = 'http://www.carguy.kr' + link
 			data_group['img_url'] = 'http://www.carguy.kr/news' + img_url[22:-1]
 			data_group['subject'] = subject
 			data_group['summary'] = summary
-			data_group['date'] = date[-16:-6]
+			data_group['reporter'] = info[5:12]
+			data_group['date'] = info[-16:-6]
 
 			data_list.append(data_group)
 
@@ -849,20 +868,21 @@ class GetCarguy() :
 			img_url = news.find('div', attrs={'class': 'list-image'})['style']
 			subject = news.find('div', attrs={'class': 'list-titles'}).get_text().strip()
 			summary = news.find('p', attrs={'class': 'list-summary'}).get_text().strip()
-			date = news.find('div', attrs={'class': 'list-dated'}).get_text().strip()
+			info = news.find('div', attrs={'class': 'list-dated'}).get_text().strip()
 			data_group = {}
 			data_group['link'] = 'http://www.carguy.kr' + link
 			data_group['img_url'] = 'http://www.carguy.kr/news' + img_url[22:-1]
 			data_group['subject'] = subject
 			data_group['summary'] = summary
-			data_group['date'] = date[-16:-6]
+			data_group['reporter'] = info[5:12]
+			data_group['date'] = info[-16:-6]
 
 			data_list.append(data_group)
 
 		return_data_dic['carguy_review'] = data_list
 		review_list.append(return_data_dic)
 
-# 더드라이브
+# 더드라이브 #
 class GetTheDrive() :
 	# 더드라이브 자동차 업계
 	def industry() :
@@ -879,13 +899,15 @@ class GetTheDrive() :
 			img_url = news.find('p', attrs={'class': 'img'}).find('img')['src']
 			subject = news.find('dt').get_text().strip()
 			summary = news.find('dd', attrs={'class': 'conts'}).get_text().strip()
+			reporter = news.find('dd', attrs={'class': 'winfo'}).find('a').get_text().strip()
 			date = news.find('span', attrs={'class': 'date'}).get_text().strip()
 			data_group = {}
 			data_group['link'] = 'http://www.thedrive.co.kr' + link
 			data_group['img_url'] = 'http://www.thedrive.co.kr' + img_url
 			data_group['subject'] = subject
 			data_group['summary'] = summary
-			data_group['date'] = date[-16:]
+			data_group['reporter'] = reporter
+			data_group['date'] = date
 
 			data_list.append(data_group)
 
@@ -907,13 +929,15 @@ class GetTheDrive() :
 			img_url = news.find('p', attrs={'class': 'img'}).find('img')['src']
 			subject = news.find('dt').get_text().strip()
 			summary = news.find('dd', attrs={'class': 'conts'}).get_text().strip()
+			reporter = news.find('dd', attrs={'class': 'winfo'}).find('a').get_text().strip()
 			date = news.find('span', attrs={'class': 'date'}).get_text().strip()
 			data_group = {}
 			data_group['link'] = 'http://www.thedrive.co.kr' + link
 			data_group['img_url'] = 'http://www.thedrive.co.kr' + img_url
 			data_group['subject'] = subject
 			data_group['summary'] = summary
-			data_group['date'] = date[-16:]
+			data_group['reporter'] = reporter
+			data_group['date'] = date
 
 			data_list.append(data_group)
 
@@ -1028,35 +1052,24 @@ def insert_used_db() :
 
 					subject = re.sub('[-=.#/?:$}\"\']', '', news.get('subject'))
 					summary = re.sub('[-=.#/?:$}\"\']', '', news.get('summary'))
+					reporter = news.get('reporter')
 					img_url = news.get('img_url')
 					date = news.get('date').replace('/', '-').replace('.', '-')
-
-					# newUsedCarNews = TblUsedCarNewsList.objects.create(
-					# 	MEDIA_CODE = media_code,
-					# 	MEDIA_NAME = media_name,
-					# 	NEWS_CODE = news_code,
-					# 	NEWS_TITLE = subject,
-					# 	NEWS_SUMMARY = summary,
-					# 	NEWS_IMG_URL = img_url,
-					# 	NEWS_URL = url,
-					# 	WRITE_DATE = date,
-					# 	ADD_DATE = now_dt
-					# )
 
 					execute(f"""
 						INSERT IGNORE INTO TBL_TOTAL_CAR_NEWS_LIST 
 						(
 							MEDIA_CODE, NEWS_CATEGORY, MEDIA_NAME, 
 							NEWS_CODE, NEWS_TITLE, 
-							NEWS_SUMMARY, NEWS_CONTENT, NEWS_IMG_URL,
-							NEWS_URL, WRITE_DATE, 
+							NEWS_SUMMARY, NEWS_CONTENT, REPORTER_NAME,
+							NEWS_IMG_URL, NEWS_URL, WRITE_DATE, 
 							ADD_DATE, MINING_STATUS
 						) 
 						VALUES (
 							"{media_code}", 1, "{media_name}", 
 							"{news_code}", "{subject}", 
-							"{summary}", "", "{img_url}", 
-							"{url}", "{date}", 
+							"{summary}", "", "{reporter}",
+							"{img_url}", "{url}", "{date}", 
 							NOW(), 1
 						) 
 					""")
@@ -1123,37 +1136,26 @@ def insert_new_db() :
 						news_code = news.get('link')[-17:]
 						url = f'https://www.autodiary.kr{news_code}'
 
-					subject = re.sub('[-=.#/?:$}\"\']', '', news.get('subject')).replace('\"', '')
-					summary = re.sub('[-=.#/?:$}\"\']', '', news.get('summary')).replace('\"', '')
+					subject = re.sub('[-=.#/?:$}\"\']', '', news.get('subject'))
+					summary = re.sub('[-=.#/?:$}\"\']', '', news.get('summary'))
+					reporter = news.get('reporter')
 					img_url = news.get('img_url')
 					date = news.get('date').replace('/', '-').replace('.', '-')
-					
-					# newNewCarNews = TblNewCarNewsList.objects.create(
-					# 	MEDIA_CODE = media_code,
-					# 	MEDIA_NAME = media_name,
-					# 	NEWS_CODE = news_code,
-					# 	NEWS_TITLE = subject,
-					# 	NEWS_SUMMARY = summary,
-					# 	NEWS_IMG_URL = img_url,
-					# 	NEWS_URL = url,
-					# 	WRITE_DATE = date,
-					# 	ADD_DATE = now_dt
-					# )
 
 					execute(f"""
 						INSERT IGNORE INTO TBL_TOTAL_CAR_NEWS_LIST 
 						(
 							MEDIA_CODE, NEWS_CATEGORY, MEDIA_NAME, 
 							NEWS_CODE, NEWS_TITLE, 
-							NEWS_SUMMARY, NEWS_CONTENT, NEWS_IMG_URL,
-							NEWS_URL, WRITE_DATE, 
+							NEWS_SUMMARY, NEWS_CONTENT, REPORTER_NAME,
+							NEWS_IMG_URL, NEWS_URL, WRITE_DATE, 
 							ADD_DATE, MINING_STATUS
 						) 
 						VALUES (
-							"{media_code}", 3, "{media_name}", 
+							"{media_code}", 1, "{media_name}", 
 							"{news_code}", "{subject}", 
-							"{summary}", "", "{img_url}", 
-							"{url}", "{date}", 
+							"{summary}", "", "{reporter}",
+							"{img_url}", "{url}", "{date}", 
 							NOW(), 1
 						) 
 					""")
@@ -1244,37 +1246,26 @@ def insert_review_db() :
 						url = f'http://www.thedrive.co.kr/news/newsview.php?ncode={news_code}'
 					
 
-					subject = re.sub('[-=.#/?:$}\"\']', '', news.get('subject')).replace('\"', '')
-					summary = re.sub('[-=.#/?:$}\"\']', '', news.get('summary')).replace('\"', '')
+					subject = re.sub('[-=.#/?:$}\"\']', '', news.get('subject'))
+					summary = re.sub('[-=.#/?:$}\"\']', '', news.get('summary'))
+					reporter = news.get('reporter')
 					img_url = news.get('img_url')
 					date = news.get('date').replace('/', '-').replace('.', '-')
-
-					# newReview = TblReviewList.objects.create(
-					# 	MEDIA_CODE = media_code,
-					# 	MEDIA_NAME = media_name,
-					# 	NEWS_CODE = news_code,
-					# 	NEWS_TITLE = subject,
-					# 	NEWS_SUMMARY = summary,
-					# 	NEWS_IMG_URL = img_url,
-					# 	NEWS_URL = url,
-					# 	WRITE_DATE = date,
-					# 	ADD_DATE = now_dt
-					# )
 
 					execute(f"""
 						INSERT IGNORE INTO TBL_TOTAL_CAR_NEWS_LIST 
 						(
 							MEDIA_CODE, NEWS_CATEGORY, MEDIA_NAME, 
 							NEWS_CODE, NEWS_TITLE, 
-							NEWS_SUMMARY, NEWS_CONTENT, NEWS_IMG_URL,
-							NEWS_URL, WRITE_DATE, 
+							NEWS_SUMMARY, NEWS_CONTENT, REPORTER_NAME,
+							NEWS_IMG_URL, NEWS_URL, WRITE_DATE, 
 							ADD_DATE, MINING_STATUS
 						) 
 						VALUES (
-							"{media_code}", 5, "{media_name}", 
+							"{media_code}", 1, "{media_name}", 
 							"{news_code}", "{subject}", 
-							"{summary}", "", "{img_url}", 
-							"{url}", "{date}", 
+							"{summary}", "", "{reporter}",
+							"{img_url}", "{url}", "{date}", 
 							NOW(), 1
 						) 
 					""")
@@ -1356,37 +1347,26 @@ def insert_industry_db() :
 						news_code = news.get('link')[-16:]
 						url = f'http://www.thedrive.co.kr/news/newsview.php?ncode={news_code}'
 
-					subject = re.sub('[-=.#/?:$}]\"\'', '', news.get('subject')).replace('\"', '')
-					summary = re.sub('[-=.#/?:$}]\"\'', '', news.get('summary')).replace('\"', '')
+					subject = re.sub('[-=.#/?:$}\"\']', '', news.get('subject'))
+					summary = re.sub('[-=.#/?:$}\"\']', '', news.get('summary'))
+					reporter = news.get('reporter')
 					img_url = news.get('img_url')
 					date = news.get('date').replace('/', '-').replace('.', '-')
-
-					# newIndustry = TblIndustryList.objects.create(
-					# 	MEDIA_CODE = media_code,
-					# 	MEDIA_NAME = media_name,
-					# 	NEWS_CODE = news_code,
-					# 	NEWS_TITLE = subject,
-					# 	NEWS_SUMMARY = summary,
-					# 	NEWS_IMG_URL = img_url,
-					# 	NEWS_URL = url,
-					# 	WRITE_DATE = date,
-					# 	ADD_DATE = now_dt
-					# )
 
 					execute(f"""
 						INSERT IGNORE INTO TBL_TOTAL_CAR_NEWS_LIST 
 						(
 							MEDIA_CODE, NEWS_CATEGORY, MEDIA_NAME, 
 							NEWS_CODE, NEWS_TITLE, 
-							NEWS_SUMMARY, NEWS_CONTENT, NEWS_IMG_URL,
-							NEWS_URL, WRITE_DATE, 
+							NEWS_SUMMARY, NEWS_CONTENT, REPORTER_NAME,
+							NEWS_IMG_URL, NEWS_URL, WRITE_DATE, 
 							ADD_DATE, MINING_STATUS
 						) 
 						VALUES (
-							"{media_code}", 7, "{media_name}", 
+							"{media_code}", 1, "{media_name}", 
 							"{news_code}", "{subject}", 
-							"{summary}", "", "{img_url}", 
-							"{url}", "{date}", 
+							"{summary}", "", "{reporter}",
+							"{img_url}", "{url}", "{date}", 
 							NOW(), 1
 						) 
 					""")
@@ -1435,9 +1415,10 @@ def get_auto_h_detail() :
 
 		return redirect('/')
 
-# 데일리카
+# 데일리카 #
 def get_dailycar_detail() :
-	newsList = TblTotalCarNewsList.objects.all().filter(media_code=200).filter(news_content='')
+	newsList = TblTotalCarNewsList.objects.all().filter(media_code=200)
+	# newsList = TblTotalCarNewsList.objects.all().filter(media_code=200).filter(news_content='')
 	print('-'*30)
 	print('데일리카')
 	try :
@@ -1449,13 +1430,17 @@ def get_dailycar_detail() :
 				soup = get_soup(full_url)
 				d_title = soup.find('span', attrs={'id': 'content_titleonly'}).get_text().strip()
 				d_content = soup.find('span', attrs={'id': 'content_bodyonly'}).get_text().strip()
+				soup.select_one('span#content_bodyonly').figure.decompose()
+				d_reporter = soup.select_one('span#content_bodyonly').get_text().strip()[6:12]
 				
 				d_title = re.sub('[-=.#/?:$}\"\']', '', d_title)
 				d_content = re.sub('[-=.#/?:$}\"\']', '', d_content)
 
+				print(d_reporter)
+
 				execute(f"""
 					UPDATE TBL_TOTAL_CAR_NEWS_LIST 
-					SET NEWS_TITLE = "{d_title}", NEWS_CONTENT = "{d_content}"
+					SET NEWS_TITLE = "{d_title}", NEWS_CONTENT = "{d_content}", REPORTER_NAME = "{d_reporter}" 
 					WHERE NEWS_CODE = "{newsList.values()[idx].get('news_code')}" AND NEWS_CONTENT = ""
 				""")
 				time.sleep(3)
@@ -1471,7 +1456,7 @@ def get_dailycar_detail() :
 
 		return redirect('/')
 
-# 오토뷰
+# 오토뷰 @
 def get_autoview_detail() :
 	newsList = TblTotalCarNewsList.objects.all().filter(media_code=300).filter(news_content='')
 	print('-'*30)
@@ -1507,7 +1492,7 @@ def get_autoview_detail() :
 		
 		return redirect('/')
 
-# IT조선
+# IT조선 #
 def get_it_chosun_detail() :
 	newsList = TblTotalCarNewsList.objects.all().filter(media_code=400).filter(news_content='')
 	print('-'*30)
@@ -1579,7 +1564,7 @@ def get_auto_morning_detail() :
 		
 		return redirect('/')
 
-# 오토다이어리
+# 오토다이어리 #
 def get_auto_diary_detail() :
 	newsList = TblTotalCarNewsList.objects.all().filter(media_code=600).filter(news_content='')
 	print('-'*30)
@@ -1593,12 +1578,14 @@ def get_auto_diary_detail() :
 				soup = get_soup(full_url)
 				d_title = soup.find('h2', attrs={'class': 'entry-title'}).get_text().strip()
 				d_content = soup.find('div', attrs={'class': 'post-content'}).get_text().strip()
+				d_content_tree = soup.find('div', attrs={'class': 'post-content'}).find_all('p')
+				reporter = d_content_tree[len(d_content_tree) -1].get_text()[0:4]
 				d_title = re.sub('[-=.#/?:$}\"\']', '', d_title)
 				d_content = re.sub('[-=.#/?:$}\"\']', '', d_content)
 
 				execute(f"""
 					UPDATE TBL_TOTAL_CAR_NEWS_LIST 
-					SET NEWS_TITLE = "{d_title}", NEWS_CONTENT = "{d_content}"
+					SET NEWS_TITLE = "{d_title}", NEWS_CONTENT = "{d_content}", REPORTER_NAME = "{reporter}"
 					WHERE NEWS_CODE = "{newsList.values()[idx].get('news_code')}" AND NEWS_CONTENT = ""
 				""")
 				time.sleep(3)
@@ -1614,7 +1601,7 @@ def get_auto_diary_detail() :
 		
 		return redirect('/')
 
-# 카가이
+# 카가이 #
 def get_carguy_detail() :
 	newsList = TblTotalCarNewsList.objects.all().filter(media_code=700).filter(news_content='')
 	print('-'*30)
@@ -1649,7 +1636,7 @@ def get_carguy_detail() :
 		
 		return redirect('/')
 
-# 더드라이브
+# 더드라이브 #
 def get_the_drive_detail() :
 	newsList = TblTotalCarNewsList.objects.all().filter(media_code=800).filter(news_content='')
 	print('-'*30)
@@ -1891,7 +1878,7 @@ def text_mining(request) :
 								print(f'[{idx}/{len(data_list)}][{origin_word}] >> {word[0]} / {word[1]} / KEYWORD 추가 및 뉴스 매핑 완료!')
 								execute2(f"""
 									UPDATE TBL_TOTAL_CAR_NEWS_LIST
-									SET MINING_STATUS = 3
+									SET MINING_STATUS = 3, MINING_DATE = NOW() 
 									WHERE NEWS_NO = {news_no}
 								""")
 

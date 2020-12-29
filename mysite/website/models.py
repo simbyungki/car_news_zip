@@ -48,7 +48,7 @@ class TblTotalCarNewsList(models.Model):
     news_title = models.CharField(db_column='NEWS_TITLE', max_length=1000, blank=True, null=True)  # Field name made lowercase.    
     news_summary = models.TextField(db_column='NEWS_SUMMARY', blank=True, null=True)  # Field name made lowercase.
     news_content = models.TextField(db_column='NEWS_CONTENT', blank=True, null=True)  # Field name made lowercase.
-    repoter_name = models.CharField(db_column='REPOTER_NAME', max_length=100, blank=True, null=True)  # Field name made lowercase. 
+    reporter_name = models.CharField(db_column='REPORTER_NAME', max_length=100, blank=True, null=True)  # Field name made lowercase. 
     view_count = models.IntegerField(db_column='VIEW_COUNT', blank=True, null=True)  # Field name made lowercase.
     news_img_url = models.CharField(db_column='NEWS_IMG_URL', max_length=1000, blank=True, null=True)  # Field name made lowercase.
     news_url = models.CharField(db_column='NEWS_URL', max_length=1000, blank=True, null=True)  # Field name made lowercase.        
