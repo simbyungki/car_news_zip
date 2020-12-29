@@ -10,16 +10,19 @@ from konlpy.tag import Kkma
 from wordcloud import WordCloud
 import regex
 import json
+
 # import matplotlib.pyplot as plt
 
 import requests
 import re
 import time
+import schedule
 from bs4 import BeautifulSoup
 from selenium import webdriver
 import mysql.connector
 
 dbconn = mysql.connector.connect(host='118.27.37.85', user='car_news_zip', password='dbsgPwls!2', database='CAR_NEWS_ZIP', port='3366')
+
 
 # BeautifulSoup
 def get_soup(url) :
@@ -993,17 +996,7 @@ def get_industry() :
 # 기사 DB INSERT
 # Custom 쿼리 실행 함수
 def execute(query, bufferd=True) :
-	global dbconn
-	try :
-		cursor = dbconn.cursor(buffered=bufferd)
-		cursor.execute(query)
-	except Exception as e :
-		dbconn.rollback()
-		raise e
-
-def execute2(query, bufferd=True) :
-	global dbconn
-	cursor = dbconn.cursor(buffered=bufferd)
+	cursor = dbconn.cursor()
 	try :
 		cursor.execute(query)
 	except Exception as e :
@@ -1077,7 +1070,7 @@ def insert_used_db() :
 	except Exception as e :
 		print(f'***** + error! >> {e}')	
 	finally : 
-		dbconn.commit()
+		
 		
 		print('ㅡ'*50)
 		print('중고차 관련 기사 수집 및 DB저장 완료!')
@@ -1152,7 +1145,7 @@ def insert_new_db() :
 							ADD_DATE, MINING_STATUS
 						) 
 						VALUES (
-							"{media_code}", 1, "{media_name}", 
+							"{media_code}", 3, "{media_name}", 
 							"{news_code}", "{subject}", 
 							"{summary}", "", "{reporter}",
 							"{img_url}", "{url}", "{date}", 
@@ -1163,7 +1156,6 @@ def insert_new_db() :
 	except Exception as e :
 		print(f'***** + error! >> {e}')	
 	finally : 
-		dbconn.commit()
 		print('ㅡ'*50)
 		print('신차 관련 기사 수집 및 DB저장 완료!')
 		print('ㅡ'*50)
@@ -1262,7 +1254,7 @@ def insert_review_db() :
 							ADD_DATE, MINING_STATUS
 						) 
 						VALUES (
-							"{media_code}", 1, "{media_name}", 
+							"{media_code}", 5, "{media_name}", 
 							"{news_code}", "{subject}", 
 							"{summary}", "", "{reporter}",
 							"{img_url}", "{url}", "{date}", 
@@ -1273,7 +1265,6 @@ def insert_review_db() :
 	except Exception as e :
 		print(f'***** + error! >> {e}')	
 	finally : 
-		dbconn.commit()
 		print('ㅡ'*50)
 		print('시승기 수집 및 DB저장 완료!')
 		print('ㅡ'*50)
@@ -1363,7 +1354,7 @@ def insert_industry_db() :
 							ADD_DATE, MINING_STATUS
 						) 
 						VALUES (
-							"{media_code}", 1, "{media_name}", 
+							"{media_code}", 7, "{media_name}", 
 							"{news_code}", "{subject}", 
 							"{summary}", "", "{reporter}",
 							"{img_url}", "{url}", "{date}", 
@@ -1374,7 +1365,6 @@ def insert_industry_db() :
 	except Exception as e :
 		print(f'***** + error! >> {e}')	
 	finally : 
-		dbconn.commit()
 		print('ㅡ'*50)
 		print('자동차 업계 뉴스 수집 및 DB저장 완료!')
 		print('ㅡ'*50)
@@ -1417,8 +1407,7 @@ def get_auto_h_detail() :
 
 # 데일리카 #
 def get_dailycar_detail() :
-	newsList = TblTotalCarNewsList.objects.all().filter(media_code=200)
-	# newsList = TblTotalCarNewsList.objects.all().filter(media_code=200).filter(news_content='')
+	newsList = TblTotalCarNewsList.objects.all().filter(media_code=200).filter(news_content='')
 	print('-'*30)
 	print('데일리카')
 	try :
@@ -1435,8 +1424,6 @@ def get_dailycar_detail() :
 				
 				d_title = re.sub('[-=.#/?:$}\"\']', '', d_title)
 				d_content = re.sub('[-=.#/?:$}\"\']', '', d_content)
-
-				print(d_reporter)
 
 				execute(f"""
 					UPDATE TBL_TOTAL_CAR_NEWS_LIST 
@@ -1679,9 +1666,11 @@ def reload_list_data(request) :
 	insert_review_db()
 	insert_industry_db()
 
-	dbconn.close()
-	print('목록 데이터 다시 불러오기 DB Commit 완료!')
-	print('목록 데이터 다시 불러오기 DB Close 완료!')
+	
+	dbconn.commit()
+	print('뉴스 받아오기 DB Commit 완료!')
+	# dbconn.close()
+	print('뉴스 받아오기 DB Close 완료!')
 
 	return redirect('/')
 
@@ -1698,7 +1687,7 @@ def load_detail_data(request) :
 	
 	dbconn.commit()
 	print('뉴스 상세 내용 가져오기 DB Commit 완료!')
-	dbconn.close()
+	# dbconn.close()
 	print('뉴스 상세 내용 가져오기 DB Close 완료!')
 
 	return redirect('/')
@@ -1764,7 +1753,6 @@ def list_data(request) :
 	
 	set_news = serializers.serialize('json', news[start_idx:start_idx+load_length])
 	return JsonResponse({'news': set_news, 'total_length': len(news)}, status=200)
-	# return HttpResponse(serializers.serialize('json', news[start_idx:start_idx+load_length]), content_type="text/json-comment-filtered")
 
 # 뉴스 클릭 수 ajax
 def view_count(request) : 
@@ -1785,7 +1773,7 @@ def view_count(request) :
 mining_result_data = []
 def text_mining(request) :
 	kkma = Kkma()
-	car_news_list = TblTotalCarNewsList.objects.all().filter(mining_status=1)
+	car_news_list = TblTotalCarNewsList.objects.all().filter(mining_status=1).exclude(news_content = '')
 	news_keyword_map = TblNewsKeywordMap.objects.all()
 	except_word_list = []
 	except_keyword_list = []
@@ -1800,7 +1788,7 @@ def text_mining(request) :
 		context['user'] = None
 
 	# print(car_news_list[0].news_summary)
-	for idx in range(len(car_news_list) - 1) :
+	for idx in range(len(car_news_list)) :
 		re_content = regex.findall(r'[\p{Hangul}|\p{Latin}|\p{Han}]+', f'{car_news_list[idx].news_content}')
 		origin_sentence_list.append(car_news_list[idx].news_summary)
 		# print(re_summary)
@@ -1825,82 +1813,54 @@ def text_mining(request) :
 			in_result_data.append(group)
 		mining_result_data.append(in_result_data)
 
-	# print(mining_result_data)
-	
 	for out_idx, data_list in enumerate(mining_result_data) :
-		try :
-			# print(data_list)
-			if out_idx == (len(mining_result_data) -1) :
-				print('ㅡ'*50)
-				print('바깥쪽 break!')
-				break
-			else :
-				for idx, data in enumerate(data_list) :
-					try : 
-						# idx = 0 >> 형태소 분석 전 단어
-						if idx == 0 :
-							news_no = data_list[0]
-						elif idx == (len(data_list) -2) :
-							print('ㅡ'*50)
-							print('안쪽 break!')
-							break
-						else : 
-							origin_word = re.sub('[-=.#/?:$}\"\']', '', str(data[0])).replace('[','').replace(']','')
-							print(f'*** : [{out_idx}/{len(mining_result_data)}][{idx}/{len(data_list)}][{news_no}][{origin_word}]')
-							print('-'*50)
-							print(f'[{car_news_list[idx].news_no}] >> 분석 / INSERT / DB COMMIT 완료')
-							print('-'*50)
-							for word in data[1] :
-								# print('>>> : ', word[0])
-								# print('>>> : ', word[1])
-								# print(f'{word[0]} / {word[1]} >>> INSERT')
-								# INSERT
-								execute2(f"""
-									INSERT IGNORE INTO TBL_NEWS_KEYWORD_LIST 
-									(
-										WORD_MORPHEME, WORD_CLASS
-									) 
-									VALUES (
-										"{word[0]}", "{word[1]}"
-									)
-								""")
-								execute2(f"""
-									INSERT IGNORE INTO TBL_NEWS_KEYWORD_MAP 
-									(
-										WORD_ORIGIN, WORD_MORPHEME,
-										NEWS_NO, WORD_COUNT
-									) 
-									VALUES (
-										"{origin_word}", "{word[0]}",
-										"{news_no}", 1
-									)
-								""")
-								print(f'[{idx}/{len(data_list)}][{origin_word}] >> {word[0]} / {word[1]} / KEYWORD 추가 및 뉴스 매핑 완료!')
-								execute2(f"""
-									UPDATE TBL_TOTAL_CAR_NEWS_LIST
-									SET MINING_STATUS = 3, MINING_DATE = NOW() 
-									WHERE NEWS_NO = {news_no}
-								""")
+		for idx, data in enumerate(data_list) :
+			try : 
+				# idx = 0 >> 형태소 분석 전 단어
+				if idx == 0 :
+					news_no = data_list[0]
+				else : 
+					origin_word = re.sub('[-=.#/?:$}\"\']', '', str(data[0])).replace('[','').replace(']','')
+					print(f'*** : [{out_idx}/{len(mining_result_data) -1}][{news_no}][{idx}/{len(data_list)}][{origin_word}]')
+					for in_idx, word in enumerate(data[1]) :
+						# INSERT
+						execute(f"""
+							INSERT IGNORE INTO TBL_NEWS_KEYWORD_LIST 
+							(
+								WORD_MORPHEME, WORD_CLASS, UPDATE_DATE
+							) 
+							VALUES (
+								"{word[0]}", "{word[1]}", NOW()
+							)
+						""")
+						execute(f"""
+							INSERT IGNORE INTO TBL_NEWS_KEYWORD_MAP 
+							(
+								WORD_ORIGIN, WORD_MORPHEME,
+								NEWS_NO, WORD_COUNT
+							) 
+							VALUES (
+								"{origin_word}", "{word[0]}",
+								"{news_no}", 1
+							)
+						""")
+						print(f'**** : [{out_idx}/{len(mining_result_data) -1}][{news_no}][{idx}/{len(data_list) - 1}][{origin_word}][{in_idx}/{len(data[1]) -1}] >> {word[0]} / {word[1]} / KEYWORD 추가 및 뉴스 매핑 완료!')
+						execute(f"""
+							UPDATE TBL_TOTAL_CAR_NEWS_LIST
+							SET MINING_STATUS = 3, MINING_DATE = NOW() 
+							WHERE NEWS_NO = {news_no}
+						""")
 
-								dbconn.commit()
+			except Exception as e :
+				print(f'****** + error! >> {e} >>>>> [{idx} // {len(data_list) - 1}] >> 안쪽 오류!')
+				pass
+			finally : 
+				dbconn.commit()
+				print('-'*50)
+				print(f'***** : [{out_idx}/{len(mining_result_data) -1}][{idx}/{len(data_list) - 1}][{news_no}] >> 분석 / INSERT / DB COMMIT 완료')
+				print('-'*50)
 					
-					except Exception as e :
-						print(f'****** + error! >> {e}')
-						print('안쪽 오류로 프로그램 종료됨!')
-					finally : 
-						print('ㅡ'*50)
-						print(f'[{out_idx}/{len(mining_result_data)}]>[{car_news_list[idx].news_no}] >> 분석 / INSERT / DB COMMIT 완료')
-						print('ㅡ'*50)	
-					
-		except Exception as e :
-			print(f'+++[{out_idx}/{len(mining_result_data)}]+++ + error! >> {e}')
-			print('바깥쪽 오류로 프로그램 종료됨!')
-		finally : 
-			print('ㅡ'*50)
-			print('바깥쪽 for문 종료')
-			print('ㅡ'*50)
-	
-	dbconn.close()
+	# dbconn.close()
 	print('ㅡ'*50)
 	print('DB CLOSE / 작업 완료!')
 	return redirect('/text_mining_result/')

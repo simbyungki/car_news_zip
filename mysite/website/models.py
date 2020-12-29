@@ -21,6 +21,7 @@ class TblNewsKeywordList(models.Model):
     word_class = models.CharField(db_column='WORD_CLASS', max_length=100, blank=True, null=True)  # Field name made lowercase.
     positive_yn = models.CharField(db_column='POSITIVE_YN', max_length=1, blank=True, null=True)  # Field name made lowercase.
     negative_yn = models.CharField(db_column='NEGATIVE_YN', max_length=1, blank=True, null=True)  # Field name made lowercase.
+    update_date = models.DateTimeField(db_column='UPDATE_DATE')  # Field name made lowercase.
 
     class Meta:
         managed = False
