@@ -6,7 +6,7 @@
 - 테이블 명세서 : <a href="https://docs.google.com/spreadsheets/d/1TOZSDXpLZaXQhyP-K11WmGR_dQ1tswQc181uI90sgF4/edit#gid=0">https://docs.google.com/spreadsheets/d/1TOZSDXpLZaXQhyP-K11WmGR_dQ1tswQc181uI90sgF4/edit#gid=0</a>
 - 8개 자동차 언론사 : 오토헤럴드, 데일리카, 오토뷰, IT조선, 오토모닝, 오토다이어리, 카가이, 더드라이브
 
-![가장 편한 자동차 정보 - 카뉴스집]](http://carnewszip.com/static/images/common/img_share.png "가장 편한 자동차 정보 - 카뉴스집")
+![가장 편한 자동차 정보 - 카뉴스집](http://carnewszip.com/static/images/common/img_share.png "가장 편한 자동차 정보 - 카뉴스집")
 
 ---
 
