@@ -20,7 +20,10 @@
 	<meta http-equiv="Reply-To" content="naver@naver.com">
 	<meta http-equiv="Email" content="naver@naver.com">
 	<meta http-equiv="Build" content="2020.12" />
+	<meta property="og:url" content="http://carnewszip.com">
 	<meta property="og:title" content="카뉴스.zip">
+	<meta property="og:type" content="website">
+	<meta property="og:image" content="{% static 'images/common/img_share.png' %}">
 	<meta property="og:description" content="카뉴스.zip, 자동차 뉴스, 중고차 뉴스, 신차 뉴스, 자동차 시승기">
 	<meta name="naver-site-verification" content="c7ce06c9ed9736eb46db21ed102e4dea95dfe089" />
 	<meta name="google-site-verification" content="jt2p5-PNGgED4Z5xiMbyiENXRz7QGQtd6HxuQbAHYWw" />
@@ -65,8 +68,11 @@
 			<span>
 				{% if user %}
 					{% if user == '심병기' %}
-					<a href="{% url 'reload_list_data' %}" title="숨은기능 : 데이터 새로 받아오기 (약 1분 소요)" class="btn-reload-data">
-					[{{ today_date }} {{ user }}님만을 위한 뉴스!]</a>
+					[
+					(<a href="{% url 'reload_list_data' %}" title="숨은기능 : 데이터 새로 받아오기 (약 1분 소요)" class="btn-reload-data">{{ today_date }} {{ user }}</a>)
+					(<a href="{% url 'load_detail_data' %}" title="숨은기능 : 뉴스 상세 새로 받기" class="btn-reload-data">본문 받아오기</a>)
+					(<a href="{% url 'text_mining' %}" title="숨은기능 : 분석" class="btn-reload-data">분석하기</a>)
+					]
 					{% else %}
 					[{{ today_date }} {{ user }}님만을 위한 뉴스!]
 					{% endif %}	
