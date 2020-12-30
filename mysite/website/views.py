@@ -996,8 +996,9 @@ def get_industry() :
 # 기사 DB INSERT
 # Custom 쿼리 실행 함수
 def execute(query, bufferd=True) :
-	cursor = dbconn.cursor()
+	global dbconn
 	try :
+		cursor = dbconn.cursor(buffered=bufferd)
 		cursor.execute(query)
 	except Exception as e :
 		dbconn.rollback()
@@ -1760,11 +1761,18 @@ def view_count(request) :
 		now_count = int(request.GET.get('now_count'))
 		news_code = request.GET.get('news_code')
 		after_count = now_count + 1
-		execute(f"""
-			UPDATE TBL_TOTAL_CAR_NEWS_LIST 
-			SET VIEW_COUNT = "{after_count}"
-			WHERE NEWS_CODE = "{news_code}"
-		""")
+		try : 
+			execute(f"""
+				UPDATE TBL_TOTAL_CAR_NEWS_LIST 
+				SET VIEW_COUNT = "{after_count}"
+				WHERE NEWS_CODE = "{news_code}"
+			""")
+		except Exception as e :
+			print(f'****** + error! >> {e} >> 오류!')
+			pass
+		finally : 
+			dbconn.commit()
+			print(f'조회수 증가 >> {now_count} >> {after_count}')
 
 	return HttpResponse(after_count, content_type="text/json-comment-filtered")
 

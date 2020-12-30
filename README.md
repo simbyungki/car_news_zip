@@ -7,20 +7,22 @@
 - 접속 URL : <a href="http://carnewszip.com">http://carnewszip.com</a>
 - 테이블 명세서 : <a href="https://docs.google.com/spreadsheets/d/1TOZSDXpLZaXQhyP-K11WmGR_dQ1tswQc181uI90sgF4/edit#gid=0">https://docs.google.com/spreadsheets/d/1TOZSDXpLZaXQhyP-K11WmGR_dQ1tswQc181uI90sgF4/edit#gid=0</a>
 - 8개 자동차 언론사 : 오토헤럴드, 데일리카, 오토뷰, IT조선, 오토모닝, 오토다이어리, 카가이, 더드라이브
+- 수집 분야 : 중고차/신차/자동차업계 뉴스 및 시승기
 
 
 ---
 
 ### 추가해야할 기능
 - 카뉴스집 소개 구성 (간단하게)
-- 뉴스 검색
 - 코드 리팩토링
   - view 정리 (기능별 분리)
   - Template 공통 코드 처리 (Extends)
 - 좋아요(스크랩) 기능 (좋아요 테이블 추가)
   - 좋아요 한 페이지 별도 구성
 - 뉴스 수집(본문) / 분석 Batch 작업
-- 기자 이름 함께 수집
+- 뉴스 목록 타입 선택 제공
+- <del>기자 이름 함께 수집 >> 2020.12.29</del>
+- <del>뉴스 검색 >> 2020.12.28</del>
 - <del>뉴스 분석 (Konlpy, Kkma) >> 2020.12.27</del>
   - <del>뉴스 본문 어절 분리 (regex)</del>
   - <del>뉴스 본문 형태소 분석</del>
