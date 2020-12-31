@@ -7,10 +7,10 @@
 			<div class="inner">
 				<!-- 카테고리별 뉴스 -->
 				<ul class="sub-menu category show">
-					<li class="active"><a href="javascript:;">중고차 뉴스</a></li>
+					<li class="active"><a href="javascript:;">자동차 업계 뉴스</a></li>
+					<li><a href="javascript:;">중고차 뉴스</a></li>
 					<li><a href="javascript:;">신차 뉴스</a></li>
 					<li><a href="javascript:;">시승기</a></li>
-					<li><a href="javascript:;">자동차 업계 뉴스</a></li>
 				</ul>
 				<!-- 언론사별 뉴스 -->
 				<ul class="sub-menu media">
@@ -34,13 +34,11 @@
 			<div class="inner">
 				<div class="list-top">
 					<p class="txt-guide">* 뉴스 기사를 클릭하면 해당 뉴스로 이동됩니다.</p>
-					{% comment %} 
-					목록 타입 (스타일) 변경
+					<!-- 목록 타입 (스타일) 변경 -->
 					<div class="list-type">
-						<button type="button" class="btn type01 active"></button>
-						<button type="button" class="btn type02"></button>
+						<button type="button" class="btn type01 active" title="목록 세로 타입으로 보기"></button>
+						<button type="button" class="btn type02" title="목록 가로 타입으로 보기"></button>
 					</div> 
-					{% endcomment %}
 				</div>
 				<ul class="news-group show"></ul>
 			</div>
@@ -95,6 +93,17 @@ $(function(){
 		alert('카뉴스.zip 회원 전용 기능입니다.');
 		location.href='/login';
 	});
+	//목록타입 변경
+	$('.list-type .btn').on('click', function(){
+		idx = $(this).index();
+		$('.list-type .btn').removeClass('active').eq(idx).addClass('active');
+		if(idx == 0){
+			$('.news-group').removeClass('type02');
+		}else if(idx == 1){
+			$('.news-group').addClass('type02');
+		}
+	});
+
 	//스크롤 로드 (페이징)
 	$(window).on('scroll', function(e){
 		if(($(window).innerHeight() + $(window).scrollTop()) >= $('body').height()) {
@@ -111,7 +120,22 @@ $(function(){
 			}
 		}
 	});
+
+	//리사이징
+	listTypeSet();
+	$(window).resize(function(){
+		listTypeSet();
+	});
 });
+
+function listTypeSet(){
+	var winWidth = $(window).width();
+	if(winWidth <= 1280){
+		$('.news-group').removeClass('type02');
+	}else{
+		$('.list-type .btn').removeClass('active').eq(0).addClass('active');
+	}
+}
 	
 //news list > view count
 function viewCountUp(idx, nowCount, newsCode){

@@ -99,10 +99,37 @@
 .item-list ul li .infos .btn-like {position:absolute; right:5px; bottom:-4px; line-height:24px;}
 .item-list ul li .infos .btn-like:active {bottom:-5px;}
 .item-list ul li .infos .btn-like strong {position:relative; top:1px; margin-left:3px; font-size:16px;}
+.item-list ul.type02 li {margin:20px 0 0 1%; padding-bottom:25px; width:49.5%;}
+.item-list ul.type02 li:nth-child(4n+1),
+.item-list ul.type02 li:nth-child(5n+1) {margin-left:1%;}
+.item-list ul.type02 li:first-child,
+.item-list ul.type02 li:nth-child(odd) {margin-left:0;}
+.item-list ul.type02 li a {display:flex; justify-content:space-between;}
+.item-list ul.type02 li .picture {width:208px; height:110px; overflow:hidden;}
+.item-list ul.type02 li .picture p {padding:26px 0 0; line-height:16px; font-size:12px;}
+.item-list ul.type02 li .info-box {width:calc(100% - 230px); height:110px;}
+.item-list ul.type02 li .tags {left:0; top:0;}
+.item-list ul.type02 li .subject {margin:0 0 10px;}
+.item-list ul.type02 li .infos {position:absolute; left:auto; right:15px; bottom:15px; width:calc(100% - 260px);}
+
+
 .list-top {position:relative;}
 .list-top .list-type {position:absolute; right:0; top:-6px;}
-.list-top .list-type .btn {display:inline-block; width:30px; height:30px; border:1px solid #444;}
+.list-top .list-type .btn {display:inline-block; position:relative; width:30px; height:30px; border:1px solid #444;}
 .list-top .list-type .btn.active {background:#444;}
+.list-top .list-type .btn:before,
+.list-top .list-type .btn:after {display:block; content:""; position:absolute; background:#777;}
+.list-top .list-type .btn.active:before,
+.list-top .list-type .btn.active:after {background:#fff;}
+.list-top .list-type .btn:nth-child(1):before,
+.list-top .list-type .btn:nth-child(1):after {top:5px; width:3px; height:18px;}
+.list-top .list-type .btn:nth-child(1):before {left:8px;}
+.list-top .list-type .btn:nth-child(1):after {right:8px;}
+.list-top .list-type .btn:nth-child(2):before,
+.list-top .list-type .btn:nth-child(2):after {left:5px; width:18px; height:3px;}
+.list-top .list-type .btn:nth-child(2):before {top:8px;}
+.list-top .list-type .btn:nth-child(2):after {bottom:8px;}
+
 
 .category-list {position:fixed; top:120px; left:0; z-index:100; width:100%; height:60px; background:#444; box-sizing:border-box;}
 .category-list ul {display:none; flex-wrap:wrap; margin-top:5px;}
@@ -179,6 +206,7 @@
      1280 > w 
 				*/
 @media screen and (max-width: 1280px) {
+	.list-type {display:none;}
 	.item-list ul li {width:32%;}
 	.item-list ul li + li {margin-left:2%;}
 	.item-list ul li:first-child, 

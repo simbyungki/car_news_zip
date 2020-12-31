@@ -67,15 +67,7 @@
 			<a href="/">카뉴스.zip 🙈</a><sup>Beta!</sup><br>
 			<span>
 				{% if user %}
-					{% if user == '심병기' %}
-					[
-					(<a href="{% url 'reload_list_data' %}" title="숨은기능 : 데이터 새로 받아오기 (약 1분 소요)" class="btn-reload-data">{{ today_date }} {{ user }}</a>)
-					(<a href="{% url 'load_detail_data' %}" title="숨은기능 : 뉴스 상세 새로 받기" class="btn-reload-data">본문 받아오기</a>)
-					(<a href="{% url 'text_mining' %}" title="숨은기능 : 분석" class="btn-reload-data">분석하기</a>)
-					]
-					{% else %}
-					[{{ today_date }} {{ user }}님만을 위한 뉴스!]
-					{% endif %}	
+					[{{ today_date }} {{ user }}님만을 위한 뉴스!]	
 				{% else %}
 					[{{ today_date }} CAR_NEWS.zip!]
 				{% endif %}
