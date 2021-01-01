@@ -1657,9 +1657,9 @@ def load_detail_data() :
 	GetAutoDiary.detail(dbconn, cursor)
 	GetCarguy.detail(dbconn, cursor)
 	GetTheDrive.detail(dbconn, cursor)
-
+	print('뉴스 상세 내용 가져오기 완료!')
 	text_mining(dbconn, cursor)
-	
+	print('뉴스 상세 내용 분석 완료!')
 	dbconn.commit()
 	print('뉴스 상세 내용 가져오기 DB Commit 완료!')
 	dbconn.close()
@@ -1796,18 +1796,19 @@ if __name__ == '__main__' :
 	# text_mining()
 
 	# Schedule Work
-	# 매일 3회 (오전 10시 / 오후 3시 /오후 8시) 뉴스 데이터 수집
+	# 매일 5회 (오전 9시 / 오후 12시 / 오후 3시 / 오후 6시 / 오후 10시) 뉴스 데이터 수집
 	# schedule.every().days.at('10:00').do(reload_list_data)
 	# schedule.every().days.at('15:00').do(reload_list_data)
 	# schedule.every().days.at('20:00').do(reload_list_data)
 
-	schedule.every().days.at('10:00').do(reload_list_data)
+	schedule.every().days.at('09:00').do(reload_list_data)
+	schedule.every().days.at('12:00').do(reload_list_data)
 	schedule.every().days.at('15:00').do(reload_list_data)
-	schedule.every().days.at('20:00').do(reload_list_data)
+	schedule.every().days.at('18:00').do(reload_list_data)
+	schedule.every().days.at('22:00').do(reload_list_data)
 
-	# 매일 2회 (오전 11시 / 오후 9시) 뉴스 본문 데이터 수집
-	schedule.every().days.at('11:00').do(load_detail_data)
-	schedule.every().days.at('21:00').do(load_detail_data)
+	# 매일 1회 (오전 05시 / 오전 00시 / 오후 9시) 뉴스 본문 데이터 수집
+	schedule.every().days.at('05:00').do(load_detail_data)
 
 	# 매일 1회 (자정) 뉴스 분석
 	# schedule.every().days.at('11:50').do(run_text_mining)
