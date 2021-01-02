@@ -1850,7 +1850,7 @@ def load_detail_data() :
 	print('뉴스 상세 내용 가져오기 완료!', '%04d/%02d/%02d %02d:%02d:%02d' % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec))
 	now = time.localtime()
 	print('뉴스 상세 내용 분석 시작!', '%04d/%02d/%02d %02d:%02d:%02d' % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec))
-	# text_mining(dbconn, cursor)
+	text_mining(dbconn, cursor)
 	now = time.localtime()
 	print('뉴스 상세 내용 분석 완료!', '%04d/%02d/%02d %02d:%02d:%02d' % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec))
 	now = time.localtime()
@@ -1989,20 +1989,19 @@ def get_conn_cursor():
 
 
 if __name__ == '__main__' : 
-	load_detail_data()
-	# # Schedule Work
-	# # 매일 5회 (오전 9시 / 오후 12시 / 오후 3시 / 오후 6시 / 오후 10시) 뉴스 데이터 수집
-	# schedule.every().days.at('09:00').do(reload_list_data)
-	# schedule.every().days.at('12:00').do(reload_list_data)
-	# schedule.every().days.at('15:00').do(reload_list_data)
-	# schedule.every().days.at('18:00').do(reload_list_data)
-	# schedule.every().days.at('22:00').do(reload_list_data)
+	# Schedule Work
+	# 매일 5회 (오전 9시 / 오후 12시 / 오후 3시 / 오후 6시 / 오후 10시) 뉴스 데이터 수집
+	schedule.every().days.at('09:00').do(reload_list_data)
+	schedule.every().days.at('12:00').do(reload_list_data)
+	schedule.every().days.at('15:00').do(reload_list_data)
+	schedule.every().days.at('18:00').do(reload_list_data)
+	schedule.every().days.at('22:00').do(reload_list_data)
 
-	# # 매일 1회 (오전 05시 / 오전 00시 / 오후 9시) 뉴스 본문 데이터 수집
-	# schedule.every().days.at('05:00').do(load_detail_data)
+	# 매일 1회 (오전 05시 / 오전 00시 / 오후 9시) 뉴스 본문 데이터 수집
+	schedule.every().days.at('05:00').do(load_detail_data)
 
-	# while True :
-	# 	schedule.run_pending()
-	# 	time.sleep(1)
+	while True :
+		schedule.run_pending()
+		time.sleep(1)
 
 
