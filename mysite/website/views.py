@@ -165,6 +165,8 @@ def list_data(request) :
 			category_num = 700
 		elif idx == 7 :
 			category_num = 800
+		elif idx == 8 :
+			category_num = 900
 		news = news_list.filter(media_code=category_num).order_by('-write_date')
 	elif list_type == 'category' :
 		if idx == 0 :

@@ -1997,8 +1997,8 @@ if __name__ == '__main__' :
 	schedule.every().days.at('18:00').do(reload_list_data)
 	schedule.every().days.at('22:00').do(reload_list_data)
 
-	# 매일 1회 (오전 05시 / 오전 00시 / 오후 9시) 뉴스 본문 데이터 수집
-	schedule.every().days.at('05:00').do(load_detail_data)
+	# 매일 1회 (오전 04시) 뉴스 본문 데이터 수집
+	schedule.every().days.at('04:00').do(load_detail_data)
 
 	while True :
 		schedule.run_pending()

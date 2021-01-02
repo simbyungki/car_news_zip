@@ -22,6 +22,7 @@
 					<li><a href="javascript:;">오토다이어리</a></li>
 					<li><a href="javascript:;">카가이</a></li>
 					<li><a href="javascript:;">더드라이브</a></li>
+					<li><a href="javascript:;">모터그래프</a></li>
 				</ul>
 				<!-- 검색 -->
 				<div class="result-info">
@@ -132,7 +133,6 @@ function listTypeSet(){
 	var winWidth = $(window).width();
 	if(winWidth <= 1280){
 		$('.news-group').removeClass('type02');
-	}else{
 		$('.list-type .btn').removeClass('active').eq(0).addClass('active');
 	}
 }
@@ -218,8 +218,8 @@ function loadNewsList(idx, list_type, start_idx, load_length, load_type, fnc_typ
 				newsItem += '</a>';
 				newsItem += '<div class="infos">';
 				newsItem += '<span class="date">' + list.write_date + '</span>';
-				newsItem += '<span class="view-cnt" title="이 기사 조회수">👁 <strong>' + list.view_count + '</strong></span>'
-				newsItem += '<button type="button" class="btn-like" title="이 기사 찜하기">👍 <strong>0</strong></button>';
+				{% comment %} newsItem += '<span class="view-cnt" title="이 기사 조회수">👁 <strong>' + list.view_count + '</strong></span>' {% endcomment %}
+				{% comment %} newsItem += '<button type="button" class="btn-like" title="이 기사 찜하기">👍 <strong>0</strong></button>'; {% endcomment %}
 				newsItem += '</div>';
 				newsItem += '</li>';
 			}
@@ -250,7 +250,7 @@ function loadNewsList(idx, list_type, start_idx, load_length, load_type, fnc_typ
 				if(list_type == 'category'){
 					$('#wrap').prop('class', '').addClass('category');
 					$('.category-list ul.category').addClass('show');
-				}else if(fnc_type == 'media'){
+				}else if(list_type == 'media'){
 					$('#wrap').prop('class', '').addClass('media');
 					$('.category-list ul.media').addClass('show');
 				}
