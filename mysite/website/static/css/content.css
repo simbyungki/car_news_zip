@@ -88,6 +88,7 @@
 .item-list ul li .tags span.auto-diary {background:#620027;}
 .item-list ul li .tags span.chosun {background:#ce2c2c;}
 .item-list ul li .tags span.carguy {background:#000;}
+.item-list ul li .tags span.motor-graph {background:#b4000f;}
 .item-list ul li .tags span.drive {background:#00adee;}
 .item-list ul li .subject {margin:20px 0 10px; line-height:26px; letter-spacing:-1px; font-size:20px; font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
 .item-list ul li .summary {display:-webkit-box; word-wrap:break-word; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; text-overflow:ellipsis; line-height:20px; color:#444; font-size:15px;}

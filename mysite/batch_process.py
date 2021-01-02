@@ -48,15 +48,6 @@ def get_soup2(url) :
 # 기사 DB INSERT
 # Custom 쿼리 실행 함수
 
-# def execute(query, bufferd=True) :
-# 	global dbconn
-# 	try :
-# 		cursor = dbconn.cursor(buffered=bufferd)
-# 		cursor.execute(query)
-# 	except Exception as e :
-# 		dbconn.rollback()
-# 		raise e
-
 
 # 오토뷰
 class GetAutoview() :
@@ -1226,6 +1217,167 @@ class GetTheDrive() :
 		finally : 
 			pass
 
+# 모터그래프
+class GetMotorGraph() :
+	# 신차
+	def new() :
+		url = 'https://www.motorgraph.com/news/articleList.html?page=1&total=1103&sc_section_code=&sc_sub_section_code=S2N2&sc_serial_code=&sc_area=&sc_level=&sc_article_type=&sc_view_level=&sc_sdate=&sc_edate=&sc_serial_number=&sc_word=&sc_word2=&sc_andor=&sc_order_by=E&view_type=sm'
+		soup = get_soup(url)
+
+		news_list = soup.find('section', attrs={'class': 'article-list-content'}).findAll('div', attrs={'class': 'list-block'})
+		
+		data_list = []
+		return_data_dic = {}
+
+		for news in news_list :
+			link = news.find('div', attrs={'class': 'list-image'}).find('a')['href']
+			img_url = news.find('div', attrs={'class': 'list-image'})['style'][22:-1]
+			subject = news.find('div', attrs={'class': 'list-titles'}).find('strong').get_text().strip()
+			summary = news.find('p', attrs={'class': 'list-summary'}).find('a').get_text().strip()
+			reporter = news.find('div', attrs={'class': 'list-dated'}).get_text().strip()
+			reporter = re.search(r'\|(.*?)\|', reporter).group(1).strip()
+			date = news.find('div', attrs={'class': 'list-dated'}).get_text().strip()[-16:-6]
+			data_group = {}
+			data_group['link'] = 'https://www.motorgraph.com' + link
+			data_group['img_url'] = 'https://www.motorgraph.com/news/' + img_url
+			data_group['subject'] = subject
+			data_group['summary'] = summary
+			data_group['reporter'] = reporter
+			data_group['date'] = date
+
+			data_list.append(data_group)
+
+		return_data_dic['motorgraph_new'] = data_list
+		new_car_list.append(return_data_dic)
+
+	# 시승기 (국산)
+	def review_k() :
+		url = 'https://www.motorgraph.com/news/articleList.html?page=1&total=142&sc_section_code=&sc_sub_section_code=S2N4&sc_serial_code=&sc_area=&sc_level=&sc_article_type=&sc_view_level=&sc_sdate=&sc_edate=&sc_serial_number=&sc_word=&sc_word2=&sc_andor=&sc_order_by=E&view_type=sm'
+		soup = get_soup(url)
+
+		news_list = soup.find('section', attrs={'class': 'article-list-content'}).findAll('div', attrs={'class': 'list-block'})
+		
+		data_list = []
+		return_data_dic = {}
+
+		for news in news_list :
+			link = news.find('div', attrs={'class': 'list-image'}).find('a')['href']
+			img_url = news.find('div', attrs={'class': 'list-image'})['style'][22:-1]
+			subject = news.find('div', attrs={'class': 'list-titles'}).find('strong').get_text().strip()
+			summary = news.find('p', attrs={'class': 'list-summary'}).find('a').get_text().strip()
+			reporter = news.find('div', attrs={'class': 'list-dated'}).get_text().strip()
+			reporter = re.search(r'\|(.*?)\|', reporter).group(1).strip()
+			date = news.find('div', attrs={'class': 'list-dated'}).get_text().strip()[-16:-6]
+			data_group = {}
+			data_group['link'] = 'https://www.motorgraph.com' + link
+			data_group['img_url'] = 'https://www.motorgraph.com/news/' + img_url
+			data_group['subject'] = subject
+			data_group['summary'] = summary
+			data_group['reporter'] = reporter
+			data_group['date'] = date
+
+			data_list.append(data_group)
+
+		return_data_dic['motorgraph_review_k'] = data_list
+		review_list.append(return_data_dic)
+
+	# 시승기 (수입)
+	def review_g() :
+		url = 'https://www.motorgraph.com/news/articleList.html?page=1&total=344&sc_section_code=&sc_sub_section_code=S2N5&sc_serial_code=&sc_area=&sc_level=&sc_article_type=&sc_view_level=&sc_sdate=&sc_edate=&sc_serial_number=&sc_word=&sc_word2=&sc_andor=&sc_order_by=E&view_type=sm'
+		soup = get_soup(url)
+
+		news_list = soup.find('section', attrs={'class': 'article-list-content'}).findAll('div', attrs={'class': 'list-block'})
+		
+		data_list = []
+		return_data_dic = {}
+
+		for news in news_list :
+			link = news.find('div', attrs={'class': 'list-image'}).find('a')['href']
+			img_url = news.find('div', attrs={'class': 'list-image'})['style'][22:-1]
+			subject = news.find('div', attrs={'class': 'list-titles'}).find('strong').get_text().strip()
+			summary = news.find('p', attrs={'class': 'list-summary'}).find('a').get_text().strip()
+			reporter = news.find('div', attrs={'class': 'list-dated'}).get_text().strip()
+			reporter = re.search(r'\|(.*?)\|', reporter).group(1).strip()
+			date = news.find('div', attrs={'class': 'list-dated'}).get_text().strip()[-16:-6]
+			data_group = {}
+			data_group['link'] = 'https://www.motorgraph.com' + link
+			data_group['img_url'] = 'https://www.motorgraph.com/news/' + img_url
+			data_group['subject'] = subject
+			data_group['summary'] = summary
+			data_group['reporter'] = reporter
+			data_group['date'] = date
+
+			data_list.append(data_group)
+			
+		return_data_dic['motorgraph_review_g'] = data_list
+		review_list.append(return_data_dic)
+
+	# 자동차 업계
+	def industry() :
+		url = 'https://www.motorgraph.com/news/articleList.html?page=1&total=1280&sc_section_code=&sc_sub_section_code=S2N15&sc_serial_code=&sc_area=&sc_level=&sc_article_type=&sc_view_level=&sc_sdate=&sc_edate=&sc_serial_number=&sc_word=&sc_word2=&sc_andor=&sc_order_by=E&view_type=sm'
+		soup = get_soup(url)
+
+		news_list = soup.find('section', attrs={'class': 'article-list-content'}).findAll('div', attrs={'class': 'list-block'})
+		
+		data_list = []
+		return_data_dic = {}
+
+		for news in news_list :
+			link = news.find('div', attrs={'class': 'list-image'}).find('a')['href']
+			img_url = news.find('div', attrs={'class': 'list-image'})['style'][22:-1]
+			subject = news.find('div', attrs={'class': 'list-titles'}).find('strong').get_text().strip()
+			summary = news.find('p', attrs={'class': 'list-summary'}).find('a').get_text().strip()
+			reporter = news.find('div', attrs={'class': 'list-dated'}).get_text().strip()
+			reporter = re.search(r'\|(.*?)\|', reporter).group(1).strip()
+			date = news.find('div', attrs={'class': 'list-dated'}).get_text().strip()[-16:-6]
+			data_group = {}
+			data_group['link'] = 'https://www.motorgraph.com' + link
+			data_group['img_url'] = 'https://www.motorgraph.com/news/' + img_url
+			data_group['subject'] = subject
+			data_group['summary'] = summary
+			data_group['reporter'] = reporter
+			data_group['date'] = date
+
+			data_list.append(data_group)
+			
+		return_data_dic['motorgraph_industry'] = data_list
+		industry_list.append(return_data_dic)
+
+		# 본문 수집
+	
+	# 본문 수집
+	@staticmethod
+	def detail(dbconn, cursor) :
+		newsList = TblTotalCarNewsList.objects.all().filter(media_code=900).filter(news_content='')
+		print('-'*30)
+		print('모터그래프')
+		try :
+			print('ㅡㅡㅡ'*30)
+			for idx in range(len(newsList)) : 
+				full_url = f'https://www.motorgraph.com/news/articleView.html?idxno={newsList.values()[idx].get("news_code")}'
+				print(newsList.values()[idx].get('news_code'))
+				try : 
+					soup = get_soup(full_url)
+					d_title = soup.find('div', attrs={'class': 'article-head-title'}).get_text().strip()
+					d_content = soup.find('div', attrs={'id': 'articleBody'}).get_text().strip()
+					d_title = re.sub('[-=.#/?:$}\"\']', '', d_title)
+					d_content = re.sub('[-=.#/?:$}\"\']', '', d_content)
+
+					cursor.execute(f"""
+						UPDATE TBL_TOTAL_CAR_NEWS_LIST 
+						SET NEWS_TITLE = "{d_title}", NEWS_CONTENT = "{d_content}"
+						WHERE NEWS_CODE = "{newsList.values()[idx].get('news_code')}" AND NEWS_CONTENT = ""
+					""")
+					time.sleep(3)
+					print(f'{newsList.values()[idx].get("news_code")} :: 기사 본문 스크랩 완료! [{idx + 1} / {len(newsList)}]')
+				except Exception as e :
+					print(f'*+++++ + error! >> {e}')	
+				print('ㅡㅡㅡ'*30)
+		except Exception as e :
+			print(f'***** + error! >> {e}')	
+		finally : 
+			pass
+
 
 # 중고차 뉴스 모음
 def get_used_car() :
@@ -1243,6 +1395,7 @@ def get_new_car() :
 	GetItChosun.new()
 	GetAutoMorning.new()
 	GetAutoDiary.new()
+	GetMotorGraph.new()
 
 	return new_car_list
 
@@ -1256,11 +1409,16 @@ def get_review() :
 	GetAutoDiary.review()
 	GetCarguy.review()
 	GetTheDrive.review()
+	GetMotorGraph.review_k()
+	GetMotorGraph.review_g()
 
 	return review_list
 
 # 자동차 업계 뉴스 모음
 def get_industry() :
+
+	
+
 	GetAutoH.industry()
 	GetDailyCar.industry()
 	GetAutoview.industry()
@@ -1268,6 +1426,7 @@ def get_industry() :
 	GetAutoDiary.industry()
 	GetCarguy.industry()
 	GetTheDrive.industry()
+	GetMotorGraph.industry()
 
 	return industry_list
 
@@ -1367,6 +1526,10 @@ def insert_new_db(dbconn, cursor) :
 				# 오토다이어리
 				media_code = 600
 				media_name = '오토다이어리'
+			elif idx == 6 :
+				# 모터그래프
+				media_code = 900
+				media_name = '모터그래프'
 
 			for news_dict in news_list.values() :
 				for news in news_dict : 
@@ -1390,6 +1553,10 @@ def insert_new_db(dbconn, cursor) :
 						# 오토다이어리
 						news_code = news.get('link')[-17:]
 						url = f'https://www.autodiary.kr{news_code}'
+					elif idx == 6 : 
+						# 모터그래프
+						news_code = news.get('link')[-5:]
+						url = f'https://www.motorgraph.com/news/articleView.html?idxno={news_code}'
 
 					subject = re.sub('[-=.#/?:$}\"\']', '', news.get('subject'))
 					summary = re.sub('[-=.#/?:$}\"\']', '', news.get('summary'))
@@ -1461,6 +1628,10 @@ def insert_review_db(dbconn, cursor) :
 				# 더드라이브
 				media_code = 800
 				media_name = '더드라이브'
+			elif idx == 8 or idx == 9 :
+				# 모터그래프
+				media_code = 900
+				media_name = '모터그래프'
 
 			for news_dict in news_list.values() :
 				for news in news_dict : 
@@ -1496,8 +1667,10 @@ def insert_review_db(dbconn, cursor) :
 						# 더드라이브
 						news_code = news.get('link')[-16:]
 						url = f'http://www.thedrive.co.kr/news/newsview.php?ncode={news_code}'
+					elif idx == 8 or idx == 9 :
+						news_code = news.get('link')[-5:]
+						url = f'https://www.motorgraph.com/news/articleView.html?idxno={news_code}'
 					
-
 					subject = re.sub('[-=.#/?:$}\"\']', '', news.get('subject'))
 					summary = re.sub('[-=.#/?:$}\"\']', '', news.get('summary'))
 					reporter = news.get('reporter')
@@ -1564,6 +1737,10 @@ def insert_industry_db(dbconn, cursor) :
 				# 더드라이브
 				media_code = 800
 				media_name = '더드라이브'
+			elif idx == 7 :
+				# 모터그래프
+				media_code = 900
+				media_name = '모터그래프'
 
 			for news_dict in news_list.values() :
 				for news in news_dict : 
@@ -1595,6 +1772,10 @@ def insert_industry_db(dbconn, cursor) :
 						# 더드라이브
 						news_code = news.get('link')[-16:]
 						url = f'http://www.thedrive.co.kr/news/newsview.php?ncode={news_code}'
+					elif idx == 7 :
+						# 모터그래프
+						news_code = news.get('link')[-5:]
+						url = f'https://www.motorgraph.com/news/articleView.html?idxno={news_code}'
 
 					subject = re.sub('[-=.#/?:$}\"\']', '', news.get('subject'))
 					summary = re.sub('[-=.#/?:$}\"\']', '', news.get('summary'))
@@ -1627,11 +1808,13 @@ def insert_industry_db(dbconn, cursor) :
 		print('ㅡ'*50)
 
 
-
 # 뉴스 목록 새로 수집
 def reload_list_data() :
 	dbconn = mysql.connector.connect(host='118.27.37.85', user='car_news_zip', password='dbsgPwls!2', database='CAR_NEWS_ZIP', port='3366')
 	cursor = dbconn.cursor()
+
+	now = time.localtime()
+	print('뉴스 받아오기 시작!', '%04d/%02d/%02d %02d:%02d:%02d' % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec))
 
 	insert_used_db(dbconn, cursor)
 	insert_new_db(dbconn, cursor)
@@ -1639,8 +1822,9 @@ def reload_list_data() :
 	insert_industry_db(dbconn, cursor)
 
 	
+	now = time.localtime()
 	dbconn.commit()
-	print('뉴스 받아오기 DB Commit 완료!')
+	print('뉴스 받아오기 DB Commit 완료!', '%04d/%02d/%02d %02d:%02d:%02d' % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec))
 	dbconn.close()
 	print('뉴스 받아오기 DB Close 완료!')
 
@@ -1648,6 +1832,9 @@ def reload_list_data() :
 def load_detail_data() :
 	dbconn = mysql.connector.connect(host='118.27.37.85', user='car_news_zip', password='dbsgPwls!2', database='CAR_NEWS_ZIP', port='3366')
 	cursor = dbconn.cursor()
+
+	now = time.localtime()
+	print('뉴스 상세 내용 가져오기 시작!', '%04d/%02d/%02d %02d:%02d:%02d' % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec))
 
 	GetAutoH.detail(dbconn, cursor)
 	GetDailyCar.detail(dbconn, cursor)
@@ -1657,13 +1844,20 @@ def load_detail_data() :
 	GetAutoDiary.detail(dbconn, cursor)
 	GetCarguy.detail(dbconn, cursor)
 	GetTheDrive.detail(dbconn, cursor)
-	print('뉴스 상세 내용 가져오기 완료!')
-	text_mining(dbconn, cursor)
-	print('뉴스 상세 내용 분석 완료!')
+	GetMotorGraph.detail(dbconn, cursor)
+	
+	now = time.localtime()
+	print('뉴스 상세 내용 가져오기 완료!', '%04d/%02d/%02d %02d:%02d:%02d' % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec))
+	now = time.localtime()
+	print('뉴스 상세 내용 분석 시작!', '%04d/%02d/%02d %02d:%02d:%02d' % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec))
+	# text_mining(dbconn, cursor)
+	now = time.localtime()
+	print('뉴스 상세 내용 분석 완료!', '%04d/%02d/%02d %02d:%02d:%02d' % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec))
+	now = time.localtime()
 	dbconn.commit()
 	print('뉴스 상세 내용 가져오기 DB Commit 완료!')
 	dbconn.close()
-	print('뉴스 상세 내용 가져오기 DB Close 완료!')
+	print('뉴스 상세 내용 가져오기 DB Close 완료!', '%04d/%02d/%02d %02d:%02d:%02d' % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec))
 
 # 뉴스 분석
 mining_result_data = []
@@ -1769,7 +1963,7 @@ def run_text_mining() :
 	print('DB CLOSE / 작업 완료!')
 
 
-
+# SQL 실행
 def get_conn_cursor():
 	try:
 		dbconn = mysql.connector.connect(host='118.27.37.85', user='car_news_zip', password='dbsgPwls!2', database='CAR_NEWS_ZIP', port='3366')
@@ -1783,41 +1977,32 @@ def get_conn_cursor():
 
 
 
+# # 유튜브 영상 수집
+# def getYoutubeVideo() :
+# 	youtubeVideos = []
+# 	searchKeywords = ['']
+
+
+
+	# return youtubeVideos
+
+
+
 if __name__ == '__main__' : 
-	# get_conn_cursor()
-	# text_mining()
-	# 뉴스 데이터 새로 수집
-	# reload_list_data()
-	
-	# 뉴스 본문 수집
-	# load_detail_data()
-
-	# 뉴스 분석
-	# text_mining()
-
-	# Schedule Work
-	# 매일 5회 (오전 9시 / 오후 12시 / 오후 3시 / 오후 6시 / 오후 10시) 뉴스 데이터 수집
-	# schedule.every().days.at('10:00').do(reload_list_data)
+	load_detail_data()
+	# # Schedule Work
+	# # 매일 5회 (오전 9시 / 오후 12시 / 오후 3시 / 오후 6시 / 오후 10시) 뉴스 데이터 수집
+	# schedule.every().days.at('09:00').do(reload_list_data)
+	# schedule.every().days.at('12:00').do(reload_list_data)
 	# schedule.every().days.at('15:00').do(reload_list_data)
-	# schedule.every().days.at('20:00').do(reload_list_data)
+	# schedule.every().days.at('18:00').do(reload_list_data)
+	# schedule.every().days.at('22:00').do(reload_list_data)
 
-	schedule.every().days.at('09:00').do(reload_list_data)
-	schedule.every().days.at('12:00').do(reload_list_data)
-	schedule.every().days.at('15:00').do(reload_list_data)
-	schedule.every().days.at('18:00').do(reload_list_data)
-	schedule.every().days.at('22:00').do(reload_list_data)
+	# # 매일 1회 (오전 05시 / 오전 00시 / 오후 9시) 뉴스 본문 데이터 수집
+	# schedule.every().days.at('05:00').do(load_detail_data)
 
-	# 매일 1회 (오전 05시 / 오전 00시 / 오후 9시) 뉴스 본문 데이터 수집
-	schedule.every().days.at('05:00').do(load_detail_data)
-
-	# 매일 1회 (자정) 뉴스 분석
-	# schedule.every().days.at('11:50').do(run_text_mining)
-
-	# def fighting() :
-	# 	print('F I G H T I N G !')
-
-	while True :
-		schedule.run_pending()
-		time.sleep(1)
+	# while True :
+	# 	schedule.run_pending()
+	# 	time.sleep(1)
 
 
