@@ -107,7 +107,7 @@ $(function(){
 
 	//스크롤 로드 (페이징)
 	$(window).on('scroll', function(e){
-		if(($(window).innerHeight() + $(window).scrollTop()) >= $('body').height()) {
+		if(($(window).innerHeight() + $(window).scrollTop()) >= $('body').height() - 150) {
 			if(!connFlag){
 				var thisCategory = $('.sub-menu.show li.active').index();
 				var thisNewsType = $('#wrap').prop('class');
