@@ -284,11 +284,12 @@
 	.header .gnb-box .box {left:-90%; width:90%;}
 	.header .search-box {margin-left:-45%; width:90%;}
 	.container .inner {width:96%;}
-	.item-list {padding-bottom:40px;}
-	.item-list .txt-guide {font-size:14px;}
 	.category-list {top:105px;}
 	.category-list ul li {margin-right:10px;}
 	.category-list ul li a {font-size:13px;}
+	.item-list {padding-bottom:0;}
+	.item-list .txt-guide {font-size:14px;}
+	.item-list ul {padding-bottom:10px;}
 	.item-list ul li {margin-top:10px; padding-top:10px; padding-bottom:10px;}
 	.item-list ul li .picture {width:80px; height:80px;}
 	.item-list ul li .picture p {padding:20px 0 0;}

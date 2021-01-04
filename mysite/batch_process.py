@@ -1879,6 +1879,7 @@ def text_mining(dbconn, cursor) :
 
 	# print(car_news_list[0].news_summary)
 	for idx in range(len(car_news_list)) :
+	# for idx in range(50) :
 		re_content = regex.findall(r'[\p{Hangul}|\p{Latin}|\p{Han}]+', f'{car_news_list[idx].news_content}')
 		origin_sentence_list.append(car_news_list[idx].news_summary)
 		# print(re_summary)
@@ -1989,6 +1990,7 @@ def get_conn_cursor():
 
 
 if __name__ == '__main__' : 
+	# reload_list_data()
 	# Schedule Work
 	# 매일 5회 (오전 9시 / 오후 12시 / 오후 3시 / 오후 6시 / 오후 10시) 뉴스 데이터 수집
 	schedule.every().days.at('09:00').do(reload_list_data)
@@ -1998,10 +2000,8 @@ if __name__ == '__main__' :
 	schedule.every().days.at('22:00').do(reload_list_data)
 
 	# 매일 1회 (오전 04시) 뉴스 본문 데이터 수집
-	schedule.every().days.at('04:00').do(load_detail_data)
+	schedule.every().days.at('03:00').do(load_detail_data)
 
 	while True :
 		schedule.run_pending()
 		time.sleep(1)
-
-
