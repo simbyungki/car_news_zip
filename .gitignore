@@ -134,3 +134,6 @@ dmypy.json
 # settings
 # settings.py
 secrets.json
+
+chromedriver.exe
+/chromedriver.exe

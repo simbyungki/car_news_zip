@@ -6,7 +6,7 @@
 ### 정보
 - 접속 URL : <a href="http://carnewszip.com">http://carnewszip.com</a>
 - 테이블 명세서 : <a href="https://docs.google.com/spreadsheets/d/1TOZSDXpLZaXQhyP-K11WmGR_dQ1tswQc181uI90sgF4/edit#gid=0">https://docs.google.com/spreadsheets/d/1TOZSDXpLZaXQhyP-K11WmGR_dQ1tswQc181uI90sgF4/edit#gid=0</a>
-- 8개 자동차 언론사 : 오토헤럴드, 데일리카, 오토뷰, IT조선, 오토모닝, 오토다이어리, 카가이, 더드라이브
+- 9개 자동차 언론사 : 모터그래프, 오토헤럴드, 데일리카, 오토뷰, IT조선, 오토모닝, 오토다이어리, 카가이, 더드라이브
 - 수집 분야 : 중고차/신차/자동차업계 뉴스 및 시승기
 
 ---
@@ -41,9 +41,6 @@
 
 ### History
 #### 2021.01.04 (월)
-- 
-
-#### 2021.01.03 (일)
 - 뉴스 수집 / 분석 Schedule daemon 실행
   - 실행방법 및 log 확인방법 확인
 

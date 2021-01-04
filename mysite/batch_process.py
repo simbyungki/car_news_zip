@@ -38,7 +38,7 @@ def get_soup2(url) :
 	options = webdriver.ChromeOptions()
 	options.headless = True
 	options.add_argument('window-size=1920x1080')
-	browser = webdriver.Chrome(r'C:\Users\PC\Documents\simbyungki\git\autoplus\chromedriver.exe', options=options)
+	browser = webdriver.Chrome(r'C:\Users\PC\Documents\simbyungki\git\car_news_zip\chromedriver.exe', options=options)
 	browser.maximize_window()
 	browser.get(url)
 	time.sleep(2)
@@ -1416,9 +1416,6 @@ def get_review() :
 
 # 자동차 업계 뉴스 모음
 def get_industry() :
-
-	
-
 	GetAutoH.industry()
 	GetDailyCar.industry()
 	GetAutoview.industry()
@@ -1964,6 +1961,53 @@ def run_text_mining() :
 	print('DB CLOSE / 작업 완료!')
 
 
+
+
+# 네이버 자동차 토크 댓글 수집
+def car_talk() :
+	comment_data = [] 
+	url = 'https://auto.naver.com/car/talk.nhn?yearsId=141873'
+	model_id = 141873
+	headers = {
+		'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36',
+		'referer': url 
+	}
+	page_cnt = 1
+	while True :
+		url = f'https://apis.naver.com/commentBox/cbox/web_naver_list_jsonp.json?ticket=auto1&templateId=&pool=cbox&_callback=jQuery17027007885873388005_1609724711797&lang=ko&country=&objectId={model_id}&categoryId=&pageSize=10&indexSize=10&groupId=&listType=OBJECT&pageType=default&page={page_cnt}&refresh=false&sort=NEW&_=1609725469399'
+		r = requests.get(url, headers=headers)
+		cont = BeautifulSoup(r.content, 'html.parser')
+		# print(cont)
+		total_comm = str(cont).split('comment":')[1].split(",")[0]
+
+		match = re.findall('"contents":([^\*]*),"userIdNo"', str(cont))
+		comment_data.append(match)
+
+		if int(total_comm) <= ((page_cnt) * 10): 
+			break 
+		else :  
+			page_cnt += 1
+
+	def return_comment_list(comments): 
+		flatList = [] 
+		for elem in comments: 
+			# if an element of a list is a list 
+			# iterate over this list and add elements to flatList  
+			if type(elem) == list: 
+				for e in elem: 
+					flatList.append(e) 
+			else: 
+				flatList.append(elem) 
+		return flatList
+
+	comment_list = return_comment_list(comment_data)
+	# print(len(comment_list))
+	for idx, comment in enumerate(comment_list) :
+		print(f'{idx} : {comment}')
+	
+	
+
+
 # SQL 실행
 def get_conn_cursor():
 	try:
@@ -1978,30 +2022,23 @@ def get_conn_cursor():
 
 
 
-# # 유튜브 영상 수집
-# def getYoutubeVideo() :
-# 	youtubeVideos = []
-# 	searchKeywords = ['']
-
-
-
-	# return youtubeVideos
 
 
 
 if __name__ == '__main__' : 
-	# reload_list_data()
-	# Schedule Work
-	# 매일 5회 (오전 9시 / 오후 12시 / 오후 3시 / 오후 6시 / 오후 10시) 뉴스 데이터 수집
-	schedule.every().days.at('09:00').do(reload_list_data)
-	schedule.every().days.at('12:00').do(reload_list_data)
-	schedule.every().days.at('15:00').do(reload_list_data)
-	schedule.every().days.at('18:00').do(reload_list_data)
-	schedule.every().days.at('22:00').do(reload_list_data)
+	# car_talk()
+	# # reload_list_data()
+	# # Schedule Work
+	# # 매일 5회 (오전 9시 / 오후 12시 / 오후 3시 / 오후 6시 / 오후 10시) 뉴스 데이터 수집
+	# schedule.every().days.at('09:00').do(reload_list_data)
+	# schedule.every().days.at('12:00').do(reload_list_data)
+	# schedule.every().days.at('15:00').do(reload_list_data)
+	# schedule.every().days.at('18:00').do(reload_list_data)
+	# schedule.every().days.at('22:00').do(reload_list_data)
 
-	# 매일 1회 (오전 04시) 뉴스 본문 데이터 수집
-	schedule.every().days.at('03:00').do(load_detail_data)
+	# # 매일 1회 (오전 04시) 뉴스 본문 데이터 수집
+	# schedule.every().days.at('03:00').do(load_detail_data)
 
-	while True :
-		schedule.run_pending()
-		time.sleep(1)
+	# while True :
+	# 	schedule.run_pending()
+	# 	time.sleep(1)
