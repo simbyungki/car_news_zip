@@ -1949,6 +1949,8 @@ def text_mining(dbconn, cursor) :
 	
 					
 def run_text_mining() :
+	now = time.localtime()
+
 	dbconn = mysql.connector.connect(host='118.27.37.85', user='car_news_zip', password='dbsgPwls!2', database='CAR_NEWS_ZIP', port='3366')
 	cursor = dbconn.cursor()
 
@@ -1956,56 +1958,9 @@ def run_text_mining() :
 
 	dbconn.commit()
 	print('ㅡ'*50)
-	print('뉴스 상세 내용 분석 DB Commit 완료!')
+	print('뉴스 상세 내용 분석 DB Commit 완료! %04d/%02d/%02d %02d:%02d:%02d' % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec))
 	dbconn.close()
-	print('DB CLOSE / 작업 완료!')
-
-
-
-
-# 네이버 자동차 토크 댓글 수집
-def car_talk() :
-	comment_data = [] 
-	url = 'https://auto.naver.com/car/talk.nhn?yearsId=141873'
-	model_id = 141873
-	headers = {
-		'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36',
-		'referer': url 
-	}
-	page_cnt = 1
-	while True :
-		url = f'https://apis.naver.com/commentBox/cbox/web_naver_list_jsonp.json?ticket=auto1&templateId=&pool=cbox&_callback=jQuery17027007885873388005_1609724711797&lang=ko&country=&objectId={model_id}&categoryId=&pageSize=10&indexSize=10&groupId=&listType=OBJECT&pageType=default&page={page_cnt}&refresh=false&sort=NEW&_=1609725469399'
-		r = requests.get(url, headers=headers)
-		cont = BeautifulSoup(r.content, 'html.parser')
-		# print(cont)
-		total_comm = str(cont).split('comment":')[1].split(",")[0]
-
-		match = re.findall('"contents":([^\*]*),"userIdNo"', str(cont))
-		comment_data.append(match)
-
-		if int(total_comm) <= ((page_cnt) * 10): 
-			break 
-		else :  
-			page_cnt += 1
-
-	def return_comment_list(comments): 
-		flatList = [] 
-		for elem in comments: 
-			# if an element of a list is a list 
-			# iterate over this list and add elements to flatList  
-			if type(elem) == list: 
-				for e in elem: 
-					flatList.append(e) 
-			else: 
-				flatList.append(elem) 
-		return flatList
-
-	comment_list = return_comment_list(comment_data)
-	# print(len(comment_list))
-	for idx, comment in enumerate(comment_list) :
-		print(f'{idx} : {comment}')
-	
-	
+	print('DB CLOSE / 작업 완료! %04d/%02d/%02d %02d:%02d:%02d' % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec))
 
 
 # SQL 실행
@@ -2023,22 +1978,19 @@ def get_conn_cursor():
 
 
 
-
-
 if __name__ == '__main__' : 
-	# car_talk()
-	# # reload_list_data()
+	# run_text_mining()
 	# # Schedule Work
 	# # 매일 5회 (오전 9시 / 오후 12시 / 오후 3시 / 오후 6시 / 오후 10시) 뉴스 데이터 수집
-	# schedule.every().days.at('09:00').do(reload_list_data)
-	# schedule.every().days.at('12:00').do(reload_list_data)
-	# schedule.every().days.at('15:00').do(reload_list_data)
-	# schedule.every().days.at('18:00').do(reload_list_data)
-	# schedule.every().days.at('22:00').do(reload_list_data)
+	schedule.every().days.at('09:00').do(reload_list_data)
+	schedule.every().days.at('12:00').do(reload_list_data)
+	schedule.every().days.at('15:00').do(reload_list_data)
+	schedule.every().days.at('18:00').do(reload_list_data)
+	schedule.every().days.at('22:00').do(reload_list_data)
 
 	# # 매일 1회 (오전 04시) 뉴스 본문 데이터 수집
 	# schedule.every().days.at('03:00').do(load_detail_data)
 
-	# while True :
-	# 	schedule.run_pending()
-	# 	time.sleep(1)
+	while True :
+		schedule.run_pending()
+		time.sleep(1)
