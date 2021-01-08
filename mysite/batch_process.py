@@ -1847,7 +1847,7 @@ def load_detail_data() :
 	print('뉴스 상세 내용 가져오기 완료!', '%04d/%02d/%02d %02d:%02d:%02d' % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec))
 	now = time.localtime()
 	print('뉴스 상세 내용 분석 시작!', '%04d/%02d/%02d %02d:%02d:%02d' % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec))
-	text_mining(dbconn, cursor)
+	# text_mining(dbconn, cursor)
 	now = time.localtime()
 	print('뉴스 상세 내용 분석 완료!', '%04d/%02d/%02d %02d:%02d:%02d' % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec))
 	now = time.localtime()
@@ -1979,6 +1979,8 @@ def get_conn_cursor():
 
 
 if __name__ == '__main__' : 
+	# reload_list_data()
+	# load_detail_data()
 	# run_text_mining()
 	# # Schedule Work
 	# # 매일 5회 (오전 9시 / 오후 12시 / 오후 3시 / 오후 6시 / 오후 10시) 뉴스 데이터 수집

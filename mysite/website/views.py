@@ -18,6 +18,10 @@ def execute(query, bufferd=True) :
 	except Exception as e :
 		dbconn.rollback()
 		raise e
+	finally : 
+		dbconn.commit()
+		cursor.close()
+		# dbconn.close()
 
 # 목록
 def news_list(request) :
@@ -191,6 +195,7 @@ def view_count(request) :
 		news_code = request.GET.get('news_code')
 		after_count = now_count + 1
 		try : 
+			print(f'조회수 >> {now_count} >> {after_count}')
 			execute(f"""
 				UPDATE TBL_TOTAL_CAR_NEWS_LIST 
 				SET VIEW_COUNT = "{after_count}"
@@ -200,7 +205,6 @@ def view_count(request) :
 			print(f'****** + error! >> {e} >> 오류!')
 			pass
 		finally : 
-			dbconn.commit()
-			print(f'조회수 증가 >> {now_count} >> {after_count}')
+			print(f'[{news_code} 조회수 증가] {now_count} >> {after_count}')
 
 	return HttpResponse(after_count, content_type="text/json-comment-filtered")

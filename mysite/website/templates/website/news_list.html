@@ -218,7 +218,7 @@ function loadNewsList(idx, list_type, start_idx, load_length, load_type, fnc_typ
 				newsItem += '</a>';
 				newsItem += '<div class="infos">';
 				newsItem += '<span class="date">' + list.write_date + '</span>';
-				{% comment %} newsItem += '<span class="view-cnt" title="이 기사 조회수">👁 <strong>' + list.view_count + '</strong></span>' {% endcomment %}
+				newsItem += '<span class="view-cnt" title="이 기사 조회수">👁 <strong>' + list.view_count + '</strong></span>'
 				{% comment %} newsItem += '<button type="button" class="btn-like" title="이 기사 찜하기">👍 <strong>0</strong></button>'; {% endcomment %}
 				newsItem += '</div>';
 				newsItem += '</li>';
