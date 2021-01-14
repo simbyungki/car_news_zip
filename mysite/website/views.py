@@ -216,7 +216,7 @@ def car_comments(request) :
 	default_path = '../../car_news_zip/data/youtube_comments/'
 	if request.method == 'POST' : 
 		excel_path = f'{default_path}{request.POST["car-model"]}_review_comments_youtube.xlsx'
-		df = pd.read_excel(excel_path, usecols='B:E')
+		df = pd.read_excel(excel_path, usecols='B:E', engine='openpyxl')
 		# 정렬 조건 (댓글 길이 기준 내림차순)
 		df = df.sort_values(by=['length'], axis=0, ascending=False)
 		comment_list = []
