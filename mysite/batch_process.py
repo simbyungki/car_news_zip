@@ -1938,7 +1938,6 @@ def text_mining(dbconn, cursor) :
 							SET MINING_STATUS = 3, MINING_DATE = NOW() 
 							WHERE NEWS_NO = {news_no}
 						""")
-
 			except Exception as e :
 				print(f'****** + error! >> {e} >>>>> [{idx} // {len(data_list) - 1}] >> 안쪽 오류!')
 				pass
@@ -1964,7 +1963,7 @@ def run_text_mining() :
 
 
 # SQL 실행
-def get_conn_cursor():
+def get_conn_cursor() :
 	try:
 		dbconn = mysql.connector.connect(host='118.27.37.85', user='car_news_zip', password='dbsgPwls!2', database='CAR_NEWS_ZIP', port='3366')
 		cursor = dbconn.cursor(dictionary=True)
@@ -1975,24 +1974,51 @@ def get_conn_cursor():
 		print('재시도')
 		return get_conn_cursor()
 
+# 문장 테스트
+def sentence_test(sentence) :
+	positive_keywords = TblNewsKeywordList.objects.all().filter(positive_yn='y')
+	negative_keywords = TblNewsKeywordList.objects.all().filter(negative_yn='y')
+	in_negative_keywords = []
+	in_positive_keywords = []
+	for keywords in positive_keywords :
+		if keywords.word_morpheme in sentence :
+			print(f'긍정적인 단어 목록 : {keywords.word_morpheme}')
+			in_positive_keywords.append(keywords.word_morpheme)
+	
+	for keywords in negative_keywords : 
+		if keywords.word_morpheme in sentence : 
+			print(f'부정적인 단어 목록 : {keywords.word_morpheme}')
+			in_negative_keywords.append(keywords.word_morpheme)
+		
+	print(f'{sentence} \n** 부정적 단어가 {len(in_negative_keywords)}개 포함되어있고, \n** 긍정적 단어가 {len(in_positive_keywords)}개 포함되어있습니다.')
 
-
+	if len(in_negative_keywords) == len(in_positive_keywords) :
+		print('50% 확률로 중립적인 문장입니다.') 
+	elif len(in_negative_keywords) > len(in_positive_keywords) :
+		per = len(in_positive_keywords) / len(in_negative_keywords) * 100 
+		result_per = 100 - per
+		print(f'{result_per}% 확률로 부정적인 문장입니다.') 
+	elif len(in_negative_keywords) < len(in_positive_keywords) :
+		per = len(in_negative_keywords) / len(in_positive_keywords) * 100 
+		result_per = 100 - per
+		print(f'{result_per}% 확률로 긍정적인 문장입니다.') 
 
 if __name__ == '__main__' : 
-	# reload_list_data()
+	# sentence_test('"다 필요없다 차는 그렌져지 물론ig"')
+	reload_list_data()
 	# load_detail_data()
 	# run_text_mining()
-	# # Schedule Work
-	# # 매일 5회 (오전 9시 / 오후 12시 / 오후 3시 / 오후 6시 / 오후 10시) 뉴스 데이터 수집
-	schedule.every().days.at('09:00').do(reload_list_data)
-	schedule.every().days.at('12:00').do(reload_list_data)
-	schedule.every().days.at('15:00').do(reload_list_data)
-	schedule.every().days.at('18:00').do(reload_list_data)
-	schedule.every().days.at('22:00').do(reload_list_data)
+	# # # Schedule Work
+	# # # 매일 5회 (오전 9시 / 오후 12시 / 오후 3시 / 오후 6시 / 오후 10시) 뉴스 데이터 수집
+	# schedule.every().days.at('09:00').do(reload_list_data)
+	# schedule.every().days.at('12:00').do(reload_list_data)
+	# schedule.every().days.at('15:00').do(reload_list_data)
+	# schedule.every().days.at('18:00').do(reload_list_data)
+	# schedule.every().days.at('22:00').do(reload_list_data)
 
-	# # 매일 1회 (오전 04시) 뉴스 본문 데이터 수집
-	# schedule.every().days.at('03:00').do(load_detail_data)
+	# # # 매일 1회 (오전 04시) 뉴스 본문 데이터 수집
+	# # schedule.every().days.at('03:00').do(load_detail_data)
 
-	while True :
-		schedule.run_pending()
-		time.sleep(1)
+	# while True :
+	# 	schedule.run_pending()
+	# 	time.sleep(1)

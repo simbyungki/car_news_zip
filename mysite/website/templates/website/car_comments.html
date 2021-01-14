@@ -1,0 +1,52 @@
+{% extends 'website/common/template.html' %}
+{% load static %}
+{% load custom_tags %}
+{% block content %}
+	<section class="container car-comment">
+		<div class="inner">
+			<h2 class="page-title">{{car_model}} 여론 평가</h2>
+			<form method="POST">
+				{% csrf_token %}
+				<div class="choice-model">
+					<select name="car-model">
+						<option value="">차종 선택</option>
+						<option value="제네시스GV80">제네시스 GV80</option>
+						<option value="현대자동차펠리세이드">현대자동차 펠리세이드</option>
+						<option value="기아자동차올뉴모닝">기아자동차올뉴모닝</option>
+						<option value="기아자동차쏘렌토MQ4">기아자동차 쏘렌토 MQ4</option>
+					</select>
+					<button type="submit" class="btn-choice btn-deep-gray">여론 평가 보기</button>
+				</div>
+			</form>
+			<p class="comment-info">
+				유튜브 기준 해당 차종 상위 10개의 리뷰 영상에 달린 댓글을 수집하였습니다.<br>
+				차량과 무관한 평가가 존재할 수 있습니다.
+			</p>
+			<div class="car-comment-list">
+				<ul>
+					{% for row in data %}
+						<li>
+							{% comment %} <strong class="info">[{{row.register}} / {{row.registed_date}}]</strong>  {% endcomment %}
+							<p class="comment">{{row.comment}}</p>
+						</li>
+					{% endfor %}
+				</ul>
+			</div>
+		</div>
+	</section>
+	<div class="loading">
+		<div class="dim"></div>
+		<div class="loading-box">
+			<div class="out-box">
+				<i class="in-box"></i>
+			</div>
+			<p>
+				데이터를 불러오는 중입니다.<br>
+				(잠시만 기다려주세요.)
+			</p>
+		</div>
+	</div>
+</div>
+</body>
+</html>
+{% endblock %}

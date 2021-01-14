@@ -187,7 +187,20 @@
 .default-form input[name='memb-name'],
 .member-p .member-box input[type="password"] {margin-top:5px;}
 .member-p .member-box .check-member {margin-top:20px; line-height:20px; font-size:14px; text-align:center;}
-.member-p .member-box .link-join {display:block; margin-top:10px; color:#00affa; font-size:16px; text-align:center; text-decoration:underline;}
+.member-p1 .member-box .link-join {display:block; margin-top:10px; color:#00affa; font-size:16px; text-align:center; text-decoration:underline;}
+
+/* car comment */
+.container.car-comment {padding-top:160px;}
+.page-title {margin-bottom:20px; font-size:32px; text-align:center;}
+.car-comment .comment-info {margin-bottom:20px; line-height:28px; font-size:18px; text-align:center;}
+.car-comment-list {padding:0 30px;}
+.car-comment-list ul {display:flex; flex-wrap:wrap;}
+.car-comment-list li {padding:20px; margin:8px 0.5%; width:22.5%; border:1px solid #ddd; box-sizing:border-box; background:#fff; transition:background .3s;}
+.car-comment-list li:hover {background:#f5f5f5;}
+.car-comment-list li .info {display:block; margin-bottom:8px; font-size:18px;}
+.car-comment-list li .comment {line-height:24px; font-size:16px; word-break:break-all;}
+.car-comment .choice-model {position:absolute; right:0; top:7px;}
+.car-comment .choice-model .btn-choice {display:inline-block; padding:0 20px; height:38px; font-size:14px; vertical-align:middle;}
 
 
 /***** 
@@ -202,6 +215,8 @@
 	.item-list ul li:nth-child(4n+1) {margin-left:1.5%;}
 	.item-list ul li:first-child,
 	.item-list ul li:nth-child(5n + 1) {margin-left:0;}
+
+	.car-comment-list li {width:32.3%;}
 }
 /*****
      1280 > w 

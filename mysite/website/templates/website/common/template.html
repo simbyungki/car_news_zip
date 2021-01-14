@@ -34,9 +34,6 @@
 	<link rel="stylesheet" href="{% static 'css/jquery-ui.css' %}">
 	<link rel="stylesheet" href="{% static 'css/swiper.css' %}">
 	<link rel="stylesheet" href="{% static 'css/content.css' %}">
-    <!--[if lt IE 9]>
-		<script src="../resources/js/html5shiv.min.js"></script>
-	<![endif]-->
 	<!-- Global site tag (gtag.js) - Google Analytics -->
 	<script data-ad-client="ca-pub-3984460457062336" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 	<script async src="https://www.googletagmanager.com/gtag/js?id=G-T4CL1V9FXP"></script>
@@ -100,11 +97,14 @@
 				<nav class="menu">
 					<ul>
 						<li class="active">
-							<a href="javascript:;" onclick="loadNewsList(0, 'category', 0, 12, 'default', 'change');">자동차 관련 뉴스 보기</a>
+							<a href="/news_list">자동차 관련 뉴스 보기</a>
 							<ul>
 								<li class="active">&middot; <a href="javascript:;" onclick="loadNewsList(0, 'category', 0, 12, 'default', 'change');">뉴스 카테고리별 보기</a></li>
 								<li>&middot; <a href="javascript:;" onclick="loadNewsList(0, 'media', 0, 12, 'default', 'change');">언론사별 보기</a></li>
 							</ul>
+						</li>
+						<li>
+							<a href="/car_comments/">차량 모델별 여론 평가</a>
 						</li>
 						{% comment %} <li>
 							<a href="javascript:;">마이페이지</a>
@@ -125,5 +125,20 @@
 		</section>
 	</header>
 
+	<!-- Javascript -->
+	<script type="text/javascript" src="{% static 'js/jquery-1.12.4.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/jquery-ui.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/swiper.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/common.js' %}"></script>
+	<script>
+		$('.gnb-box .menu ul > li').removeClass('active');
+		var thisPath = window.location.pathname;		
+		console.log(thisPath)
+		if(thisPath == '/' || thisPath == '/news_list' || thisPath == '/news_list/'){
+			$('.gnb-box .menu > ul > li').eq(0).addClass('active');
+		}else if(thisPath == '/car_comments/' || thisPath == '/car_comments'){
+			$('.gnb-box .menu > ul > li').eq(1).addClass('active');
+		}
+	</script>
 	{% block content %}{% endblock %}
 	

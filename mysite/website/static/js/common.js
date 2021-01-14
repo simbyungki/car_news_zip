@@ -1,5 +1,5 @@
 var connFlag = false;
-$(function(){
+$(document).ready(function(){
 	//뉴스 다시 불러오기
 	$('.btn-reload-data').on('click', function(){
 		$('.loading').show();

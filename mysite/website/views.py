@@ -6,6 +6,7 @@ from datetime import datetime
 from django.http import HttpResponse
 from django.core import serializers
 
+import pandas as pd
 import time
 import mysql.connector
 
@@ -208,3 +209,29 @@ def view_count(request) :
 			print(f'[{news_code} 조회수 증가] {now_count} >> {after_count}')
 
 	return HttpResponse(after_count, content_type="text/json-comment-filtered")
+
+
+def car_comments(request) : 
+	context = {}
+	default_path = '../../car_news_zip/data/youtube_comments/'
+	if request.method == 'POST' : 
+		excel_path = f'{default_path}{request.POST["car-model"]}_review_comments_youtube.xlsx'
+		df = pd.read_excel(excel_path, usecols='B:E')
+		# 정렬 조건 (댓글 길이 기준 내림차순)
+		df = df.sort_values(by=['length'], axis=0, ascending=False)
+		comment_list = []
+		
+		for row in df.values :
+			temp_dict = {}
+			temp_dict['register'] = row[0]
+			temp_dict['comment'] = row[1]
+			temp_dict['registed_date'] = row[2]
+			comment_list.append(temp_dict)
+
+		context['data'] = comment_list
+		context['car_model'] = request.POST["car-model"]
+		
+		return render(request, 'website/car_comments.html', context)
+	else :
+		
+		return render(request, 'website/car_comments.html', context)
