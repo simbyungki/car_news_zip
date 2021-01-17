@@ -1846,11 +1846,10 @@ def load_detail_data() :
 	now = time.localtime()
 	print('뉴스 상세 내용 가져오기 완료!', '%04d/%02d/%02d %02d:%02d:%02d' % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec))
 	now = time.localtime()
-	print('뉴스 상세 내용 분석 시작!', '%04d/%02d/%02d %02d:%02d:%02d' % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec))
+	# print('뉴스 상세 내용 분석 시작!', '%04d/%02d/%02d %02d:%02d:%02d' % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec))
 	# text_mining(dbconn, cursor)
-	now = time.localtime()
-	print('뉴스 상세 내용 분석 완료!', '%04d/%02d/%02d %02d:%02d:%02d' % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec))
-	now = time.localtime()
+	# now = time.localtime()
+	# print('뉴스 상세 내용 분석 완료!', '%04d/%02d/%02d %02d:%02d:%02d' % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec))
 	dbconn.commit()
 	print('뉴스 상세 내용 가져오기 DB Commit 완료!')
 	dbconn.close()
@@ -1875,8 +1874,8 @@ def text_mining(dbconn, cursor) :
 	# 	context['user'] = None
 
 	# print(car_news_list[0].news_summary)
-	for idx in range(len(car_news_list)) :
-	# for idx in range(50) :
+	# for idx in range(len(car_news_list)) :
+	for idx in range(1) :
 		re_content = regex.findall(r'[\p{Hangul}|\p{Latin}|\p{Han}]+', f'{car_news_list[idx].news_content}')
 		origin_sentence_list.append(car_news_list[idx].news_summary)
 		# print(re_summary)
@@ -2005,9 +2004,9 @@ def sentence_test(sentence) :
 
 if __name__ == '__main__' : 
 	# sentence_test('"다 필요없다 차는 그렌져지 물론ig"')
-	reload_list_data()
+	# reload_list_data()
 	# load_detail_data()
-	# run_text_mining()
+	run_text_mining()
 	# # # Schedule Work
 	# # # 매일 5회 (오전 9시 / 오후 12시 / 오후 3시 / 오후 6시 / 오후 10시) 뉴스 데이터 수집
 	# schedule.every().days.at('09:00').do(reload_list_data)

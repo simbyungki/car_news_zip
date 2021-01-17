@@ -195,11 +195,12 @@
 .car-comment .comment-info {margin-bottom:20px; line-height:28px; font-size:18px; text-align:center;}
 .car-comment-list {padding:0 30px;}
 .car-comment-list ul {display:flex; flex-wrap:wrap;}
-.car-comment-list li {padding:20px; margin:8px 0.5%; width:22.5%; border:1px solid #ddd; box-sizing:border-box; background:#fff; transition:background .3s;}
+.car-comment-list li {padding:20px; margin:8px 0.5%; width:32.3%; border:1px solid #ddd; box-sizing:border-box; background:#fff; transition:background .3s;}
 .car-comment-list li:hover {background:#f5f5f5;}
 .car-comment-list li .info {display:block; margin-bottom:8px; font-size:18px;}
 .car-comment-list li .comment {line-height:24px; font-size:16px; word-break:break-all;}
 .car-comment .choice-model {position:absolute; right:0; top:7px;}
+.car-comment .choice-model select {vertical-align:middle;}
 .car-comment .choice-model .btn-choice {display:inline-block; padding:0 20px; height:38px; font-size:14px; vertical-align:middle;}
 
 
@@ -229,6 +230,8 @@
 	.item-list ul li:nth-child(4n+1) {margin-left:2%;}
 	.item-list ul li:first-child,
 	.item-list ul li:nth-child(3n+1) {margin-left:0;}
+
+	.car-comment-list li {width:49%;}
 }                
 /*****
      1024 > w 
@@ -238,6 +241,12 @@
 	.header .gnb-box .box {left:-40%; padding-top:140px; padding-left:40px; width:40%;}
 	.category-list {height:50px;}
 	.category-list ul li a {font-size:21px;}
+
+	.container.car-comment {padding-top:140px;}
+	.car-comment .page-title {margin-bottom:15px;}
+	.car-comment .choice-model {position:static; margin-bottom:20px; text-align:center;}
+	.car-comment-list ul {border-top:1px solid #ddd;}
+	.car-comment-list li {margin:0; width:100%; border:0; border-bottom:1px solid #ddd;}
 }
 /*****
      880 > w 
@@ -252,6 +261,10 @@
 	.item-list ul li:first-child,
 	.item-list ul li:nth-child(3n+1) {margin-left:0;}
 	.item-list ul li:nth-child(2n) {margin-left:3%;}
+
+	.car-comment .page-title {font-size:28px;}
+	.car-comment .comment-info {line-height:22px; font-size:16px;}
+	.car-comment-list {padding:0;}
 }
 /*****
      768 > w 
@@ -285,6 +298,8 @@
 	.category-list .inner {padding-bottom:0;}
 	.category-list ul {margin-top:0;}
 	.category-list ul li {margin-right:18px; margin-bottom:10px;}
+
+	.car-comment .comment-info {line-height:20px; font-size:14px;}
 }
 
 @media screen and (max-width: 450px) {
@@ -319,4 +334,10 @@
 	.loading .dim {position:fixed; left:0; top:0; z-index:300; width:100%; height:100%; background:rgba(0,0,0,.7);}
 	.loading .loading-box {margin-left:-165px; width:250px;}
 	.loading .loading-box p {line-height:20px; font-size:16px;}
+
+	.container.car-comment {padding-top:128px;}
+	.car-comment .page-title {font-size:22px;}
+	.car-comment .comment-info {margin-bottom:15px; line-height:18px; font-size:12px;}
+	.car-comment-list li {padding:15px;}
+	.car-comment-list li .comment {line-height:20px; font-size:14px;}
 }
