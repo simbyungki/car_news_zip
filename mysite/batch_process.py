@@ -1807,31 +1807,39 @@ def insert_industry_db(dbconn, cursor) :
 
 # 뉴스 목록 새로 수집
 def reload_list_data() :
+	now = time.localtime()
+	start_time = now
+
 	dbconn = mysql.connector.connect(host='118.27.37.85', user='car_news_zip', password='dbsgPwls!2', database='CAR_NEWS_ZIP', port='3366')
 	cursor = dbconn.cursor()
 
-	now = time.localtime()
-	print('뉴스 받아오기 시작!', '%04d/%02d/%02d %02d:%02d:%02d' % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec))
+	print('뉴스 받아오기 시작!')
 
 	insert_used_db(dbconn, cursor)
 	insert_new_db(dbconn, cursor)
 	insert_review_db(dbconn, cursor)
 	insert_industry_db(dbconn, cursor)
 
-	
-	now = time.localtime()
 	dbconn.commit()
-	print('뉴스 받아오기 DB Commit 완료!', '%04d/%02d/%02d %02d:%02d:%02d' % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec))
 	dbconn.close()
-	print('뉴스 받아오기 DB Close 완료!')
+
+	now = time.localtime()
+	end_time = now
+	print('ㅡ'*50)
+	print('뉴스 받아오기 DB Commit/Close 완료!')
+	print('뉴스 받아오기 작업 시작 시간 > %04d/%02d/%02d %02d:%02d:%02d' % (start_time.tm_year, start_time.tm_mon, start_time.tm_mday, start_time.tm_hour, start_time.tm_min, start_time.tm_sec))
+	print('뉴스 받아오기 작업 종료 시간 > %04d/%02d/%02d %02d:%02d:%02d' % (end_time.tm_year, end_time.tm_mon, end_time.tm_mday, end_time.tm_hour, end_time.tm_min, end_time.tm_sec))
 
 # 뉴스 본문 수집
 def load_detail_data() :
+	now = time.localtime()
+	start_time = now
+
 	dbconn = mysql.connector.connect(host='118.27.37.85', user='car_news_zip', password='dbsgPwls!2', database='CAR_NEWS_ZIP', port='3366')
 	cursor = dbconn.cursor()
 
 	now = time.localtime()
-	print('뉴스 상세 내용 가져오기 시작!', '%04d/%02d/%02d %02d:%02d:%02d' % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec))
+	print('뉴스 상세 내용 가져오기 시작!')
 
 	GetAutoH.detail(dbconn, cursor)
 	GetDailyCar.detail(dbconn, cursor)
@@ -1843,17 +1851,17 @@ def load_detail_data() :
 	GetTheDrive.detail(dbconn, cursor)
 	GetMotorGraph.detail(dbconn, cursor)
 	
-	now = time.localtime()
-	print('뉴스 상세 내용 가져오기 완료!', '%04d/%02d/%02d %02d:%02d:%02d' % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec))
-	now = time.localtime()
-	# print('뉴스 상세 내용 분석 시작!', '%04d/%02d/%02d %02d:%02d:%02d' % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec))
-	# text_mining(dbconn, cursor)
-	# now = time.localtime()
-	# print('뉴스 상세 내용 분석 완료!', '%04d/%02d/%02d %02d:%02d:%02d' % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec))
+	print('뉴스 상세 내용 가져오기 완료!')
 	dbconn.commit()
-	print('뉴스 상세 내용 가져오기 DB Commit 완료!')
 	dbconn.close()
-	print('뉴스 상세 내용 가져오기 DB Close 완료!', '%04d/%02d/%02d %02d:%02d:%02d' % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec))
+
+	now = time.localtime()
+	end_time = now
+	print('ㅡ'*50)
+	print('뉴스 상세 내용 가져오기 DB Commit/Close 완료!')
+	print('뉴스 상세 내용 가져오기 작업 시작 시간 > %04d/%02d/%02d %02d:%02d:%02d' % (start_time.tm_year, start_time.tm_mon, start_time.tm_mday, start_time.tm_hour, start_time.tm_min, start_time.tm_sec))
+	print('뉴스 상세 내용 가져오기 작업 종료 시간 > %04d/%02d/%02d %02d:%02d:%02d' % (end_time.tm_year, end_time.tm_mon, end_time.tm_mday, end_time.tm_hour, end_time.tm_min, end_time.tm_sec))
+	
 
 # 뉴스 분석
 mining_result_data = []
@@ -1874,8 +1882,10 @@ def text_mining(dbconn, cursor) :
 	# 	context['user'] = None
 
 	# print(car_news_list[0].news_summary)
+
+	# step01. 형태소 분석 (데이터 가공)
 	# for idx in range(len(car_news_list)) :
-	for idx in range(1) :
+	for idx in range(50) :
 		re_content = regex.findall(r'[\p{Hangul}|\p{Latin}|\p{Han}]+', f'{car_news_list[idx].news_content}')
 		origin_sentence_list.append(car_news_list[idx].news_summary)
 		# print(re_summary)
@@ -1900,9 +1910,11 @@ def text_mining(dbconn, cursor) :
 			in_result_data.append(group)
 		mining_result_data.append(in_result_data)
 
-	for out_idx, data_list in enumerate(mining_result_data) :
-		for idx, data in enumerate(data_list) :
-			try : 
+	# step02. DB Insert
+	try : 
+		for out_idx, data_list in enumerate(mining_result_data) :
+			for idx, data in enumerate(data_list) :
+				# try : 
 				# idx = 0 >> 형태소 분석 전 단어
 				if idx == 0 :
 					news_no = data_list[0]
@@ -1937,17 +1949,22 @@ def text_mining(dbconn, cursor) :
 							SET MINING_STATUS = 3, MINING_DATE = NOW() 
 							WHERE NEWS_NO = {news_no}
 						""")
-			except Exception as e :
-				print(f'****** + error! >> {e} >>>>> [{idx} // {len(data_list) - 1}] >> 안쪽 오류!')
-				pass
-			finally : 
-				print('-'*50)
-				print(f'***** : [{out_idx}/{len(mining_result_data) -1}][{idx}/{len(data_list) - 1}][{news_no}] >> 분석 / INSERT 완료')
-				print('-'*50)
-	
+				# except Exception as e :
+				# 	print(f'****** + error! >> {e} >>>>> [{idx} // {len(data_list) - 1}] >> 안쪽 오류!')
+				# 	pass
+				# finally : 
+				# 	print('-'*50)
+				# 	print(f'***** : [{out_idx}/{len(mining_result_data) -1}][{idx}/{len(data_list) - 1}][{news_no}] >> 분석 / INSERT 완료')
+					
+	except Exception as e :
+		print(f'****** + error! >> {e} >>>>> [{idx} // {len(data_list) - 1}] >> 바깥쪽 오류!')
+		pass
+	finally : 
+		print('바깥쪽 종료')
 					
 def run_text_mining() :
 	now = time.localtime()
+	start_time = now
 
 	dbconn = mysql.connector.connect(host='118.27.37.85', user='car_news_zip', password='dbsgPwls!2', database='CAR_NEWS_ZIP', port='3366')
 	cursor = dbconn.cursor()
@@ -1955,10 +1972,14 @@ def run_text_mining() :
 	text_mining(dbconn, cursor)
 
 	dbconn.commit()
-	print('ㅡ'*50)
-	print('뉴스 상세 내용 분석 DB Commit 완료! %04d/%02d/%02d %02d:%02d:%02d' % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec))
 	dbconn.close()
-	print('DB CLOSE / 작업 완료! %04d/%02d/%02d %02d:%02d:%02d' % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec))
+
+	now = time.localtime()
+	end_time = now
+	print('ㅡ'*50)
+	print('뉴스 상세 내용 분석 DB Commit/Close 완료!')
+	print('뉴스 상세 내용 분석 작업 시작 시간 > %04d/%02d/%02d %02d:%02d:%02d' % (start_time.tm_year, start_time.tm_mon, start_time.tm_mday, start_time.tm_hour, start_time.tm_min, start_time.tm_sec))
+	print('뉴스 상세 내용 분석 작업 종료 시간 > %04d/%02d/%02d %02d:%02d:%02d' % (end_time.tm_year, end_time.tm_mon, end_time.tm_mday, end_time.tm_hour, end_time.tm_min, end_time.tm_sec))
 
 
 # SQL 실행
@@ -1973,51 +1994,26 @@ def get_conn_cursor() :
 		print('재시도')
 		return get_conn_cursor()
 
-# 문장 테스트
-def sentence_test(sentence) :
-	positive_keywords = TblNewsKeywordList.objects.all().filter(positive_yn='y')
-	negative_keywords = TblNewsKeywordList.objects.all().filter(negative_yn='y')
-	in_negative_keywords = []
-	in_positive_keywords = []
-	for keywords in positive_keywords :
-		if keywords.word_morpheme in sentence :
-			print(f'긍정적인 단어 목록 : {keywords.word_morpheme}')
-			in_positive_keywords.append(keywords.word_morpheme)
-	
-	for keywords in negative_keywords : 
-		if keywords.word_morpheme in sentence : 
-			print(f'부정적인 단어 목록 : {keywords.word_morpheme}')
-			in_negative_keywords.append(keywords.word_morpheme)
-		
-	print(f'{sentence} \n** 부정적 단어가 {len(in_negative_keywords)}개 포함되어있고, \n** 긍정적 단어가 {len(in_positive_keywords)}개 포함되어있습니다.')
 
-	if len(in_negative_keywords) == len(in_positive_keywords) :
-		print('50% 확률로 중립적인 문장입니다.') 
-	elif len(in_negative_keywords) > len(in_positive_keywords) :
-		per = len(in_positive_keywords) / len(in_negative_keywords) * 100 
-		result_per = 100 - per
-		print(f'{result_per}% 확률로 부정적인 문장입니다.') 
-	elif len(in_negative_keywords) < len(in_positive_keywords) :
-		per = len(in_negative_keywords) / len(in_positive_keywords) * 100 
-		result_per = 100 - per
-		print(f'{result_per}% 확률로 긍정적인 문장입니다.') 
 
 if __name__ == '__main__' : 
-	# sentence_test('"다 필요없다 차는 그렌져지 물론ig"')
 	# reload_list_data()
 	# load_detail_data()
-	run_text_mining()
-	# # # Schedule Work
-	# # # 매일 5회 (오전 9시 / 오후 12시 / 오후 3시 / 오후 6시 / 오후 10시) 뉴스 데이터 수집
-	# schedule.every().days.at('09:00').do(reload_list_data)
-	# schedule.every().days.at('12:00').do(reload_list_data)
-	# schedule.every().days.at('15:00').do(reload_list_data)
-	# schedule.every().days.at('18:00').do(reload_list_data)
-	# schedule.every().days.at('22:00').do(reload_list_data)
+	# run_text_mining()
+	# # Schedule Work
+	# # 매일 5회 (오전 9시 / 오후 12시 / 오후 3시 / 오후 6시 / 오후 10시) 뉴스 데이터 수집
+	schedule.every().days.at('09:00').do(reload_list_data)
+	schedule.every().days.at('12:00').do(reload_list_data)
+	schedule.every().days.at('15:00').do(reload_list_data)
+	schedule.every().days.at('18:00').do(reload_list_data)
+	schedule.every().days.at('22:00').do(reload_list_data)
 
-	# # # 매일 1회 (오전 04시) 뉴스 본문 데이터 수집
-	# # schedule.every().days.at('03:00').do(load_detail_data)
+	# 매일 1회 (오전 01시) 뉴스 본문 데이터 수집
+	schedule.every().days.at('01:00').do(load_detail_data)
 
-	# while True :
-	# 	schedule.run_pending()
-	# 	time.sleep(1)
+	# 매일 1회 (오전 05시) 뉴스 본문 데이터 분석
+	schedule.every().days.at('05:00').do(run_text_mining)
+
+	while True :
+		schedule.run_pending()
+		time.sleep(1)
