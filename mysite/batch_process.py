@@ -1966,7 +1966,7 @@ def run_text_mining() :
 	now = time.localtime()
 	start_time = now
 
-	dbconn = mysql.connector.connect(host='118.27.37.85', user='car_news_zip', password='dbsgPwls!2', database='CAR_NEWS_ZIP', port='3366')
+	dbconn = mysql.connector.connect(host='localhost', user='car_news_zip', password='dbsgPwls!2', database='CAR_NEWS_ZIP', port='3366')
 	cursor = dbconn.cursor()
 
 	text_mining(dbconn, cursor)
@@ -1999,6 +1999,7 @@ def get_conn_cursor() :
 if __name__ == '__main__' : 
 	# reload_list_data()
 	# load_detail_data()
+	print('실행')
 	run_text_mining()
 	# # Schedule Work
 	# # 매일 5회 (오전 9시 / 오후 12시 / 오후 3시 / 오후 6시 / 오후 10시) 뉴스 데이터 수집
