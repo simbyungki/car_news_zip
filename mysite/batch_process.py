@@ -1884,8 +1884,8 @@ def text_mining(dbconn, cursor) :
 	# print(car_news_list[0].news_summary)
 
 	# step01. 형태소 분석 (데이터 가공)
-	# for idx in range(len(car_news_list)) :
-	for idx in range(50) :
+	for idx in range(len(car_news_list)) :
+	# for idx in range(50) :
 		re_content = regex.findall(r'[\p{Hangul}|\p{Latin}|\p{Han}]+', f'{car_news_list[idx].news_content}')
 		origin_sentence_list.append(car_news_list[idx].news_summary)
 		# print(re_summary)
@@ -2005,14 +2005,14 @@ if __name__ == '__main__' :
 	schedule.every().days.at('09:00').do(reload_list_data)
 	schedule.every().days.at('12:00').do(reload_list_data)
 	schedule.every().days.at('15:00').do(reload_list_data)
-	schedule.every().days.at('18:00').do(reload_list_data)
+	# schedule.every().days.at('18:00').do(reload_list_data)
 	schedule.every().days.at('22:00').do(reload_list_data)
 
 	# 매일 1회 (오전 01시) 뉴스 본문 데이터 수집
 	schedule.every().days.at('01:00').do(load_detail_data)
 
 	# 매일 1회 (오전 05시) 뉴스 본문 데이터 분석
-	schedule.every().days.at('05:00').do(run_text_mining)
+	schedule.every().days.at('17:20').do(run_text_mining)
 
 	while True :
 		schedule.run_pending()
