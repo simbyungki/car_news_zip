@@ -1884,8 +1884,8 @@ def text_mining(dbconn, cursor) :
 	# print(car_news_list[0].news_summary)
 
 	# step01. 형태소 분석 (데이터 가공)
-	for idx in range(len(car_news_list)) :
-	# for idx in range(50) :
+	# for idx in range(len(car_news_list)) :
+	for idx in range(10) :
 		re_content = regex.findall(r'[\p{Hangul}|\p{Latin}|\p{Han}]+', f'{car_news_list[idx].news_content}')
 		origin_sentence_list.append(car_news_list[idx].news_summary)
 		# print(re_summary)
