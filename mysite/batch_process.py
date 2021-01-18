@@ -1868,10 +1868,8 @@ mining_result_data = []
 def text_mining(dbconn, cursor) :
 	kkma = Kkma()
 	car_news_list = TblTotalCarNewsList.objects.all().filter(mining_status=1).exclude(news_content = '')
-	news_keyword_map = TblNewsKeywordMap.objects.all()
 	except_word_list = []
 	except_keyword_list = []
-	context = {}
 	origin_sentence_list = []
 	news_no = 0
 	# user_id = request.session.get('user')
@@ -1885,6 +1883,7 @@ def text_mining(dbconn, cursor) :
 
 	# step01. 형태소 분석 (데이터 가공)
 	# for idx in range(len(car_news_list)) :
+	print('형태소 분석')
 	for idx in range(10) :
 		re_content = regex.findall(r'[\p{Hangul}|\p{Latin}|\p{Han}]+', f'{car_news_list[idx].news_content}')
 		origin_sentence_list.append(car_news_list[idx].news_summary)
@@ -1911,9 +1910,12 @@ def text_mining(dbconn, cursor) :
 		mining_result_data.append(in_result_data)
 
 	# step02. DB Insert
+	print('DB Insert')
 	try : 
 		for out_idx, data_list in enumerate(mining_result_data) :
+			print('DB Insert 2')
 			for idx, data in enumerate(data_list) :
+				print('DB Insert 3')
 				# try : 
 				# idx = 0 >> 형태소 분석 전 단어
 				if idx == 0 :
