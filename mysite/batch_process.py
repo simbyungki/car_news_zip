@@ -1966,7 +1966,7 @@ def run_text_mining() :
 	now = time.localtime()
 	start_time = now
 
-	dbconn = mysql.connector.connect(host='localhost', user='car_news_zip', password='dbsgPwls!2', database='CAR_NEWS_ZIP', port='3366')
+	dbconn = mysql.connector.connect(host='118.27.37.85', user='car_news_zip', password='dbsgPwls!2', database='CAR_NEWS_ZIP', port='3366')
 	cursor = dbconn.cursor()
 
 	text_mining(dbconn, cursor)
@@ -1985,7 +1985,7 @@ def run_text_mining() :
 # SQL 실행
 def get_conn_cursor() :
 	try:
-		dbconn = mysql.connector.connect(host='localhost', user='car_news_zip', password='dbsgPwls!2', database='CAR_NEWS_ZIP', port='3366')
+		dbconn = mysql.connector.connect(host='118.27.37.85', user='car_news_zip', password='dbsgPwls!2', database='CAR_NEWS_ZIP', port='3366')
 		cursor = dbconn.cursor(dictionary=True)
 		cursor.execute('SELECT NOW();')
 		return dbconn, cursor
