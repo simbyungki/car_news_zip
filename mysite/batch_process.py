@@ -1888,7 +1888,7 @@ def text_mining(cont_type, dbconn, cursor) :
 	if cont_type == 'news' : 
 		# step01. 형태소 분석 (데이터 가공)
 		# for idx in range(len(car_news_list)) :
-		for idx in range(10) :
+		for idx in range(3) :
 			re_content = regex.findall(r'[\p{Hangul}|\p{Latin}|\p{Han}]+', f'{car_news_list[idx].news_content}')
 			origin_sentence_list.append(car_news_list[idx].news_summary)
 			# print(re_summary)
@@ -2041,9 +2041,8 @@ def run_text_mining() :
 	dbconn = mysql.connector.connect(host='118.27.37.85', user='car_news_zip', password='dbsgPwls!2', database='CAR_NEWS_ZIP', port='3366')
 	cursor = dbconn.cursor()
 
-
-	# text_mining('news', dbconn, cursor)
-	text_mining('youtube_comments', dbconn, cursor)
+	text_mining('news', dbconn, cursor)
+	# text_mining('youtube_comments', dbconn, cursor)
 
 	dbconn.commit()
 	dbconn.close()
@@ -2072,9 +2071,9 @@ def get_conn_cursor() :
 
 if __name__ == '__main__' : 
 	print('실행')
-	load_detail_data()
+	# load_detail_data()
 	# reload_list_data()
-	# run_text_mining()
+	run_text_mining()
 	# # Schedule Work
 	# # 매일 5회 (오전 9시 / 오후 12시 / 오후 3시 / 오후 6시 / 오후 10시) 뉴스 데이터 수집
 	# schedule.every().days.at('09:00').do(reload_list_data)

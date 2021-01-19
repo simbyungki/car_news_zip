@@ -98,7 +98,6 @@ def get_comments(keyword) :
 		registed_date_list = soup.select('yt-formatted-string.published-time-text')
 
 		# replace / append data
-		printProgressBar(0, len(user_id_list), prefix = 'Progress:', suffix = 'Complete', length = 50)
 		for i in range(len(user_id_list)):
 			str_tmp = str(user_id_list[i].text)
 			str_tmp = str_tmp.replace('\n', '')
@@ -111,7 +110,6 @@ def get_comments(keyword) :
 			str_tmp = str_tmp.replace('\t', '')
 			str_tmp = str_tmp.replace('   ','')
 			comment_group.append(str_tmp)
-			printProgressBar(i + 1, len(user_id_list), prefix = 'Progress:', suffix = 'Complete', length = 50)
 			# print(f'[{i} / {len(user_id_list)}] {str_tmp}')
 			length_group.append(len(str_tmp))
 
@@ -143,26 +141,6 @@ def car_comments() :
 
 	return comment_list
 
-def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):
-    """
-    Call in a loop to create terminal progress bar
-    @params:
-        iteration   - Required  : current iteration (Int)
-        total       - Required  : total iterations (Int)
-        prefix      - Optional  : prefix string (Str)
-        suffix      - Optional  : suffix string (Str)
-        decimals    - Optional  : positive number of decimals in percent complete (Int)
-        length      - Optional  : character length of bar (Int)
-        fill        - Optional  : bar fill character (Str)
-        printEnd    - Optional  : end character (e.g. "\r", "\r\n") (Str)
-    """
-    percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
-    filledLength = int(length * iteration // total)
-    bar = fill * filledLength + '-' * (length - filledLength)
-    print(f'\r{prefix} |{bar}| {percent}% {suffix}', end = printEnd)
-    # Print New Line on Complete
-    if iteration == total: 
-        print()
 
 # 문장 테스트
 def sentence_test(sentence) :
@@ -199,20 +177,20 @@ def sentence_test(sentence) :
 		print(f' ★  위 문장은 {result_per}% 확률로 긍정적인 문장입니다.') 
 
 if __name__ == '__main__' : 
-	sentence_test('원가 절감하면서 차가격은 더 올리고 ....그걸 또 좋다고 사주는 호구 국민들도 있고.. 이러니 연결고리가 끊어지나..')
+	# sentence_test('원가 절감하면서 차가격은 더 올리고 ....그걸 또 좋다고 사주는 호구 국민들도 있고.. 이러니 연결고리가 끊어지나..')
 
 
-	# # 시작 시간 (전체 수행시간을 구하기 위함)
-	# start = time.time()  
+	# 시작 시간 (전체 수행시간을 구하기 위함)
+	start = time.time()  
 	
-	# # 영상 검색 후 댓글 가져오기
-	# get_comments('기아자동차K5DL3')
+	# 영상 검색 후 댓글 가져오기
+	get_comments('기아자동차레이')
 
-	# # 종료 시간 (전체 수행시간을 구하기 위함)
-	# end = time.time()
-	# # 전체 수행시간
-	# min, sec = divmod(round(end - start), 60)
-	# print('*** 작업 총 소요 시간 : %02d분 %02d초' % (min, sec))
+	# 종료 시간 (전체 수행시간을 구하기 위함)
+	end = time.time()
+	# 전체 수행시간
+	min, sec = divmod(round(end - start), 60)
+	print('*** 작업 총 소요 시간 : %02d분 %02d초' % (min, sec))
 
 	
 
