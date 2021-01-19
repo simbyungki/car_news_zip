@@ -2086,7 +2086,7 @@ if __name__ == '__main__' :
 	schedule.every().days.at('01:00').do(load_detail_data)
 
 	# 매일 1회 (오전 05시) 뉴스 본문 데이터 분석
-	schedule.every().days.at('15:45').do(run_text_mining)
+	schedule.every().days.at('15:55').do(run_text_mining)
 
 	while True :
 		schedule.run_pending()
