@@ -1954,6 +1954,7 @@ def text_mining(cont_type, dbconn, cursor) :
 									SET MINING_STATUS = 3, MINING_DATE = NOW() 
 									WHERE NEWS_NO = {news_no}
 								""")
+								time.sleep(0.1)
 					except Exception as e :
 						print(f'****** + error! >> {e} >>>>> [{idx} // {len(data_list) - 1}] >> 안쪽 오류!')
 						pass
@@ -2015,7 +2016,7 @@ def text_mining(cont_type, dbconn, cursor) :
 								)
 							""")
 							print(f'**** : [{out_idx}/{len(mining_result_data) -1}][{idx}/{len(data_list) - 1}][{origin_word}][{in_idx}/{len(data[1]) -1}] >> {word[0]} / {word[1]} / KEYWORD 추가 완료!')
-							time.sleep(0.15)
+							time.sleep(0.1)
 					except Exception as e :
 						print(f'****** + error! >> {e} >>>>> [{idx} // {len(data_list) - 1}] >> 안쪽 오류!')
 						pass
