@@ -200,7 +200,7 @@
 .car-comment-list li .info {display:block; margin-bottom:8px; font-size:18px;}
 .car-comment-list li .comment {line-height:24px; font-size:16px; word-break:break-all;}
 .car-comment .choice-model {position:absolute; right:0; top:7px;}
-.car-comment .choice-model select {vertical-align:middle;}
+.car-comment .choice-model select {color:#444; vertical-align:middle;}
 .car-comment .choice-model .btn-choice {display:inline-block; padding:0 20px; height:38px; font-size:14px; vertical-align:middle;}
 
 

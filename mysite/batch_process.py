@@ -18,6 +18,7 @@ from konlpy.tag import Kkma
 from wordcloud import WordCloud
 from bs4 import BeautifulSoup
 from selenium import webdriver
+import pandas as pd
 
 new_car_list = []
 used_car_list = []
@@ -1865,7 +1866,7 @@ def load_detail_data() :
 
 # 뉴스 분석
 mining_result_data = []
-def text_mining(dbconn, cursor) :
+def text_mining(cont_type, dbconn, cursor) :
 	kkma = Kkma()
 	car_news_list = TblTotalCarNewsList.objects.all().filter(mining_status=1).exclude(news_content = '')
 	except_word_list = []
@@ -1881,88 +1882,156 @@ def text_mining(dbconn, cursor) :
 
 	# print(car_news_list[0].news_summary)
 
-	# step01. 형태소 분석 (데이터 가공)
-	# for idx in range(len(car_news_list)) :
 	print('형태소 분석')
-	for idx in range(10) :
-		re_content = regex.findall(r'[\p{Hangul}|\p{Latin}|\p{Han}]+', f'{car_news_list[idx].news_content}')
-		origin_sentence_list.append(car_news_list[idx].news_summary)
-		# print(re_summary)
-		# print('-'*50)
-		in_result_data = []
-		in_result_data.append(car_news_list[idx].news_no)
-		for word in re_content :
-			in_result_word = []	
-			group = []
-			if (word not in except_word_list) :
-				word_g = []
-				word_g.append(word)
-				group.append(word_g)
-				# print(word)
-				# print('-'*50)
-				for keyword in kkma.pos(word) :
-					if (keyword not in except_keyword_list) :
-						# print(keyword)
-						# print('-'*50)
-						in_result_word.append(keyword)
-				group.append(in_result_word)
-			in_result_data.append(group)
-		mining_result_data.append(in_result_data)
 
-	# step02. DB Insert
-	print('DB Insert')
-	try : 
-		for out_idx, data_list in enumerate(mining_result_data) :
-			print('DB Insert 2')
-			for idx, data in enumerate(data_list) :
-				print('DB Insert 3')
-				# try : 
-				# idx = 0 >> 형태소 분석 전 단어
-				if idx == 0 :
-					news_no = data_list[0]
-				else : 
-					origin_word = re.sub('[-=.#/?:$}\"\']', '', str(data[0])).replace('[','').replace(']','')
-					print(f'*** : [{out_idx}/{len(mining_result_data) -1}][{news_no}][{idx}/{len(data_list)}][{origin_word}]')
-					for in_idx, word in enumerate(data[1]) :
-						# INSERT
-						cursor.execute(f"""
-							INSERT IGNORE INTO TBL_NEWS_KEYWORD_LIST 
-							(
-								WORD_MORPHEME, WORD_CLASS, UPDATE_DATE
-							) 
-							VALUES (
-								"{word[0]}", "{word[1]}", NOW()
-							)
-						""")
-						cursor.execute(f"""
-							INSERT IGNORE INTO TBL_NEWS_KEYWORD_MAP 
-							(
-								WORD_ORIGIN, WORD_MORPHEME,
-								NEWS_NO, WORD_COUNT
-							) 
-							VALUES (
-								"{origin_word}", "{word[0]}",
-								"{news_no}", 1
-							)
-						""")
-						print(f'**** : [{out_idx}/{len(mining_result_data) -1}][{news_no}][{idx}/{len(data_list) - 1}][{origin_word}][{in_idx}/{len(data[1]) -1}] >> {word[0]} / {word[1]} / KEYWORD 추가 및 뉴스 매핑 완료!')
-						cursor.execute(f"""
-							UPDATE TBL_TOTAL_CAR_NEWS_LIST
-							SET MINING_STATUS = 3, MINING_DATE = NOW() 
-							WHERE NEWS_NO = {news_no}
-						""")
-				# except Exception as e :
-				# 	print(f'****** + error! >> {e} >>>>> [{idx} // {len(data_list) - 1}] >> 안쪽 오류!')
-				# 	pass
-				# finally : 
-				# 	print('-'*50)
-				# 	print(f'***** : [{out_idx}/{len(mining_result_data) -1}][{idx}/{len(data_list) - 1}][{news_no}] >> 분석 / INSERT 완료')
+	# 뉴스 본문 분석
+	if cont_type == 'news' : 
+		# step01. 형태소 분석 (데이터 가공)
+		# for idx in range(len(car_news_list)) :
+		for idx in range(10) :
+			re_content = regex.findall(r'[\p{Hangul}|\p{Latin}|\p{Han}]+', f'{car_news_list[idx].news_content}')
+			origin_sentence_list.append(car_news_list[idx].news_summary)
+			# print(re_summary)
+			# print('-'*50)
+			in_result_data = []
+			in_result_data.append(car_news_list[idx].news_no)
+			for word in re_content :
+				in_result_word = []	
+				group = []
+				if (word not in except_word_list) :
+					word_g = []
+					word_g.append(word)
+					group.append(word_g)
+					# print(word)
+					# print('-'*50)
+					for keyword in kkma.pos(word) :
+						if (keyword not in except_keyword_list) :
+							# print(keyword)
+							# print('-'*50)
+							in_result_word.append(keyword)
+					group.append(in_result_word)
+				in_result_data.append(group)
+			mining_result_data.append(in_result_data)
+
+		# step02. DB Insert
+		print('DB Insert')
+		try : 
+			for out_idx, data_list in enumerate(mining_result_data) :
+				print('DB Insert 2')
+				for idx, data in enumerate(data_list) :
+					try : 
+						if idx == 0 :	
+							news_no = data_list[0]
+						else : 
+							origin_word = re.sub('[-=.#/?:$}\"\']', '', str(data[0])).replace('[','').replace(']','')
+							print(f'*** : [{out_idx}/{len(mining_result_data) -1}][{news_no}][{idx}/{len(data_list)}][{origin_word}]')
+
+							for in_idx, word in enumerate(data[1]) :
+								# INSERT
+								cursor.execute(f"""
+									INSERT IGNORE INTO TBL_NEWS_KEYWORD_LIST 
+									(
+										WORD_MORPHEME, WORD_CLASS, UPDATE_DATE
+									) 
+									VALUES (
+										"{word[0]}", "{word[1]}", NOW()
+									)
+								""")
+								cursor.execute(f"""
+									INSERT IGNORE INTO TBL_NEWS_KEYWORD_MAP 
+									(
+										WORD_ORIGIN, WORD_MORPHEME,
+										NEWS_NO, WORD_COUNT
+									) 
+									VALUES (
+										"{origin_word}", "{word[0]}",
+										"{news_no}", 1
+									)
+								""")
+								print(f'**** : [{out_idx}/{len(mining_result_data) -1}][{news_no}][{idx}/{len(data_list) - 1}][{origin_word}][{in_idx}/{len(data[1]) -1}] >> {word[0]} / {word[1]} / KEYWORD 추가 및 뉴스 매핑 완료!')
+								cursor.execute(f"""
+									UPDATE TBL_TOTAL_CAR_NEWS_LIST
+									SET MINING_STATUS = 3, MINING_DATE = NOW() 
+									WHERE NEWS_NO = {news_no}
+								""")
+					except Exception as e :
+						print(f'****** + error! >> {e} >>>>> [{idx} // {len(data_list) - 1}] >> 안쪽 오류!')
+						pass
+					finally : 
+						print('-'*50)
+						print(f'***** : [{out_idx}/{len(mining_result_data) -1}][{idx}/{len(data_list) - 1}][{news_no}] >> 분석 / INSERT 완료')
+		except Exception as e :
+			print(f'****** + error! >> {e} >>>>> [{idx} // {len(data_list) - 1}] >> 바깥쪽 오류!')
+			pass
+		finally : 
+			print('바깥쪽 종료')
+
+	# 유튜브 댓글 분석
+	elif cont_type == 'youtube_comments' : 
+		reviews = pd.read_excel('../data/youtube_comments/기아자동차K5DL3_review_comments_youtube.xlsx')
+		df_list = reviews.values.tolist()
+		in_result_data = []
+
+		# step01. 형태소 분석 (데이터 가공)
+		for review in df_list :
+			re_content = regex.findall(r'[\p{Hangul}|\p{Latin}|\p{Han}]+', f'{review[2]}')
+			for word in re_content :
+				in_result_word = []	
+				group = []
+				if (word not in except_word_list) :
+					word_g = []
+					word_g.append(word)
+					group.append(word_g)
+					# print(word)
+					# print('-'*50)
+					for keyword in kkma.pos(word) :
+						if (keyword not in except_keyword_list) :
+							# print(keyword)
+							# print('-'*50)
+							in_result_word.append(keyword)
+					group.append(in_result_word)
+				in_result_data.append(group)
+			mining_result_data.append(in_result_data)
+	
+		# step02. DB Insert
+		print('DB Insert')
+		try : 
+			for out_idx, data_list in enumerate(mining_result_data) :
+				print('DB Insert 2')
+				for idx, data in enumerate(data_list) :
+					try : 
+						origin_word = re.sub('[-=.#/?:$}\"\']', '', str(data[0])).replace('[','').replace(']','')
+						print(f'*** : [{out_idx}/{len(mining_result_data) -1}][{idx}/{len(data_list)}][{origin_word}]')
+
+						for in_idx, word in enumerate(data[1]) :
+							# INSERT
+							cursor.execute(f"""
+								INSERT IGNORE INTO TBL_NEWS_KEYWORD_LIST 
+								(
+									WORD_MORPHEME, WORD_CLASS, UPDATE_DATE
+								) 
+								VALUES (
+									"{word[0]}", "{word[1]}", NOW()
+								)
+							""")
+							print(f'**** : [{out_idx}/{len(mining_result_data) -1}][{idx}/{len(data_list) - 1}][{origin_word}][{in_idx}/{len(data[1]) -1}] >> {word[0]} / {word[1]} / KEYWORD 추가 완료!')
+							time.sleep(0.15)
+					except Exception as e :
+						print(f'****** + error! >> {e} >>>>> [{idx} // {len(data_list) - 1}] >> 안쪽 오류!')
+						pass
+					finally : 
+						print('-'*50)
+						print(f'***** : [{out_idx}/{len(mining_result_data) -1}][{idx}/{len(data_list) - 1}] >> 분석 / INSERT 완료')
+
+				if out_idx == 10 :
+					break
+		except Exception as e :
+			print(f'****** + error! >> {e} >>>>> [{idx} // {len(data_list) - 1}] >> 바깥쪽 오류!')
+			pass
+		finally : 
+			print('바깥쪽 종료')
 					
-	except Exception as e :
-		print(f'****** + error! >> {e} >>>>> [{idx} // {len(data_list) - 1}] >> 바깥쪽 오류!')
-		pass
-	finally : 
-		print('바깥쪽 종료')
+	
 					
 def run_text_mining() :
 	now = time.localtime()
@@ -1971,7 +2040,9 @@ def run_text_mining() :
 	dbconn = mysql.connector.connect(host='118.27.37.85', user='car_news_zip', password='dbsgPwls!2', database='CAR_NEWS_ZIP', port='3366')
 	cursor = dbconn.cursor()
 
-	text_mining(dbconn, cursor)
+
+	# text_mining('news', dbconn, cursor)
+	text_mining('youtube_comments', dbconn, cursor)
 
 	dbconn.commit()
 	dbconn.close()
@@ -1999,9 +2070,9 @@ def get_conn_cursor() :
 
 
 if __name__ == '__main__' : 
-	# reload_list_data()
-	# load_detail_data()
 	print('실행')
+	# load_detail_data()
+	# reload_list_data()
 	run_text_mining()
 	# # Schedule Work
 	# # 매일 5회 (오전 9시 / 오후 12시 / 오후 3시 / 오후 6시 / 오후 10시) 뉴스 데이터 수집
