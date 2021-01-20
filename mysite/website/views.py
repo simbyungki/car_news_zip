@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.contrib import auth
+from django.db.models import Q
 from .models import TblTotalCarNewsList, TblMemberList, TblNewsKeywordList, TblNewsKeywordMap
 from datetime import datetime
 from django.http import HttpResponse
@@ -184,7 +185,7 @@ def list_data(request) :
 			category_num = 5
 		news = news_list.filter(news_category=category_num).order_by('-write_date')
 	elif list_type == 'all' : 
-		news = news_list.filter(news_content__icontains=search_keyword).order_by('-write_date')
+		news = news_list.filter(Q(news_content__icontains=search_keyword) | Q(news_title__icontains=search_keyword) ).order_by('-write_date')
 	
 	set_news = serializers.serialize('json', news[start_idx:start_idx+load_length])
 	return JsonResponse({'news': set_news, 'total_length': len(news)}, status=200)

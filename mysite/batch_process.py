@@ -1886,6 +1886,7 @@ def text_mining(cont_type, dbconn, cursor) :
 
 	# 뉴스 본문 분석
 	if cont_type == 'news' : 
+
 		# step01. 형태소 분석 (데이터 가공)
 		for idx in range(len(car_news_list)) :
 		# for idx in range(3) :
@@ -1969,13 +1970,18 @@ def text_mining(cont_type, dbconn, cursor) :
 
 	# 유튜브 댓글 분석
 	elif cont_type == 'youtube_comments' : 
-		reviews = pd.read_excel('../data/youtube_comments/기아자동차더k9_review_comments_youtube.xlsx')
+		reviews = pd.read_excel('../data/youtube_comments/기아자동차레이_review_comments_youtube.xlsx')
 		df_list = reviews.values.tolist()
 		in_result_data = []
 
-		# step01. 형태소 분석 (데이터 가공)
-		for review in df_list :
-			re_content = regex.findall(r'[\p{Hangul}|\p{Latin}|\p{Han}]+', f'{review[2]}')
+		# # step01. 형태소 분석 (데이터 가공)
+		for idx in range(len(df_list)) :
+			re_content = regex.findall(r'[\p{Hangul}|\p{Latin}|\p{Han}]+', f'{df_list[idx][2]}')
+			origin_sentence_list.append(df_list[idx][2])
+			# print(re_summary)
+			# print('-'*50)
+			in_result_data = []
+			in_result_data.append('idx')
 			for word in re_content :
 				in_result_word = []	
 				group = []
@@ -1998,13 +2004,12 @@ def text_mining(cont_type, dbconn, cursor) :
 		print(f'{len(mining_result_data)} > DB Insert')
 		try : 
 			for out_idx, data_list in enumerate(mining_result_data) :
-				# print(data_list)
 				for idx, data in enumerate(data_list) :
 					try : 
 						origin_word = re.sub('[-=.#/?:$}\"\']', '', str(data[0])).replace('[','').replace(']','')
-						print(f'*** : [{out_idx}/{len(mining_result_data) -1}][{idx}/{len(data[1])}][{origin_word}]')
-
+						print(f'*** : [{out_idx}/{len(mining_result_data) -1}][{idx}/{len(data_list) - 1}][{origin_word}]')
 						for in_idx, word in enumerate(data[1]) :
+							# print(f'[{word[0]}], [{word[1]}]')
 							# INSERT
 							cursor.execute(f"""
 								INSERT IGNORE INTO TBL_NEWS_KEYWORD_LIST 
@@ -2016,7 +2021,7 @@ def text_mining(cont_type, dbconn, cursor) :
 								)
 							""")
 							print(f'**** : [{out_idx}/{len(mining_result_data) -1}][{idx}/{len(data_list) - 1}][{origin_word}][{in_idx}/{len(data[1]) -1}] >> {word[0]} / {word[1]} / KEYWORD 추가 완료!')
-							time.sleep(0.1)
+						time.sleep(0.1)
 					except Exception as e :
 						print(f'****** + error! >> {e} >>>>> [{idx} // {len(data_list) - 1}] >> 안쪽 오류!')
 						pass
@@ -2071,20 +2076,20 @@ if __name__ == '__main__' :
 	print('실행')
 	# load_detail_data()
 	# reload_list_data()
-	# run_text_mining()
-	# Schedule Work
-	# 매일 4회 (오전 9시 / 오후 12시 / 오후 3시 / 오후 7시) 뉴스 데이터 수집
-	schedule.every().days.at('09:00').do(reload_list_data)
-	schedule.every().days.at('12:00').do(reload_list_data)
-	schedule.every().days.at('15:00').do(reload_list_data)
-	schedule.every().days.at('19:00').do(reload_list_data)
+	run_text_mining()
+	# # Schedule Work
+	# # 매일 4회 (오전 9시 / 오후 12시 / 오후 3시 / 오후 7시) 뉴스 데이터 수집
+	# schedule.every().days.at('09:00').do(reload_list_data)
+	# schedule.every().days.at('12:00').do(reload_list_data)
+	# schedule.every().days.at('15:00').do(reload_list_data)
+	# schedule.every().days.at('19:00').do(reload_list_data)
 
-	# 매일 1회 (오전 01시) 뉴스 본문 데이터 수집
-	schedule.every().days.at('01:00').do(load_detail_data)
+	# # 매일 1회 (오전 01시) 뉴스 본문 데이터 수집
+	# schedule.every().days.at('01:00').do(load_detail_data)
 
-	# 매일 1회 (오전 05시) 뉴스 본문 데이터 분석
-	# schedule.every().days.at('05:00').do(run_text_mining)
+	# # 매일 1회 (오전 05시) 뉴스 본문 데이터 분석
+	# # schedule.every().days.at('05:00').do(run_text_mining)
 
-	while True :
-		schedule.run_pending()
-		time.sleep(1)
+	# while True :
+	# 	schedule.run_pending()
+	# 	time.sleep(1)

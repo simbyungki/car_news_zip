@@ -131,14 +131,134 @@
 	<script type="text/javascript" src="{% static 'js/swiper.min.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/common.js' %}"></script>
 	<script>
-		$('.gnb-box .menu ul > li').removeClass('active');
-		var thisPath = window.location.pathname;		
-		console.log(thisPath)
-		if(thisPath == '/' || thisPath == '/news_list' || thisPath == '/news_list/'){
-			$('.gnb-box .menu > ul > li').eq(0).addClass('active');
-		}else if(thisPath == '/car_comments/' || thisPath == '/car_comments'){
-			$('.gnb-box .menu > ul > li').eq(1).addClass('active');
-		}
+	$('.gnb-box .menu ul > li').removeClass('active');
+	var thisPath = window.location.pathname;		
+	console.log(thisPath)
+	if(thisPath == '/' || thisPath == '/news_list' || thisPath == '/news_list/'){
+		$('.gnb-box .menu > ul > li').eq(0).addClass('active');
+	}else if(thisPath == '/car_comments/' || thisPath == '/car_comments'){
+		$('.gnb-box .menu > ul > li').eq(1).addClass('active');
+	}
+
+	//news load
+function loadNewsList(idx, list_type, start_idx, load_length, load_type, fnc_type, search_keyword){
+	console.log('@@@', list_type)
+	$('.loading').show();
+	connFlag = true;
+	$.ajax({
+		url: '{% url "list_data" %}',
+		type: 'GET',
+		data: {
+			'list_idx': idx,
+			'list_type': list_type,
+			'start_idx': start_idx,
+			'load_length': load_length,
+			'search_keyword': search_keyword
+		},
+		dataType: 'json',
+		success: function(data){
+			$('.loading').hide();
+			var newsItem = "";		
+			json_data = JSON.parse(data.news)
+			total_length = data.total_length
+			console.log(total_length)
+			for(i = 0; i < json_data.length; i++){
+				list = json_data[i].fields;
+				var media_name = '';
+				if(list.media_code == '100'){
+					media_name = 'ah'
+				}else if(list.media_code == '200'){
+					media_name = 'daily'
+				}else if(list.media_code == '300'){
+					media_name = 'auto-view'
+				}else if(list.media_code == '400'){
+					media_name = 'chosun'
+				}else if(list.media_code == '500'){
+					media_name = 'auto-morning'
+				}else if(list.media_code == '600'){
+					media_name = 'auto-diary'
+				}else if(list.media_code == '700'){
+					media_name = 'carguy'
+				}else if(list.media_code == '800'){
+					media_name = 'drive'
+				}else if(list.media_code == '900'){
+					media_name = 'motor-graph'
+				}
+				newsItem += '<li data-news-code="' + list.news_code + '">';
+				newsItem += '<a href="' + list.news_url + '" target="_blank" title="' + list.news_title + '">';
+				if(list.media_code == '200' || /*list.media_code == '500' ||*/ list.news_img_url == 'None' || list.news_img_url == ''){
+					newsItem += '<div class="picture">';
+					newsItem += '<p><span class="ico">😰</span><br>해당 언론사에서<br>이미지를 불러올 수 없습니다.</p>';
+					newsItem += '</div>';
+				}else{
+					newsItem += '<div class="picture" style="background:url(\'' + list.news_img_url + '\') no-repeat center; background-size:cover;"></div>';
+				}
+				newsItem += '<div class="info-box">';
+				newsItem += '<div class="tags">';
+				if(list.write_date == '{{ today_date|escapejs }}'){
+					newsItem += '<span class="today">TODAY</span>';
+				}
+				newsItem += '<span class="'+ media_name +'">' + list.media_name + '</span>';
+				newsItem += '</div>';
+				newsItem += '<p class="subject">' + list.news_title + '</p>';
+				if(list.news_summary.length == 0){
+					newsItem += '<p class="summary">' + list.news_content + '</p>';
+				}else {
+					newsItem += '<p class="summary">' + list.news_summary + '</p>';
+				}
+				newsItem += '</div>';
+				newsItem += '</a>';
+				newsItem += '<div class="infos">';
+				newsItem += '<span class="date">' + list.write_date + '</span>';
+				newsItem += '<span class="view-cnt" title="이 기사 조회수">👁 <strong>' + list.view_count + '</strong></span>'
+				{% comment %} newsItem += '<button type="button" class="btn-like" title="이 기사 찜하기">👍 <strong>0</strong></button>'; {% endcomment %}
+				newsItem += '</div>';
+				newsItem += '</li>';
+			}
+			if(load_type == 'more'){
+				$('.news-group').append(newsItem);
+				var nowScrollTop = $('html, body').scrollTop();
+				$('html, body').animate({scrollTop: nowScrollTop + 100}, 150);
+			}else{
+				$('.news-group').html(newsItem);
+				$('document, html').scrollTop(0);
+			}
+
+			if(load_type == 'search'){
+				var keyword = $('#search_keyword').val();
+				$('.result-info p span').text(keyword);
+				$('.result-info p strong').text(total_length);
+				$('.category-list .sub-menu').removeClass('show');
+				$('.category-list .result-info').addClass('show');
+			}
+
+			//sub menu
+			console.log(list_type)
+			if(fnc_type == 'change'){
+				$('.category-list ul').removeClass('show');
+				$('.category-list ul li').removeClass('active');
+				$('.category-list .result-info').removeClass('show');
+
+				if(list_type == 'category'){
+					$('#wrap').prop('class', '').addClass('category');
+					$('.category-list ul.category').addClass('show');
+				}else if(list_type == 'media'){
+					$('#wrap').prop('class', '').addClass('media');
+					$('.category-list ul.media').addClass('show');
+				}
+				$('.category-list ul.sub-menu.show li').eq(0).addClass('active');
+			}
+
+			//close gnb box
+			$('.header .btn-gnb').removeClass('active');
+			$('.gnb-box, .header .fncs').removeClass('show');
+			connFlag = false;
+		},
+		error : function(request, status, error){
+			console.log(error)
+		},
+	});
+}
 	</script>
 	{% block content %}{% endblock %}
 	
