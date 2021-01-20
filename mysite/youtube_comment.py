@@ -177,20 +177,20 @@ def sentence_test(sentence) :
 		print(f' ★  위 문장은 {result_per}% 확률로 긍정적인 문장입니다.') 
 
 if __name__ == '__main__' : 
-	# sentence_test('원가 절감하면서 차가격은 더 올리고 ....그걸 또 좋다고 사주는 호구 국민들도 있고.. 이러니 연결고리가 끊어지나..')
+	sentence_test('급커브에서 자빠진다는 레이...')
 
 
-	# 시작 시간 (전체 수행시간을 구하기 위함)
-	start = time.time()  
+	# # 시작 시간 (전체 수행시간을 구하기 위함)
+	# start = time.time()  
 	
-	# 영상 검색 후 댓글 가져오기
-	get_comments('기아자동차레이')
+	# # 영상 검색 후 댓글 가져오기
+	# get_comments('기아자동차레이')
 
-	# 종료 시간 (전체 수행시간을 구하기 위함)
-	end = time.time()
-	# 전체 수행시간
-	min, sec = divmod(round(end - start), 60)
-	print('*** 작업 총 소요 시간 : %02d분 %02d초' % (min, sec))
+	# # 종료 시간 (전체 수행시간을 구하기 위함)
+	# end = time.time()
+	# # 전체 수행시간
+	# min, sec = divmod(round(end - start), 60)
+	# print('*** 작업 총 소요 시간 : %02d분 %02d초' % (min, sec))
 
 	
 

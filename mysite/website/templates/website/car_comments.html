@@ -9,7 +9,7 @@
 				{% csrf_token %}
 				<div class="choice-model">
 					<select name="car-model">
-						<option value="">차종 선택</option>
+						<option value="default" select>차종 선택</option>
 						<option value="제네시스GV80">제네시스 GV80</option>
 						<option value="아반떼CN7">현대자동차 아반떼 CN7</option>
 						<option value="현대자동차쏘나타DN8">현대자동차 쏘나타 DN8</option>
@@ -26,7 +26,8 @@
 			</form>
 			<p class="comment-info">
 				유튜브 기준 상위 10개의 해당 차종의 시승기 영상에 달린 댓글을 수집하였습니다.<br>
-				차량과 무관한 평가가 존재할 수 있습니다.
+				차량과 무관한 평가가 존재할 수 있습니다.<br>
+				<span>먼저 우측에서 차종을 선택해주세요.</span>
 			</p>
 			<div class="car-comment-list">
 				<ul>
@@ -53,6 +54,13 @@
 		</div>
 	</div>
 </div>
+<script>
+$(function(){
+	$('.choice-model select').on('change', function(){
+		$('.comment-info span').fadeOut('fast');
+	});
+})
+</script>
 </body>
 </html>
 {% endblock %}

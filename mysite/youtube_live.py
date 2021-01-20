@@ -6,7 +6,7 @@ import pandas as pd
 if __name__ == '__main__' : 
 	pafy.set_api_key('AIzaSyA2AZ0G5sRKq3uDTa_KzDT2X0oJ9rdcZWk')
 	video_id = 'gHg5OMZR9EI'
-	file_name = '20210119_reborn_show_chat'
+	file_name = '20210119_reborn_show_chat2'
 
 	v = pafy.new(video_id)
 	title = v.title

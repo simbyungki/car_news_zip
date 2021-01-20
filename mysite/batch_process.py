@@ -1969,7 +1969,7 @@ def text_mining(cont_type, dbconn, cursor) :
 
 	# 유튜브 댓글 분석
 	elif cont_type == 'youtube_comments' : 
-		reviews = pd.read_excel('../data/youtube_comments/기아자동차K5DL3_review_comments_youtube.xlsx')
+		reviews = pd.read_excel('../data/youtube_comments/기아자동차더k9_review_comments_youtube.xlsx')
 		df_list = reviews.values.tolist()
 		in_result_data = []
 
@@ -1995,14 +1995,14 @@ def text_mining(cont_type, dbconn, cursor) :
 			mining_result_data.append(in_result_data)
 	
 		# step02. DB Insert
-		print('DB Insert')
+		print(f'{len(mining_result_data)} > DB Insert')
 		try : 
 			for out_idx, data_list in enumerate(mining_result_data) :
-				print('DB Insert 2')
+				# print(data_list)
 				for idx, data in enumerate(data_list) :
 					try : 
 						origin_word = re.sub('[-=.#/?:$}\"\']', '', str(data[0])).replace('[','').replace(']','')
-						print(f'*** : [{out_idx}/{len(mining_result_data) -1}][{idx}/{len(data_list)}][{origin_word}]')
+						print(f'*** : [{out_idx}/{len(mining_result_data) -1}][{idx}/{len(data[1])}][{origin_word}]')
 
 						for in_idx, word in enumerate(data[1]) :
 							# INSERT
@@ -2024,8 +2024,6 @@ def text_mining(cont_type, dbconn, cursor) :
 						print('-'*50)
 						print(f'***** : [{out_idx}/{len(mining_result_data) -1}][{idx}/{len(data_list) - 1}] >> 분석 / INSERT 완료')
 
-				if out_idx == 10 :
-					break
 		except Exception as e :
 			print(f'****** + error! >> {e} >>>>> [{idx} // {len(data_list) - 1}] >> 바깥쪽 오류!')
 			pass
@@ -2041,8 +2039,8 @@ def run_text_mining() :
 	dbconn = mysql.connector.connect(host='118.27.37.85', user='car_news_zip', password='dbsgPwls!2', database='CAR_NEWS_ZIP', port='3366')
 	cursor = dbconn.cursor()
 
-	text_mining('news', dbconn, cursor)
-	# text_mining('youtube_comments', dbconn, cursor)
+	# text_mining('news', dbconn, cursor)
+	text_mining('youtube_comments', dbconn, cursor)
 
 	dbconn.commit()
 	dbconn.close()
@@ -2085,7 +2083,7 @@ if __name__ == '__main__' :
 	schedule.every().days.at('01:00').do(load_detail_data)
 
 	# 매일 1회 (오전 05시) 뉴스 본문 데이터 분석
-	schedule.every().days.at('05:00').do(run_text_mining)
+	# schedule.every().days.at('05:00').do(run_text_mining)
 
 	while True :
 		schedule.run_pending()

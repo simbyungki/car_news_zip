@@ -213,7 +213,14 @@ def view_count(request) :
 
 def car_comments(request) : 
 	context = {}
+	user_id = request.session.get('user')
+	if user_id :
+		memb_name = TblMemberList.objects.filter(memb_id=user_id).values()[0].get('memb_name')
+		context['user'] = memb_name
+	else : 
+		context['user'] = None
 	default_path = '../../car_news_zip/data/youtube_comments/'
+
 	if request.method == 'POST' : 
 		excel_path = f'{default_path}{request.POST["car-model"]}_review_comments_youtube.xlsx'
 		df = pd.read_excel(excel_path, usecols='B:E', engine='openpyxl')
