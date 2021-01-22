@@ -11,7 +11,15 @@ import pandas as pd
 import time
 import mysql.connector
 
-dbconn = mysql.connector.connect(host='118.27.37.85', user='car_news_zip', password='dbsgPwls!2', database='CAR_NEWS_ZIP', port='3366')
+import os, json
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+BASE_DIR = os.path.dirname(os.path.abspath('./mysite'))
+# SECURITY WARNING: keep the secret key used in production secret!
+db_info_file = os.path.join(BASE_DIR, 'db_conn.json')
+with open(db_info_file) as f :
+	db_infos = json.loads(f.read())
+
+dbconn = mysql.connector.connect(host=db_infos.get('host'), user=db_infos.get('user'), password=db_infos.get('password'), database=db_infos.get('database'), port=db_infos.get('port'))
 def execute(query, bufferd=True) :
 	global dbconn
 	try :
