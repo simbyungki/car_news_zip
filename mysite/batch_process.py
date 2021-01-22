@@ -2084,9 +2084,9 @@ def get_conn_cursor() :
 
 if __name__ == '__main__' : 
 	# print(db_infos)
-	# load_detail_data()
 	# reload_list_data()
-	run_text_mining()
+	load_detail_data()
+	# run_text_mining()
 	# # Schedule Work
 	# # 매일 4회 (오전 9시 / 오후 12시 / 오후 3시 / 오후 7시) 뉴스 데이터 수집
 	# schedule.every().days.at('09:00').do(reload_list_data)
