@@ -1899,7 +1899,7 @@ def text_mining(cont_type, dbconn, cursor) :
 
 		# step01. 형태소 분석 (데이터 가공)
 		for idx in range(len(car_news_list)) :
-		# for idx in range(3) :
+		# for idx in range(10) :
 			re_content = regex.findall(r'[\p{Hangul}|\p{Latin}|\p{Han}]+', f'{car_news_list[idx].news_content}')
 			origin_sentence_list.append(car_news_list[idx].news_summary)
 			# print(re_summary)
@@ -2054,8 +2054,8 @@ def run_text_mining() :
 	dbconn = mysql.connector.connect(host=db_infos.get('host'), user=db_infos.get('user'), password=db_infos.get('password'), database=db_infos.get('database'), port=db_infos.get('port'))
 	cursor = dbconn.cursor()
 
-	# text_mining('news', dbconn, cursor)
-	text_mining('youtube_comments', dbconn, cursor)
+	text_mining('news', dbconn, cursor)
+	# text_mining('youtube_comments', dbconn, cursor)
 
 	dbconn.commit()
 	dbconn.close()
@@ -2085,21 +2085,21 @@ def get_conn_cursor() :
 if __name__ == '__main__' : 
 	# print(db_infos)
 	# reload_list_data()
-	load_detail_data()
+	# load_detail_data()
 	# run_text_mining()
-	# # Schedule Work
-	# # 매일 4회 (오전 9시 / 오후 12시 / 오후 3시 / 오후 7시) 뉴스 데이터 수집
-	# schedule.every().days.at('09:00').do(reload_list_data)
-	# schedule.every().days.at('12:00').do(reload_list_data)
-	# schedule.every().days.at('15:00').do(reload_list_data)
-	# schedule.every().days.at('19:00').do(reload_list_data)
+	# Schedule Work
+	# 매일 4회 (오전 9시 / 오후 12시 / 오후 3시 / 오후 7시) 뉴스 데이터 수집
+	schedule.every().days.at('09:00').do(reload_list_data)
+	schedule.every().days.at('12:00').do(reload_list_data)
+	schedule.every().days.at('15:00').do(reload_list_data)
+	schedule.every().days.at('19:00').do(reload_list_data)
 
-	# # 매일 1회 (오전 01시) 뉴스 본문 데이터 수집
-	# schedule.every().days.at('01:00').do(load_detail_data)
+	# 매일 1회 (오전 01시) 뉴스 본문 데이터 수집
+	schedule.every().days.at('01:00').do(load_detail_data)
 
-	# # # 매일 1회 (오전 05시) 뉴스 본문 데이터 분석
-	# # # schedule.every().days.at('05:00').do(run_text_mining)
+	# 매일 1회 (오전 05시) 뉴스 본문 데이터 분석
+	schedule.every().days.at('06:00').do(run_text_mining)
 
-	# while True :
-	# 	schedule.run_pending()
-	# 	time.sleep(1)
+	while True :
+		schedule.run_pending()
+		time.sleep(1)
