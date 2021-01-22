@@ -4,7 +4,7 @@ import schedule
 import re
 import regex
 import mysql.connector
-import os
+import os, json
 import traceback
 ## Python이 실행될 때 DJANGO_SETTINGS_MODULE이라는 환경 변수에 현재 프로젝트의 settings.py파일 경로 등록
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite.settings")
@@ -24,6 +24,16 @@ new_car_list = []
 used_car_list = []
 review_list = []
 industry_list = []
+
+
+
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+BASE_DIR = os.path.dirname(os.path.abspath('./mysite'))
+# SECURITY WARNING: keep the secret key used in production secret!
+db_info_file = os.path.join(BASE_DIR, 'db_conn.json')
+with open(db_info_file) as f :
+	db_infos = json.loads(f.read())
+
 
 # BeautifulSoup
 def get_soup(url) :
@@ -1811,7 +1821,7 @@ def reload_list_data() :
 	now = time.localtime()
 	start_time = now
 
-	dbconn = mysql.connector.connect(host='118.27.37.85', user='car_news_zip', password='dbsgPwls!2', database='CAR_NEWS_ZIP', port='3366')
+	dbconn = mysql.connector.connect(host=db_infos.get('host'), user=db_infos.get('user'), password=db_infos.get('password'), database=db_infos.get('database'), port=db_infos.get('port'))
 	cursor = dbconn.cursor()
 
 	print('뉴스 받아오기 시작!')
@@ -1836,7 +1846,7 @@ def load_detail_data() :
 	now = time.localtime()
 	start_time = now
 
-	dbconn = mysql.connector.connect(host='118.27.37.85', user='car_news_zip', password='dbsgPwls!2', database='CAR_NEWS_ZIP', port='3366')
+	dbconn = mysql.connector.connect(host=db_infos.get('host'), user=db_infos.get('user'), password=db_infos.get('password'), database=db_infos.get('database'), port=db_infos.get('port'))
 	cursor = dbconn.cursor()
 
 	now = time.localtime()
@@ -2041,7 +2051,7 @@ def run_text_mining() :
 	now = time.localtime()
 	start_time = now
 
-	dbconn = mysql.connector.connect(host='118.27.37.85', user='car_news_zip', password='dbsgPwls!2', database='CAR_NEWS_ZIP', port='3366')
+	dbconn = mysql.connector.connect(host=db_infos.get('host'), user=db_infos.get('user'), password=db_infos.get('password'), database=db_infos.get('database'), port=db_infos.get('port'))
 	cursor = dbconn.cursor()
 
 	# text_mining('news', dbconn, cursor)
@@ -2061,7 +2071,7 @@ def run_text_mining() :
 # SQL 실행
 def get_conn_cursor() :
 	try:
-		dbconn = mysql.connector.connect(host='118.27.37.85', user='car_news_zip', password='dbsgPwls!2', database='CAR_NEWS_ZIP', port='3366')
+		dbconn = mysql.connector.connect(host=db_infos.get('host'), user=db_infos.get('user'), password=db_infos.get('password'), database=db_infos.get('database'), port=db_infos.get('port'))
 		cursor = dbconn.cursor(dictionary=True)
 		cursor.execute('SELECT NOW();')
 		return dbconn, cursor
@@ -2073,23 +2083,23 @@ def get_conn_cursor() :
 
 
 if __name__ == '__main__' : 
-	print('실행')
+	# print(db_infos)
 	# load_detail_data()
 	# reload_list_data()
-	run_text_mining()
-	# # Schedule Work
-	# # 매일 4회 (오전 9시 / 오후 12시 / 오후 3시 / 오후 7시) 뉴스 데이터 수집
-	# schedule.every().days.at('09:00').do(reload_list_data)
-	# schedule.every().days.at('12:00').do(reload_list_data)
-	# schedule.every().days.at('15:00').do(reload_list_data)
-	# schedule.every().days.at('19:00').do(reload_list_data)
+	# run_text_mining()
+	# Schedule Work
+	# 매일 4회 (오전 9시 / 오후 12시 / 오후 3시 / 오후 7시) 뉴스 데이터 수집
+	schedule.every().days.at('09:00').do(reload_list_data)
+	schedule.every().days.at('12:00').do(reload_list_data)
+	schedule.every().days.at('15:00').do(reload_list_data)
+	schedule.every().days.at('19:00').do(reload_list_data)
 
-	# # 매일 1회 (오전 01시) 뉴스 본문 데이터 수집
-	# schedule.every().days.at('01:00').do(load_detail_data)
+	# 매일 1회 (오전 01시) 뉴스 본문 데이터 수집
+	schedule.every().days.at('01:00').do(load_detail_data)
 
 	# # 매일 1회 (오전 05시) 뉴스 본문 데이터 분석
 	# # schedule.every().days.at('05:00').do(run_text_mining)
 
-	# while True :
-	# 	schedule.run_pending()
-	# 	time.sleep(1)
+	while True :
+		schedule.run_pending()
+		time.sleep(1)
