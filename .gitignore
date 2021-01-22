@@ -135,6 +135,9 @@ dmypy.json
 # settings
 # settings.py
 secrets.json
+secrets_ap.json
+db_conn.json
+db_conn_ap.json
 
 chromedriver.exe
 /chromedriver.exe
@@ -142,3 +145,4 @@ chromedriver.exe
 # jupyter
 mysite/jupyter_/
 mysite/jupyter_test/
+
