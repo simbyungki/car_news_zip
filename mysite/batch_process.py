@@ -2087,23 +2087,19 @@ if __name__ == '__main__' :
 	# reload_list_data()
 	# load_detail_data()
 	# run_text_mining()
+	
 	# Schedule Work
 	# 매일 4회 (오전 9시 / 오후 12시 / 오후 3시 / 오후 7시) 뉴스 데이터 수집
-	# schedule.every().days.at('09:00').do(reload_list_data)
-	# schedule.every().days.at('12:00').do(reload_list_data)
-	# schedule.every().days.at('15:00').do(reload_list_data)
-	# schedule.every().days.at('19:00').do(reload_list_data)
+	schedule.every().days.at('09:00').do(reload_list_data)
+	schedule.every().days.at('12:00').do(reload_list_data)
+	schedule.every().days.at('15:00').do(reload_list_data)
+	schedule.every().days.at('19:00').do(reload_list_data)
 
-	# # 매일 1회 (오전 01시) 뉴스 본문 데이터 수집
-	# schedule.every().days.at('01:00').do(load_detail_data)
+	# 매일 1회 (오전 01시) 뉴스 본문 데이터 수집
+	schedule.every().days.at('01:00').do(load_detail_data)
 
-	# # 매일 1회 (오전 05시) 뉴스 본문 데이터 분석
-	# schedule.every().days.at('06:00').do(run_text_mining)
-
-
-
-	schedule.every().days.at('09:30').do(reload_list_data)
-	schedule.every().days.at('10:00').do(run_text_mining)
+	# 매일 1회 (오전 05시) 뉴스 본문 데이터 분석
+	schedule.every().days.at('06:00').do(run_text_mining)
 	while True :
 		schedule.run_pending()
 		time.sleep(1)

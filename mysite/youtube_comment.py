@@ -28,7 +28,7 @@ def get_soup(url) :
 	options = webdriver.ChromeOptions()
 	options.headless = True
 	options.add_argument('window-size=1920x1080')
-	browser = webdriver.Chrome(r'C:\Users\PC\Documents\simbyungki\git\car_news_zip\chromedriver.exe', options=options)
+	browser = webdriver.Chrome(r'../data/chromedriver.exe', options=options)
 	browser.maximize_window()
 	browser.get(url)
 
@@ -184,7 +184,7 @@ if __name__ == '__main__' :
 	start = time.time()  
 	
 	# 영상 검색 후 댓글 가져오기
-	get_comments('기아자동차k3')
+	get_comments('기아자동차스포티지')
 
 	# 종료 시간 (전체 수행시간을 구하기 위함)
 	end = time.time()
