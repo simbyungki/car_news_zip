@@ -920,7 +920,7 @@ class GetAutoMorning() :
 class GetAutoDiary() :
 	# 오토다이어리 신차
 	def new() :
-		url = 'https://www.autodiary.kr/category/news/new-car/'
+		url = 'http://www.autodiary.kr/category/news/new-car/'
 		soup = get_soup(url)
 
 		news_list = soup.select('#posts-container > div')
@@ -948,7 +948,7 @@ class GetAutoDiary() :
 
 	# 오토다이어리 자동차 업계
 	def industry() :
-		url = 'https://www.autodiary.kr/category/news/car-business/'
+		url = 'http://www.autodiary.kr/category/news/car-business/'
 		soup = get_soup(url)
 
 		news_list = soup.select('#posts-container > div')
@@ -979,7 +979,7 @@ class GetAutoDiary() :
 
 	# 오토다이어리 시승기
 	def review() :
-		url = 'https://www.autodiary.kr/category/impression/'
+		url = 'http://www.autodiary.kr/category/impression/'
 		soup = get_soup(url)
 
 		news_list = soup.select('#posts-container > div')
@@ -1014,7 +1014,7 @@ class GetAutoDiary() :
 		try :
 			print('ㅡㅡㅡ'*30)
 			for idx in range(len(newsList)) : 
-				full_url = f'https://www.autodiary.kr{newsList.values()[idx].get("news_code")}'
+				full_url = f'http://www.autodiary.kr{newsList.values()[idx].get("news_code")}'
 				print(newsList.values()[idx].get('news_code'))
 				try : 
 					soup = get_soup(full_url)
@@ -1405,7 +1405,7 @@ def get_new_car() :
 	GetAutoview.new()
 	GetItChosun.new()
 	GetAutoMorning.new()
-	# GetAutoDiary.new()
+	GetAutoDiary.new()
 	GetMotorGraph.new()
 
 	return new_car_list
@@ -1417,7 +1417,7 @@ def get_review() :
 	GetAutoview.review()
 	GetItChosun.review()
 	GetAutoMorning.review()
-	# GetAutoDiary.review()
+	GetAutoDiary.review()
 	GetCarguy.review()
 	GetTheDrive.review()
 	GetMotorGraph.review_k()
@@ -1431,7 +1431,7 @@ def get_industry() :
 	GetDailyCar.industry()
 	GetAutoview.industry()
 	GetItChosun.industry()
-	# GetAutoDiary.industry()
+	GetAutoDiary.industry()
 	GetCarguy.industry()
 	GetTheDrive.industry()
 	GetMotorGraph.industry()
@@ -1560,7 +1560,7 @@ def insert_new_db(dbconn, cursor) :
 					elif idx == 5 :
 						# 오토다이어리
 						news_code = news.get('link')[-17:]
-						url = f'https://www.autodiary.kr{news_code}'
+						url = f'http://www.autodiary.kr{news_code}'
 					elif idx == 6 : 
 						# 모터그래프
 						news_code = news.get('link')[-5:]
@@ -1666,7 +1666,7 @@ def insert_review_db(dbconn, cursor) :
 					elif idx == 5 :
 						# 오토다이어리
 						news_code = news.get('link')[-17:]
-						url = f'https://www.autodiary.kr{news_code}'
+						url = f'http://www.autodiary.kr{news_code}'
 					elif idx == 6 :
 						# 카가이
 						news_code = news.get('link')[-5:]
@@ -1771,7 +1771,7 @@ def insert_industry_db(dbconn, cursor) :
 					elif idx == 4 :
 						# 오토다이어리
 						news_code = news.get('link')[-17:]
-						url = f'https://www.autodiary.kr{news_code}'
+						url = f'http://www.autodiary.kr{news_code}'
 					elif idx == 5 :
 						# 카가이
 						news_code = news.get('link')[-5:]
@@ -1857,7 +1857,7 @@ def load_detail_data() :
 	GetAutoview.detail(dbconn, cursor)
 	GetItChosun.detail(dbconn, cursor)
 	GetAutoMorning.detail(dbconn, cursor)
-	# GetAutoDiary.detail(dbconn, cursor)
+	GetAutoDiary.detail(dbconn, cursor)
 	GetCarguy.detail(dbconn, cursor)
 	GetTheDrive.detail(dbconn, cursor)
 	GetMotorGraph.detail(dbconn, cursor)
