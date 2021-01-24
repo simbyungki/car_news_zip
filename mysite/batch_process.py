@@ -1405,7 +1405,7 @@ def get_new_car() :
 	GetAutoview.new()
 	GetItChosun.new()
 	GetAutoMorning.new()
-	GetAutoDiary.new()
+	# GetAutoDiary.new()
 	GetMotorGraph.new()
 
 	return new_car_list
@@ -1417,7 +1417,7 @@ def get_review() :
 	GetAutoview.review()
 	GetItChosun.review()
 	GetAutoMorning.review()
-	GetAutoDiary.review()
+	# GetAutoDiary.review()
 	GetCarguy.review()
 	GetTheDrive.review()
 	GetMotorGraph.review_k()
@@ -1431,7 +1431,7 @@ def get_industry() :
 	GetDailyCar.industry()
 	GetAutoview.industry()
 	GetItChosun.industry()
-	GetAutoDiary.industry()
+	# GetAutoDiary.industry()
 	GetCarguy.industry()
 	GetTheDrive.industry()
 	GetMotorGraph.industry()
@@ -1857,7 +1857,7 @@ def load_detail_data() :
 	GetAutoview.detail(dbconn, cursor)
 	GetItChosun.detail(dbconn, cursor)
 	GetAutoMorning.detail(dbconn, cursor)
-	GetAutoDiary.detail(dbconn, cursor)
+	# GetAutoDiary.detail(dbconn, cursor)
 	GetCarguy.detail(dbconn, cursor)
 	GetTheDrive.detail(dbconn, cursor)
 	GetMotorGraph.detail(dbconn, cursor)
@@ -2087,7 +2087,7 @@ if __name__ == '__main__' :
 	# reload_list_data()
 	# load_detail_data()
 	# run_text_mining()
-	
+
 	# Schedule Work
 	# 매일 4회 (오전 9시 / 오후 12시 / 오후 3시 / 오후 7시) 뉴스 데이터 수집
 	schedule.every().days.at('09:00').do(reload_list_data)
