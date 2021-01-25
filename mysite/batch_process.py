@@ -2088,6 +2088,8 @@ if __name__ == '__main__' :
 	# load_detail_data()
 	# run_text_mining()
 
+	print('스케쥴 작업 시작!')
+
 	# Schedule Work
 	# 매일 4회 (오전 9시 / 오후 12시 / 오후 3시 / 오후 7시) 뉴스 데이터 수집
 	schedule.every().days.at('09:00').do(reload_list_data)
