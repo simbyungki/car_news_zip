@@ -1,7 +1,7 @@
 {
-	"host": "118.27.37.85",
+	"host": "139.150.64.134",
 	"user": "car_news_zip",
-	"password": "dbsgPwls!2",
+	"password": "dhvmf2020!",
 	"database": "CAR_NEWS_ZIP",
-	"port": "3366"
+	"port": "3306"
 }

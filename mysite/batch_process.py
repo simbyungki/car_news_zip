@@ -30,7 +30,7 @@ industry_list = []
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.abspath('./mysite'))
 # SECURITY WARNING: keep the secret key used in production secret!
-db_info_file = os.path.join(BASE_DIR, 'db_conn_ap.json')
+db_info_file = os.path.join(BASE_DIR, 'db_conn.json')
 with open(db_info_file) as f :
 	db_infos = json.loads(f.read())
 
