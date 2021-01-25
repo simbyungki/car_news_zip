@@ -30,7 +30,7 @@ industry_list = []
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.abspath('./mysite'))
 # SECURITY WARNING: keep the secret key used in production secret!
-db_info_file = os.path.join(BASE_DIR, 'db_conn.json')
+db_info_file = os.path.join(BASE_DIR, 'db_conn_ap.json')
 with open(db_info_file) as f :
 	db_infos = json.loads(f.read())
 
@@ -1405,7 +1405,7 @@ def get_new_car() :
 	GetAutoview.new()
 	GetItChosun.new()
 	GetAutoMorning.new()
-	GetAutoDiary.new()
+	# GetAutoDiary.new()
 	GetMotorGraph.new()
 
 	return new_car_list
@@ -1417,7 +1417,7 @@ def get_review() :
 	GetAutoview.review()
 	GetItChosun.review()
 	GetAutoMorning.review()
-	GetAutoDiary.review()
+	# GetAutoDiary.review()
 	GetCarguy.review()
 	GetTheDrive.review()
 	GetMotorGraph.review_k()
@@ -1431,7 +1431,7 @@ def get_industry() :
 	GetDailyCar.industry()
 	GetAutoview.industry()
 	GetItChosun.industry()
-	GetAutoDiary.industry()
+	# GetAutoDiary.industry()
 	GetCarguy.industry()
 	GetTheDrive.industry()
 	GetMotorGraph.industry()
@@ -1530,11 +1530,11 @@ def insert_new_db(dbconn, cursor) :
 				# 오토모닝
 				media_code = 500
 				media_name = '오토모닝'
+			# elif idx == 5 :
+			# 	# 오토다이어리
+			# 	media_code = 600
+			# 	media_name = '오토다이어리'
 			elif idx == 5 :
-				# 오토다이어리
-				media_code = 600
-				media_name = '오토다이어리'
-			elif idx == 6 :
 				# 모터그래프
 				media_code = 900
 				media_name = '모터그래프'
@@ -1557,11 +1557,11 @@ def insert_new_db(dbconn, cursor) :
 						# 오토모닝
 						news_code = news.get('link')[-5:]
 						url = f'http://www.automorning.com/news/article.html?no={news_code}'
-					elif idx == 5 :
-						# 오토다이어리
-						news_code = news.get('link')[-17:]
-						url = f'http://www.autodiary.kr{news_code}'
-					elif idx == 6 : 
+					# elif idx == 5 :
+					# 	# 오토다이어리
+					# 	news_code = news.get('link')[-17:]
+					# 	url = f'http://www.autodiary.kr{news_code}'
+					elif idx == 5 : 
 						# 모터그래프
 						news_code = news.get('link')[-5:]
 						url = f'https://www.motorgraph.com/news/articleView.html?idxno={news_code}'
@@ -1624,19 +1624,19 @@ def insert_review_db(dbconn, cursor) :
 				# 오토모닝
 				media_code = 500
 				media_name = '오토모닝'
+			# elif idx == 5 :
+			# 	# 오토다이어리
+			# 	media_code = 600
+			# 	media_name = '오토다이어리'
 			elif idx == 5 :
-				# 오토다이어리
-				media_code = 600
-				media_name = '오토다이어리'
-			elif idx == 6 :
 				# 카가이
 				media_code = 700
 				media_name = '카가이'
-			elif idx == 7 :
+			elif idx == 6 :
 				# 더드라이브
 				media_code = 800
 				media_name = '더드라이브'
-			elif idx == 8 or idx == 9 :
+			elif idx == 7 or idx == 8 :
 				# 모터그래프
 				media_code = 900
 				media_name = '모터그래프'
@@ -1663,19 +1663,19 @@ def insert_review_db(dbconn, cursor) :
 						# 오토모닝
 						news_code = news.get('link')[-5:]
 						url = f'http://www.automorning.com/news/article.html?no={news_code}'
+					# elif idx == 5 :
+					# 	# 오토다이어리
+					# 	news_code = news.get('link')[-17:]
+					# 	url = f'http://www.autodiary.kr{news_code}'
 					elif idx == 5 :
-						# 오토다이어리
-						news_code = news.get('link')[-17:]
-						url = f'http://www.autodiary.kr{news_code}'
-					elif idx == 6 :
 						# 카가이
 						news_code = news.get('link')[-5:]
 						url = f'http://www.carguy.kr/news/articleView.html?idxno={news_code}'
-					elif idx == 7 :
+					elif idx == 6 :
 						# 더드라이브
 						news_code = news.get('link')[-16:]
 						url = f'http://www.thedrive.co.kr/news/newsview.php?ncode={news_code}'
-					elif idx == 8 or idx == 9 :
+					elif idx == 7 or idx == 8 :
 						news_code = news.get('link')[-5:]
 						url = f'https://www.motorgraph.com/news/articleView.html?idxno={news_code}'
 					
@@ -1733,19 +1733,19 @@ def insert_industry_db(dbconn, cursor) :
 				# IT조선
 				media_code = 400
 				media_name = 'IT조선'
+			# elif idx == 4 :
+			# 	# 오토다이어리
+			# 	media_code = 600
+			# 	media_name = '오토다이어리'
 			elif idx == 4 :
-				# 오토다이어리
-				media_code = 600
-				media_name = '오토다이어리'
-			elif idx == 5 :
 				# 카가이
 				media_code = 700
 				media_name = '카가이'
-			elif idx == 6 :
+			elif idx == 5 :
 				# 더드라이브
 				media_code = 800
 				media_name = '더드라이브'
-			elif idx == 7 :
+			elif idx == 6 :
 				# 모터그래프
 				media_code = 900
 				media_name = '모터그래프'
@@ -1768,19 +1768,19 @@ def insert_industry_db(dbconn, cursor) :
 						# IT조선
 						news_code = news.get('link')[39:]
 						url = f'http://it.chosun.com/site/data/html_dir{news_code}'
+					# elif idx == 4 :
+					# 	# 오토다이어리
+					# 	news_code = news.get('link')[-17:]
+					# 	url = f'http://www.autodiary.kr{news_code}'
 					elif idx == 4 :
-						# 오토다이어리
-						news_code = news.get('link')[-17:]
-						url = f'http://www.autodiary.kr{news_code}'
-					elif idx == 5 :
 						# 카가이
 						news_code = news.get('link')[-5:]
 						url = f'http://www.carguy.kr/news/articleView.html?idxno={news_code}'
-					elif idx == 6 :
+					elif idx == 5 :
 						# 더드라이브
 						news_code = news.get('link')[-16:]
 						url = f'http://www.thedrive.co.kr/news/newsview.php?ncode={news_code}'
-					elif idx == 7 :
+					elif idx == 6 :
 						# 모터그래프
 						news_code = news.get('link')[-5:]
 						url = f'https://www.motorgraph.com/news/articleView.html?idxno={news_code}'
@@ -1857,7 +1857,7 @@ def load_detail_data() :
 	GetAutoview.detail(dbconn, cursor)
 	GetItChosun.detail(dbconn, cursor)
 	GetAutoMorning.detail(dbconn, cursor)
-	GetAutoDiary.detail(dbconn, cursor)
+	# GetAutoDiary.detail(dbconn, cursor)
 	GetCarguy.detail(dbconn, cursor)
 	GetTheDrive.detail(dbconn, cursor)
 	GetMotorGraph.detail(dbconn, cursor)
@@ -2084,22 +2084,22 @@ def get_conn_cursor() :
 
 if __name__ == '__main__' : 
 	# print(db_infos)
-	# reload_list_data()
+	reload_list_data()
 	# load_detail_data()
 	# run_text_mining()
 
-	# Schedule Work
-	# 매일 4회 (오전 9시 / 오후 12시 / 오후 3시 / 오후 7시) 뉴스 데이터 수집
-	schedule.every().days.at('09:00').do(reload_list_data)
-	schedule.every().days.at('12:00').do(reload_list_data)
-	schedule.every().days.at('15:00').do(reload_list_data)
-	schedule.every().days.at('19:00').do(reload_list_data)
+	# # Schedule Work
+	# # 매일 4회 (오전 9시 / 오후 12시 / 오후 3시 / 오후 7시) 뉴스 데이터 수집
+	# schedule.every().days.at('09:00').do(reload_list_data)
+	# schedule.every().days.at('12:00').do(reload_list_data)
+	# schedule.every().days.at('15:00').do(reload_list_data)
+	# schedule.every().days.at('19:00').do(reload_list_data)
 
-	# 매일 1회 (오전 01시) 뉴스 본문 데이터 수집
-	schedule.every().days.at('01:00').do(load_detail_data)
+	# # 매일 1회 (오전 01시) 뉴스 본문 데이터 수집
+	# schedule.every().days.at('01:00').do(load_detail_data)
 
-	# 매일 1회 (오전 05시) 뉴스 본문 데이터 분석
-	schedule.every().days.at('06:00').do(run_text_mining)
-	while True :
-		schedule.run_pending()
-		time.sleep(1)
+	# # 매일 1회 (오전 05시) 뉴스 본문 데이터 분석
+	# schedule.every().days.at('06:00').do(run_text_mining)
+	# while True :
+	# 	schedule.run_pending()
+	# 	time.sleep(1)

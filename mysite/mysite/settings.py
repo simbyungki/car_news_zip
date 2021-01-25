@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-secret_file = os.path.join(BASE_DIR, 'secrets.json')
+secret_file = os.path.join(BASE_DIR, 'secrets_ap.json')
 
 with open(secret_file) as f :
 	secrets = json.loads(f.read())
@@ -107,7 +107,10 @@ DATABASES = {
 		'USER': 'car_news_zip',
 		'PASSWORD': get_secret("DB_PASSWORD"),
 		'HOST': get_secret("DB_HOST"),
-		'PORT': '3366'
+		# AP
+		'PORT': '3306'
+		# CONOHA
+		# 'PORT': '3306'
 	}
 }
 DATABASE_OPTIONS = {'charset': 'utf8'}
