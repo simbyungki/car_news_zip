@@ -2,6 +2,7 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from oauth2client.tools import argparser
 
+# https://developers.google.com/youtube/v3/docs
 # DEVELOPER_KEY = 'AIzaSyA2AZ0G5sRKq3uDTa_KzDT2X0oJ9rdcZWk'
 DEVELOPER_KEY = 'AIzaSyCHnGrLBzQJk3IvA-lhVRgfia5QUAIPb9k'
 YOUTUBE_API_SERVICE_NAME = 'youtube'
@@ -9,18 +10,8 @@ YOUTUBE_API_VERSION = 'v3'
 
 youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION, developerKey = DEVELOPER_KEY)
 
-# 영상 검색하여 채널 아이디 구하기
-# search_response = youtube.search().list(
-#     q = '슈카월드',
-#     order = 'relevance',
-#     part = 'snippet',
-#     maxResults = 50
-#     ).execute()
-	
-# channel_id=search_response['items'][0]['id']['channelId']
 
-
-# 채널 아이디 
+# 영상검색으로 채널 아이디 구하기
 def get_channel_id(keyword) :
 	search_response = youtube.search().list(
 		q = keyword,
@@ -101,15 +92,40 @@ def get_video_list(playlist_id) :
 
 	return playlist_in_videos
 
+# 비디오 아이디(`s) > 비디오 정보 
+def get_video_info(video_ids) :
+	video_info_list = []
 
+	video_infos = youtube.videos().list(
+		id = video_ids,
+		part = ['snippet','statistics'],
+	)
+
+	idx = 0
+	while video_infos :
+		video_infos_response = video_infos.execute()
+		for video_item in video_infos_response['items'] :
+			info = {}
+			info['video_id'] = video_ids[idx]
+			info['pub_date'] = video_item['snippet']['publishedAt']
+			info['view_count'] = video_item['statistics']['viewCount']
+			info['like_count'] = video_item['statistics']['likeCount']
+			info['dislike_count'] = video_item['statistics']['dislikeCount']
+
+			idx += 1
+			video_info_list.append(info)
+			video_infos = youtube.playlistItems().list_next(video_infos, video_infos_response)
+
+	return video_info_list
 
 
 
 if __name__ == '__main__' :
 	# print(get_channel_info(get_channel_id('모트라인')))
 	
-	
-	print(len(get_play_list(get_channel_id('모터그래프'))))
+	print(get_video_info(['MPPF80yLRsQ', 'bpY3_PjujD4']))
+
+	# print(len(get_play_list(get_channel_id('모터그래프'))))
 	# [
 	# 	{'title': '리본쇼 차량 리스트', 'list_id': 'PLU7cN9HulzoY4mfdrhvR_Vl64-qAKCcwD'}, 
 	# 	{'title': '�🎥어서와와,오토플러스는는처음이지지?', 'list_id': 'PLU7cN9HulzobO1YzDGD-91Px3Z8U7JIUf'}, 
@@ -129,7 +145,7 @@ if __name__ == '__main__' :
 	# 	{'title': '자동차스트레스연구소', 'list_id': 'PLU7cN9Hulzoauc5grgcf4FaC7gxdFT8sY'}
 	# ]
 
-	print(get_video_list('PLoykoHin5zIaCXtbB4kStCdjIYh-6Sezw'))
+	# print(get_video_list('PLoykoHin5zIaCXtbB4kStCdjIYh-6Sezw'))
 	# [
 	# 	{'video_id': '68JnMB4PfVw', 'title': '쏘울 EV 5인승', 'desc': '중고차의 바른 기준 #오토플러스 #리본카\n\n쏘울 EV 5인승\n연식 : 2018년 01월\n주행거리 : 7,297km\n컬러 : 흰색투톤\n냄새케어 : 1등급\n사고유무 : 무사고 \n.\n.\n.\n[ 차량 바로보기 ]\nhttps://www.autoplus.co.kr/smartbuy/WUSB050001.rb?productId=C21010600037', 'thumbnail': 'https://i.ytimg.com/vi/68JnMB4PfVw/sddefault.jpg'}, 
 	# 	{'video_id': 'f8vn_ONhmK0', 'title': 'GV80 3.0 디젤 AWD', 'desc': '중고차의 바른 기준 #오토플러스 #리본카\n\nGV80 3.0 디젤 AWD\n연식 : 2020년 01월\n주행거리 : 10,046km\n컬러 : 멜버른 그레이(무광)\n냄새케어 : 1등급\n사고유무 : 무사고 \n.\n.\n.\n[ 차량 바로보기 ]\nhttps://www.autoplus.co.kr/smartbuy/WUSB050001.rb?productId=C20122800029', 'thumbnail': 'https://i.ytimg.com/vi/f8vn_ONhmK0/sddefault.jpg'}, 
