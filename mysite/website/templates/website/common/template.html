@@ -14,20 +14,20 @@
 	<meta http-equiv="Cache-Control" content="no-cache; no-store; no-save">
 	<!-- Summary -->
 	<meta name="Keywords" content="자동차, 자동차뉴스, 시승기, 중고차뉴스, 신차뉴스, 자동차업계, 자동차업계뉴스">
-	<meta name="Description" content="카뉴스.zip은 8개 자동차 언론사들의 뉴스를 모아 제공합니다. (신차, 중고차, 시승기, 자동차업계)">
-	<meta http-equiv="Author" content="카뉴스.zip">
-	<meta http-equiv="Other Agent" content="카뉴스.zip">
-	<meta http-equiv="Reply-To" content="naver@naver.com">
-	<meta http-equiv="Email" content="naver@naver.com">
+	<meta name="Description" content="카라스 8개 자동차 언론사들의 뉴스를 모아 제공합니다. (신차, 중고차, 시승기, 자동차업계)">
+	<meta http-equiv="Author" content="카라스">
+	<meta http-equiv="Other Agent" content="카라스">
+	<meta http-equiv="Reply-To" content="simbk0120@autoplus.co.kr">
+	<meta http-equiv="Email" content="simbk0120@autoplus.co.kr">
 	<meta http-equiv="Build" content="2020.12" />
-	<meta property="og:url" content="http://carnewszip.com">
-	<meta property="og:title" content="카뉴스.zip">
+	<meta property="og:url" content="http://caras.autoplus.co.kr">
+	<meta property="og:title" content="카라스 CarAs">
 	<meta property="og:type" content="website">
 	<meta property="og:image" content="{% static 'images/common/img_share.png' %}">
-	<meta property="og:description" content="카뉴스.zip, 자동차 뉴스, 중고차 뉴스, 신차 뉴스, 자동차 시승기">
+	<meta property="og:description" content="카라스, 자동차 뉴스, 중고차 뉴스, 신차 뉴스, 자동차 시승기">
 	<meta name="naver-site-verification" content="c7ce06c9ed9736eb46db21ed102e4dea95dfe089" />
 	<meta name="google-site-verification" content="jt2p5-PNGgED4Z5xiMbyiENXRz7QGQtd6HxuQbAHYWw" />
-	<title>카뉴스.zip 🙈</title>
+	<title>카라스 | Car AnalysiS Beta!</title>
 	<link rel="shortcut icon" href="{% static 'favico.png' %}" />
 	<!-- CSS -->
 	<link rel="stylesheet" href="{% static 'css/reset.css' %}">
@@ -61,22 +61,22 @@
 	<header class="header">
 		<a href="javascript:;" class="btn-gnb" title="메뉴"></a>
 		<h1 class="service-name">
-			<a href="/">카뉴스.zip 🙈</a><sup>Beta!</sup><br>
+			<a href="/">Car AnalysiS</a><sup>Beta!</sup><br>
 			<span>
 				{% if user %}
 					[{{ today_date }} {{ user }}님만을 위한 뉴스!]	
 				{% else %}
-					[{{ today_date }} CAR_NEWS.zip!]
+					[{{ today_date }} Car AnalysiS!]
 				{% endif %}
 			</span>
 		</h1>
 		<div class="fncs">
-			{% if user %}
+			{% comment %} {% if user %}
 				<a href="/logout/" class="btn-login">로그아웃</a>
 			{% else %}
 				<a href="/join/" class="btn-logout">회원가입</a>
 				<a href="/login/" class="btn-logout">로그인</a>
-			{% endif %}
+			{% endif %} {% endcomment %}
 			<div class="box">
 				<select name="" id="" class="view-mode-changer">
 					<option value="dark">Dark mode</option>

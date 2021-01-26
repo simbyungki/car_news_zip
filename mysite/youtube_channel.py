@@ -63,7 +63,7 @@ def get_play_list(channel_id) :
 	
 	return playlist
 
-
+# 채널 > 재생목록 ID > 영상 목록
 def get_video_list(playlist_id) :
 	video_ids = []
 	video_titles = []
