@@ -46,6 +46,11 @@ def news_list(request) :
 
 	return render(request, 'website/news_list.html', context)
 
+# 목록(검색 결과)
+def search_result_list(request) :
+
+	return render(request, 'website/common/news_list.html', context)
+
 # 뉴스 분석
 def text_mining_result(request) :
 	global mining_result_data

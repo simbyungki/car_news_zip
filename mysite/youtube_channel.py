@@ -25,17 +25,18 @@ def get_channel_id(keyword) :
 
 # 채널 정보
 def get_channel_info(channel_id) :
-	channel_ifno = {}
+	channel_info = {}
 	channel_infos = youtube.channels().list(
 		id = channel_id,
 		part = 'snippet',
 	).execute()
+	
+	channel_info['channel_id'] = channel_id
+	channel_info['channel_name'] = channel_infos['items'][0]['snippet']['title']
+	channel_info['channel_desc'] = channel_infos['items'][0]['snippet']['description']
+	channel_info['channel_thumbnail'] = channel_infos['items'][0]['snippet']['thumbnails']['medium']['url']
 
-	channel_ifno['channel_name'] = channel_infos['items'][0]['snippet']['title']
-	channel_ifno['channel_desc'] = channel_infos['items'][0]['snippet']['description']
-	channel_ifno['channel_thumbnail'] = channel_infos['items'][0]['snippet']['thumbnails']['medium']['url']
-
-	return channel_ifno
+	return channel_infos['items'][0]['snippet']
 
 # 재생 목록
 def get_play_list(channel_id) : 
@@ -53,6 +54,8 @@ def get_play_list(channel_id) :
 		playlist.append(info)
 	
 	return playlist
+
+
 
 # 채널 > 재생목록 ID > 영상 목록
 def get_video_list(playlist_id) :
@@ -81,11 +84,15 @@ def get_video_list(playlist_id) :
 				info['title'] = playlist_item['snippet']['title']
 				info['desc'] = playlist_item['snippet']['description']
 				info['thumbnail'] = playlist_item['snippet']['thumbnails']['standard']['url']
+				info['pub_date'] = playlist_item['snippet']['publishedAt']
+				info[cou] = get_video_info()[]
 			except : 
 				info['video_id'] = playlist_item['snippet']['resourceId']['videoId']
 				info['title'] = playlist_item['snippet']['title']
 				info['desc'] = playlist_item['snippet']['description']
-				info['thumbnail'] = '없다'
+				info['thumbnail'] = 'None'
+				info['pub_date'] = playlist_item['snippet']['publishedAt']
+			
 
 			playlist_in_videos.append(info)
 			playlist_videos = youtube.playlistItems().list_next(playlist_videos, playlistitems_list_response)
@@ -121,11 +128,12 @@ def get_video_info(video_ids) :
 
 
 if __name__ == '__main__' :
+	# print(get_channel_id('모트라인'))
 	# print(get_channel_info(get_channel_id('모트라인')))
 	
-	print(get_video_info(['MPPF80yLRsQ', 'bpY3_PjujD4']))
+	# print(get_video_info(['MPPF80yLRsQ', 'bpY3_PjujD4']))
 
-	# print(len(get_play_list(get_channel_id('모터그래프'))))
+	# print(get_play_list(get_channel_id('모터그래프')))
 	# [
 	# 	{'title': '리본쇼 차량 리스트', 'list_id': 'PLU7cN9HulzoY4mfdrhvR_Vl64-qAKCcwD'}, 
 	# 	{'title': '�🎥어서와와,오토플러스는는처음이지지?', 'list_id': 'PLU7cN9HulzobO1YzDGD-91Px3Z8U7JIUf'}, 
@@ -145,7 +153,7 @@ if __name__ == '__main__' :
 	# 	{'title': '자동차스트레스연구소', 'list_id': 'PLU7cN9Hulzoauc5grgcf4FaC7gxdFT8sY'}
 	# ]
 
-	# print(get_video_list('PLoykoHin5zIaCXtbB4kStCdjIYh-6Sezw'))
+	print(get_video_list('PLoykoHin5zIaCXtbB4kStCdjIYh-6Sezw'))
 	# [
 	# 	{'video_id': '68JnMB4PfVw', 'title': '쏘울 EV 5인승', 'desc': '중고차의 바른 기준 #오토플러스 #리본카\n\n쏘울 EV 5인승\n연식 : 2018년 01월\n주행거리 : 7,297km\n컬러 : 흰색투톤\n냄새케어 : 1등급\n사고유무 : 무사고 \n.\n.\n.\n[ 차량 바로보기 ]\nhttps://www.autoplus.co.kr/smartbuy/WUSB050001.rb?productId=C21010600037', 'thumbnail': 'https://i.ytimg.com/vi/68JnMB4PfVw/sddefault.jpg'}, 
 	# 	{'video_id': 'f8vn_ONhmK0', 'title': 'GV80 3.0 디젤 AWD', 'desc': '중고차의 바른 기준 #오토플러스 #리본카\n\nGV80 3.0 디젤 AWD\n연식 : 2020년 01월\n주행거리 : 10,046km\n컬러 : 멜버른 그레이(무광)\n냄새케어 : 1등급\n사고유무 : 무사고 \n.\n.\n.\n[ 차량 바로보기 ]\nhttps://www.autoplus.co.kr/smartbuy/WUSB050001.rb?productId=C20122800029', 'thumbnail': 'https://i.ytimg.com/vi/f8vn_ONhmK0/sddefault.jpg'}, 

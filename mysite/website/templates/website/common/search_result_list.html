@@ -1,0 +1,118 @@
+{% extends 'website/common/template.html' %}
+{% load static %}
+{% load custom_tags %}
+{% block content %}
+	<section class="container">
+		<div class="category-list">
+			<div class="inner">
+				<!-- 카테고리별 뉴스 -->
+				<ul class="sub-menu category show">
+					<li class="active"><a href="javascript:;">자동차 업계 뉴스</a></li>
+					<li><a href="javascript:;">중고차 뉴스</a></li>
+					<li><a href="javascript:;">신차 뉴스</a></li>
+					<li><a href="javascript:;">시승기</a></li>
+				</ul>
+				<!-- 언론사별 뉴스 -->
+				<ul class="sub-menu media">
+					<li class="active"><a href="javascript:;">오토헤럴드</a></li>
+					<li><a href="javascript:;">데일리카</a></li>
+					<li><a href="javascript:;">오토뷰</a></li>
+					<li><a href="javascript:;">IT조선</a></li>
+					<li><a href="javascript:;">오토모닝</a></li>
+					<li><a href="javascript:;">오토다이어리</a></li>
+					<li><a href="javascript:;">카가이</a></li>
+					<li><a href="javascript:;">더드라이브</a></li>
+					<li><a href="javascript:;">모터그래프</a></li>
+				</ul>
+				<!-- 검색 -->
+				<div class="result-info">
+					<p>"<span></span>"에 대한 검색결과가 총 <strong></strong>건 있습니다.</p>
+					<a href="javascript:;" onclick="loadNewsList(0, 'category', 0, 12, 'default', 'change');"><span>🔙</span> 돌아가기</a>
+				</div>
+			</div>
+		</div>
+		<div class="item-list">
+			<div class="inner">
+				<div class="list-top">
+					<p class="txt-guide">* 뉴스 기사를 클릭하면 해당 뉴스로 이동됩니다.</p>
+					<!-- 목록 타입 (스타일) 변경 -->
+					<div class="list-type">
+						<button type="button" class="btn type01 active" title="목록 세로 타입으로 보기"></button>
+						<button type="button" class="btn type02" title="목록 가로 타입으로 보기"></button>
+					</div> 
+				</div>
+				<ul class="news-group show"></ul>
+			</div>
+		</div>
+	</section>
+	<div class="loading" style="display:block;">
+		<div class="dim"></div>
+		<div class="loading-box">
+			<div class="out-box">
+				<i class="in-box"></i>
+			</div>
+			<p>
+				데이터를 불러오는 중입니다.<br>
+				(잠시만 기다려주세요.)
+			</p>
+		</div>
+	</div>
+</div>
+
+<script>
+var connFlag = false;
+$(function(){
+	//최초 목록
+	loadNewsList(99, 'all', 0, 12, 'search', null, '오토플러스');
+	
+	//스크롤 로드 (페이징)
+	{% comment %} $(window).on('scroll', function(e){
+		if(($(window).innerHeight() + $(window).scrollTop()) >= $('body').height() - 150) {
+			if(!connFlag){
+				var thisCategory = $('.sub-menu.show li.active').index();
+				var thisNewsType = $('#wrap').prop('class');
+				var nowListLength = $('.news-group li').length;
+				if($('#wrap').hasClass('search-result')){
+					var keyword = $('#search_keyword').val();
+					loadNewsList(99, 'all', nowListLength, 12, 'more', null, keyword);
+				}else{
+					loadNewsList(thisCategory, thisNewsType, nowListLength, 12, 'more');
+				}
+			}
+		}
+	}); {% endcomment %}
+
+	//리사이징
+	listTypeSet();
+	$(window).resize(function(){
+		listTypeSet();
+	});
+});
+
+function listTypeSet(){
+	var winWidth = $(window).width();
+	if(winWidth <= 1280){
+		$('.news-group').removeClass('type02');
+		$('.list-type .btn').removeClass('active').eq(0).addClass('active');
+	}
+}
+	
+//news list > view count
+function viewCountUp(idx, nowCount, newsCode){
+	$.ajax({
+		url: '{% url "view_count" %}',
+		type: 'GET',
+		data: {
+			'now_count': nowCount,
+			'news_code': newsCode
+		},
+		dataType: 'json',
+		success: function(data){
+			$('.news-group.show li').eq(idx).find('.view-cnt').children('strong').text(data);
+		}
+	});
+}
+</script>
+</body>
+</html>
+{% endblock %}
