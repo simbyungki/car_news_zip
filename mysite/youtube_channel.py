@@ -46,16 +46,18 @@ def get_play_list(channel_id) :
 		maxResults=20
 	).execute()
 
+	# 재생목록 아이디와 타이틀 모두 저장
 	playlist = []
+	# 재생목록 아이디만 저장
+	play_id_list = []
 	for group in playlist_group['items']:
 		info = {}
 		info['title'] = group['snippet']['title']
 		info['list_id'] = group['id']
 		playlist.append(info)
-	
-	return playlist
+		play_id_list.append(group['id'])
 
-
+	return play_id_list
 
 # 채널 > 재생목록 ID > 영상 목록
 def get_video_list(playlist_id) :
@@ -85,15 +87,19 @@ def get_video_list(playlist_id) :
 				info['desc'] = playlist_item['snippet']['description']
 				info['thumbnail'] = playlist_item['snippet']['thumbnails']['standard']['url']
 				info['pub_date'] = playlist_item['snippet']['publishedAt']
-				info[cou] = get_video_info()[]
+				info['view_count'] = get_video_info('-Qaaaq7Fr1M')[0]['view_count']
+				info['like_count'] = get_video_info('-Qaaaq7Fr1M')[0]['like_count']
+				info['dislike_count'] = get_video_info('-Qaaaq7Fr1M')[0]['dislike_count']
 			except : 
 				info['video_id'] = playlist_item['snippet']['resourceId']['videoId']
 				info['title'] = playlist_item['snippet']['title']
 				info['desc'] = playlist_item['snippet']['description']
 				info['thumbnail'] = 'None'
 				info['pub_date'] = playlist_item['snippet']['publishedAt']
+				info['view_count'] = get_video_info('-Qaaaq7Fr1M')[0]['view_count']
+				info['like_count'] = get_video_info('-Qaaaq7Fr1M')[0]['like_count']
+				info['dislike_count'] = get_video_info('-Qaaaq7Fr1M')[0]['dislike_count']
 			
-
 			playlist_in_videos.append(info)
 			playlist_videos = youtube.playlistItems().list_next(playlist_videos, playlistitems_list_response)
 
@@ -127,11 +133,51 @@ def get_video_info(video_ids) :
 
 
 
+
+def get_result_data(channel_id) : 
+	# 채널 아이디로 영상 목록 조회
+	play_list_group = get_play_list(channel_id)
+
+
+	video_list_group = []
+	for play_list in play_list_group :
+		video_list = get_video_list(play_list)
+		for video in video_list :
+			video_list_group.append(video)
+	
+
+	print(video_list_group)
+	print(len(video_list_group))
+
+		
+
+
+
+
+	
+
+
+
+
+
+	# return result_data
+
+
+
 if __name__ == '__main__' :
 	# print(get_channel_id('모트라인'))
-	# print(get_channel_info(get_channel_id('모트라인')))
+
+
+
+	get_result_data('UClflgGB-o7wRuMMQ3pEiJDw')
+
 	
-	# print(get_video_info(['MPPF80yLRsQ', 'bpY3_PjujD4']))
+
+
+	# print(get_video_info('-Qaaaq7Fr1M'))
+	# [{'video_id': '-', 'pub_date': '2020-12-15T12:28:05Z', 'view_count': '30700', 'like_count': '223', 'dislike_count': '3'}]
+
+
 
 	# print(get_play_list(get_channel_id('모터그래프')))
 	# [
@@ -153,7 +199,7 @@ if __name__ == '__main__' :
 	# 	{'title': '자동차스트레스연구소', 'list_id': 'PLU7cN9Hulzoauc5grgcf4FaC7gxdFT8sY'}
 	# ]
 
-	print(get_video_list('PLoykoHin5zIaCXtbB4kStCdjIYh-6Sezw'))
+	# print(get_video_list('PLoykoHin5zIaCXtbB4kStCdjIYh-6Sezw'))
 	# [
 	# 	{'video_id': '68JnMB4PfVw', 'title': '쏘울 EV 5인승', 'desc': '중고차의 바른 기준 #오토플러스 #리본카\n\n쏘울 EV 5인승\n연식 : 2018년 01월\n주행거리 : 7,297km\n컬러 : 흰색투톤\n냄새케어 : 1등급\n사고유무 : 무사고 \n.\n.\n.\n[ 차량 바로보기 ]\nhttps://www.autoplus.co.kr/smartbuy/WUSB050001.rb?productId=C21010600037', 'thumbnail': 'https://i.ytimg.com/vi/68JnMB4PfVw/sddefault.jpg'}, 
 	# 	{'video_id': 'f8vn_ONhmK0', 'title': 'GV80 3.0 디젤 AWD', 'desc': '중고차의 바른 기준 #오토플러스 #리본카\n\nGV80 3.0 디젤 AWD\n연식 : 2020년 01월\n주행거리 : 10,046km\n컬러 : 멜버른 그레이(무광)\n냄새케어 : 1등급\n사고유무 : 무사고 \n.\n.\n.\n[ 차량 바로보기 ]\nhttps://www.autoplus.co.kr/smartbuy/WUSB050001.rb?productId=C20122800029', 'thumbnail': 'https://i.ytimg.com/vi/f8vn_ONhmK0/sddefault.jpg'}, 
