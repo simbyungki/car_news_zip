@@ -15,7 +15,10 @@ django.setup()
 from website.models import TblTotalCarNewsList, TblMemberList, TblNewsKeywordList, TblNewsKeywordMap
 from datetime import datetime
 from konlpy.tag import Kkma
+from wordcloud import WordCloud
 from bs4 import BeautifulSoup
+from selenium import webdriver
+import pandas as pd
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.abspath('./mysite'))
@@ -217,4 +220,4 @@ def run_text_mining() :
 
 
 if __name__ == '__main__' : 
-	run_text_mining()
+	run_text_mining('news')

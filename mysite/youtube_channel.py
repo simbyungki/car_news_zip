@@ -145,22 +145,9 @@ def get_result_data(channel_id) :
 		for video in video_list :
 			video_list_group.append(video)
 	
-
-	print(video_list_group)
 	print(len(video_list_group))
-
-		
-
-
-
-
 	
-
-
-
-
-
-	# return result_data
+	return video_list_group
 
 
 
