@@ -1448,6 +1448,7 @@ def insert_used_db(dbconn, cursor) :
 		media_name = ''
 		news_code = 0
 		for idx, news_list in enumerate(get_used_car()) :
+			print('111111111111111111111111111111111111111111111')
 			if idx == 0 :
 				# 오토헤럴드
 				media_code = 100
@@ -1460,7 +1461,7 @@ def insert_used_db(dbconn, cursor) :
 				# 데일리카
 				media_code = 500
 				media_name = '오토모닝'
-
+			print('222222222222222222222222222222222222222222222')
 			for news_dict in news_list.values() :
 				for news in news_dict : 
 					if idx == 0 :
@@ -1499,9 +1500,10 @@ def insert_used_db(dbconn, cursor) :
 							NOW(), 1
 						) 
 					""")
-		
+			print('33333333333333333333333333333333333333333')
 	except Exception as e :
 		print(f'***** + error! >> {e}')	
+		pass
 	finally : 
 		print('**** 중고차 관련 기사 수집 및 DB저장 완료!')
 		print('ㅡ'*50)
