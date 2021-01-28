@@ -413,9 +413,8 @@ class GetItChosun() :
 
 # 오토헤럴드
 class GetAutoH() :
-	# 오토헤럴드 국내 신차
-	def new_k() :
-		url = 'http://autotimes.hankyung.com/apps/news.sub_list?popup=0&nid=02&c1=02&c2=01&c3=&newscate=&isslide=&page=1'
+	def new() :
+		url = 'http://autotimes.hankyung.com/apps/news.sub_list?popup=0&nid=02&c1=02&c2=04&c3=&newscate=&isslide=&page=1'
 		soup = get_soup(url)
 
 		data_list = []
@@ -448,49 +447,7 @@ class GetAutoH() :
 			if idx == 14 :
 				break
 
-
-		return_data_dic['autoh_new_k'] = data_list
-		new_car_list.append(return_data_dic)
-
-	# 오토헤럴드 국외 신차
-	def new_g() :
-		url = 'http://autotimes.hankyung.com/apps/news.sub_list?popup=0&nid=02&c1=02&c2=02&c3=&newscate=&isslide=&page=1'
-		soup = get_soup(url)
-
-		data_list = []
-		return_data_dic = {}
-
-		news_list = soup.select('.newest_list > dl')
-
-		# normal
-		for idx, news in enumerate(news_list) :
-			link = news.find('dt').find('a')['href']
-			subject = news.find('dt').find('a').get_text().strip()
-			summary = news.find('dd', attrs={'class': 'txt'}).get_text().strip()
-			date = news.find('dd', attrs={'class': 'date'}).get_text().strip()
-			if news.find('dd', attrs={'class', 'thum'}) :
-				img_url = news.find('dd', attrs={'class', 'thum'}).find('img')['src']
-			else :
-				img_url = ''
-
-			data_group = {}
-			data_group['link'] = link
-			if img_url != '' :
-				data_group['img_url'] = 'http://autotimes.hankyung.com' + img_url
-			data_group['subject'] = subject
-			data_group['summary'] = summary
-			data_group['date'] = date[0:-6]
-
-			data_list.append(data_group)
-
-			# 상위 15개만 가져오기
-			if idx == 14 :
-				break
-
-		return_data_dic['autoh_new_g'] = data_list
-		new_car_list.append(return_data_dic)
-
-	# 오토헤럴드 중고차
+	# 오토헤럴드 중고차 (21.01.28 페이지 없어짐)
 	def used() : 
 		url = 'http://autotimes.hankyung.com/apps/news.sub_list?popup=0&nid=05&c1=05&c2=02&c3=&newscate=&isslide=&page=1'
 		soup = get_soup(url)
@@ -530,7 +487,7 @@ class GetAutoH() :
 
 	# 오토헤럴드 시승기
 	def review() :
-		url = 'http://autotimes.hankyung.com/apps/news.sub_list?popup=0&nid=06&c1=06&c2=&c3=&newscate=&isslide=&page=1'
+		url = 'http://autotimes.hankyung.com/apps/news.sub_list?popup=0&nid=02&c1=02&c2=05&c3=&newscate=&isslide=&page=1'
 		soup = get_soup(url)
 
 		data_list = []
@@ -1392,7 +1349,7 @@ class GetMotorGraph() :
 
 # 중고차 뉴스 모음
 def get_used_car() :
-	GetAutoH.used()
+	# GetAutoH.used()
 	GetDailyCar.used()
 	GetAutoMorning.used()
 
@@ -1400,8 +1357,7 @@ def get_used_car() :
 
 # 신차 뉴스 모음
 def get_new_car() :
-	GetAutoH.new_k()
-	GetAutoH.new_g()
+	GetAutoH.new()
 	GetAutoview.new()
 	GetItChosun.new()
 	GetAutoMorning.new()
@@ -1442,36 +1398,33 @@ def get_industry() :
 # 중고차 뉴스 INSERT
 def insert_used_db(dbconn, cursor) :
 	try :
-		print('중고차 관련 기사 수집 시작!')
+		print('**** 중고차 관련 기사 수집 시작!')
 		
 		media_code = 0
 		media_name = ''
 		news_code = 0
 		for idx, news_list in enumerate(get_used_car()) :
 			if idx == 0 :
-				# 오토헤럴드
-				media_code = 100
-				media_name = '오토헤럴드'
-			elif idx == 1 :
+				# # 오토헤럴드 (21.01.28 페이지 없어짐)
+				# media_code = 100
+				# media_name = '오토헤럴드'
 				# 데일리카
 				media_code = 200
 				media_name = '데일리카'
-			elif idx == 2 :
-				# 데일리카
+			elif idx == 1 :
+				# 오토모닝
 				media_code = 500
 				media_name = '오토모닝'
-
 			for news_dict in news_list.values() :
 				for news in news_dict : 
 					if idx == 0 :
-						# 오토헤럴드
-						news_code = news.get('link')[-15:]
-						url = f'http://autotimes.hankyung.com/apps/news.sub_view?popup=0&nid=05&c1=05&c2=02&c3=&nkey={news_code}'
-					elif idx == 1 :
+						# # 오토헤럴드 (21.01.28 페이지 없어짐)
+						# news_code = news.get('link')[-15:]
+						# url = f'http://autotimes.hankyung.com/apps/news.sub_view?popup=0&nid=05&c1=05&c2=02&c3=&nkey={news_code}'
 						# 데일리카
 						news_code = news.get('link')[61:66]
 						url = f'http://www.dailycar.co.kr/content/news.html?type=view&autoId={news_code}&from=%2Fcontent%2Fnews.html%3Ftype%3Dlist%26sub%3Dsell%26maker%3Dused'
-					elif idx == 2 :
+					elif idx == 1 :
 						# 오토모닝
 						news_code = news.get('link')[-5:]
 						url = f'http://www.automorning.com/news/article.html?no={news_code}'
@@ -1499,9 +1452,9 @@ def insert_used_db(dbconn, cursor) :
 							NOW(), 1
 						) 
 					""")
-		
 	except Exception as e :
 		print(f'***** + error! >> {e}')	
+		pass
 	finally : 
 		print('**** 중고차 관련 기사 수집 및 DB저장 완료!')
 		print('ㅡ'*50)
@@ -1514,46 +1467,46 @@ def insert_new_db(dbconn, cursor) :
 		media_name = ''
 		news_code = 0
 		for idx, news_list in enumerate(get_new_car()) :
-			if idx == 0 or idx == 1 :
+			if idx == 0 :
 				# 오토헤럴드
 				media_code = 100
 				media_name = '오토헤럴드'
-			elif idx == 2 :
+			elif idx == 1 :
 				# 오토뷰
 				media_code = 300
 				media_name = '오토뷰'
-			elif idx == 3 :
+			elif idx == 2 :
 				# IT조선
 				media_code = 400
 				media_name = 'IT조선'
-			elif idx == 4 :
+			elif idx == 3 :
 				# 오토모닝
 				media_code = 500
 				media_name = '오토모닝'
-			# elif idx == 5 :
+			# elif idx == 4 :
 			# 	# 오토다이어리
 			# 	media_code = 600
 			# 	media_name = '오토다이어리'
-			elif idx == 5 :
+			elif idx == 4 :
 				# 모터그래프
 				media_code = 900
 				media_name = '모터그래프'
 
 			for news_dict in news_list.values() :
 				for news in news_dict : 
-					if idx == 0 or idx == 1 :
+					if idx == 0 :
 						# 오토헤럴드
 						news_code = news.get('link')[-15:]
 						url = f'http://autotimes.hankyung.com/apps/news.sub_view?popup=0&nid=05&c1=05&c2=02&c3=&nkey={news_code}'
-					elif idx == 2 :
+					elif idx == 1 :
 						# 오토뷰
 						news_code = news.get('link')[55:60]
 						url = f'http://www.autoview.co.kr/content/article.asp?num_code={news_code}&news_section=new_car&pageshow=1'
-					elif idx == 3 :
+					elif idx == 2 :
 						# IT조선
 						news_code = news.get('link')[39:]
 						url = f'http://it.chosun.com/site/data/html_dir{news_code}'
-					elif idx == 4 :
+					elif idx == 3 :
 						# 오토모닝
 						news_code = news.get('link')[-5:]
 						url = f'http://www.automorning.com/news/article.html?no={news_code}'
@@ -1561,7 +1514,7 @@ def insert_new_db(dbconn, cursor) :
 					# 	# 오토다이어리
 					# 	news_code = news.get('link')[-17:]
 					# 	url = f'http://www.autodiary.kr{news_code}'
-					elif idx == 5 : 
+					elif idx == 4 : 
 						# 모터그래프
 						news_code = news.get('link')[-5:]
 						url = f'https://www.motorgraph.com/news/articleView.html?idxno={news_code}'
@@ -2045,7 +1998,6 @@ def text_mining(cont_type, dbconn, cursor) :
 		finally : 
 			print('바깥쪽 종료')
 					
-	
 					
 def run_text_mining() :
 	now = time.localtime()
@@ -2079,7 +2031,6 @@ def get_conn_cursor() :
 		traceback.print_stack()
 		print('재시도')
 		return get_conn_cursor()
-
 
 
 if __name__ == '__main__' : 
