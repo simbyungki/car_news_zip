@@ -1783,6 +1783,7 @@ def reload_list_data() :
 	insert_industry_db(dbconn, cursor)
 
 	dbconn.commit()
+	cursor.close()
 	dbconn.close()
 
 	now = time.localtime()

@@ -147,3 +147,5 @@ chromedriver.exe
 mysite/jupyter_/
 mysite/jupyter_test/
 
+
+.svn/

@@ -401,6 +401,7 @@ def load_detail_data() :
 	
 	print('뉴스 상세 내용 가져오기 완료!')
 	dbconn.commit()
+	cursor.close()
 	dbconn.close()
 
 	now = time.localtime()
