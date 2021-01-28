@@ -138,6 +138,7 @@ secrets.json
 secrets_ap.json
 db_conn.json
 db_conn_ap.json
+db_conn_ap_test.json
 
 chromedriver.exe
 /chromedriver.exe
