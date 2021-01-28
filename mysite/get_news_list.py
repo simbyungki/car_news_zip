@@ -1427,8 +1427,8 @@ def insert_used_db(dbconn, cursor) :
 						news_code = news.get('link')[-5:]
 						url = f'http://www.automorning.com/news/article.html?no={news_code}'
 
-					subject = re.sub('[-=.#/?:$}\"\']', '', news.get('subject'))
-					summary = re.sub('[-=.#/?:$}\"\']', '', news.get('summary'))
+					subject = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', news.get('subject')))
+					re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', news.get('summary')))
 					reporter = news.get('reporter')
 					img_url = news.get('img_url')
 					date = news.get('date').replace('/', '-').replace('.', '-')
@@ -1517,8 +1517,8 @@ def insert_new_db(dbconn, cursor) :
 						news_code = news.get('link')[-5:]
 						url = f'https://www.motorgraph.com/news/articleView.html?idxno={news_code}'
 
-					subject = re.sub('[-=.#/?:$}\"\']', '', news.get('subject'))
-					summary = re.sub('[-=.#/?:$}\"\']', '', news.get('summary'))
+					subject = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', news.get('subject')))
+					re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', news.get('summary')))
 					reporter = news.get('reporter')
 					img_url = news.get('img_url')
 					date = news.get('date').replace('/', '-').replace('.', '-')
@@ -1630,8 +1630,8 @@ def insert_review_db(dbconn, cursor) :
 						news_code = news.get('link')[-5:]
 						url = f'https://www.motorgraph.com/news/articleView.html?idxno={news_code}'
 					
-					subject = re.sub('[-=.#/?:$}\"\']', '', news.get('subject'))
-					summary = re.sub('[-=.#/?:$}\"\']', '', news.get('summary'))
+					subject = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', news.get('subject')))
+					re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', news.get('summary')))
 					reporter = news.get('reporter')
 					img_url = news.get('img_url')
 					date = news.get('date').replace('/', '-').replace('.', '-')
@@ -1736,8 +1736,8 @@ def insert_industry_db(dbconn, cursor) :
 						news_code = news.get('link')[-5:]
 						url = f'https://www.motorgraph.com/news/articleView.html?idxno={news_code}'
 
-					subject = re.sub('[-=.#/?:$}\"\']', '', news.get('subject'))
-					summary = re.sub('[-=.#/?:$}\"\']', '', news.get('summary'))
+					subject = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', news.get('subject')))
+					re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', news.get('summary')))
 					reporter = news.get('reporter')
 					img_url = news.get('img_url')
 					date = news.get('date').replace('/', '-').replace('.', '-')

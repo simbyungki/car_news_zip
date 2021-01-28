@@ -71,8 +71,8 @@ class GetAutoview() :
 					d_title = soup.find('div', attrs={'class': 'view_title'}).find('h4').get_text().strip()
 					d_content = soup.find('div', attrs={'class': 'article_text'}).get_text().strip()
 					
-					d_title = re.sub('[-=.#/?:$}\"\']', '', d_title)
-					d_content = re.sub('[-=.#/?:$}\"\']', '', d_content)
+					d_title = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', d_title))
+					d_content = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', d_content))
 
 					cursor.execute(f"""
 						UPDATE TBL_TOTAL_CAR_NEWS_LIST 
@@ -107,8 +107,8 @@ class GetItChosun() :
 					d_title = soup.find('h1', attrs={'id': 'news_title_text_id'}).get_text().strip()
 					d_content = soup.find('div', attrs={'id': 'news_body_id'}).get_text().strip()
 					
-					d_title = re.sub('[-=.#/?:$}\"\']', '', d_title)
-					d_content = re.sub('[-=.#/?:$}\"\']', '', d_content)
+					d_title = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', d_title))
+					d_content = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', d_content))
 
 					cursor.execute(f"""
 						UPDATE TBL_TOTAL_CAR_NEWS_LIST 
@@ -143,8 +143,8 @@ class GetAutoH() :
 					d_title = soup.find('div', attrs={'class': 'view-title'}).find('h2').get_text().strip()
 					d_content = soup.find('div', attrs={'class': 'view_report'}).get_text().strip()
 					
-					d_title = re.sub('[-=.#/?:$}\"\']', '', d_title)
-					d_content = re.sub('[-=.#/?:$}\"\']', '', d_content)
+					d_title = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', d_title))
+					d_content = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', d_content))
 
 					cursor.execute(f"""
 						UPDATE TBL_TOTAL_CAR_NEWS_LIST 
@@ -181,8 +181,8 @@ class GetDailyCar() :
 					soup.select_one('span#content_bodyonly').figure.decompose()
 					d_reporter = soup.select_one('span#content_bodyonly').get_text().strip()[6:12]
 					
-					d_title = re.sub('[-=.#/?:$}\"\']', '', d_title)
-					d_content = re.sub('[-=.#/?:$}\"\']', '', d_content)
+					d_title = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', d_title))
+					d_content = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', d_content))
 
 					cursor.execute(f"""
 						UPDATE TBL_TOTAL_CAR_NEWS_LIST 
@@ -217,8 +217,8 @@ class GetAutoMorning() :
 					d_title = soup.find('div', attrs={'class': 'art_top'}).find('h2').get_text().strip()
 					d_content = soup.find('div', attrs={'id': 'news_body_area'}).get_text().strip()
 					
-					d_title = re.sub('[-=.#/?:$}\"\']', '', d_title)
-					d_content = re.sub('[-=.#/?:$}\"\']', '', d_content)
+					d_title = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', d_title))
+					d_content = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', d_content))
 
 					cursor.execute(f"""
 						UPDATE TBL_TOTAL_CAR_NEWS_LIST 
@@ -254,8 +254,8 @@ class GetAutoDiary() :
 					d_content = soup.find('div', attrs={'class': 'post-content'}).get_text().strip()
 					d_content_tree = soup.find('div', attrs={'class': 'post-content'}).find_all('p')
 					reporter = d_content_tree[len(d_content_tree) -1].get_text()[0:4]
-					d_title = re.sub('[-=.#/?:$}\"\']', '', d_title)
-					d_content = re.sub('[-=.#/?:$}\"\']', '', d_content)
+					d_title = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', d_title))
+					d_content = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', d_content))
 
 					cursor.execute(f"""
 						UPDATE TBL_TOTAL_CAR_NEWS_LIST 
@@ -289,8 +289,8 @@ class GetCarguy() :
 					soup = get_soup(full_url)
 					d_title = soup.find('div', attrs={'class': 'article-head-title'}).get_text().strip()
 					d_content = soup.find('div', attrs={'id': 'article-view-content-div'}).get_text().strip()
-					d_title = re.sub('[-=.#/?:$}\"\']', '', d_title)
-					d_content = re.sub('[-=.#/?:$}\"\']', '', d_content)
+					d_title = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', d_title))
+					d_content = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', d_content))
 
 					cursor.execute(f"""
 						UPDATE TBL_TOTAL_CAR_NEWS_LIST 
@@ -324,8 +324,8 @@ class GetTheDrive() :
 					soup = get_soup(full_url)
 					d_title = soup.find('div', attrs={'class': 'viewTitle'}).find('h3').get_text().strip()
 					d_content = soup.find('div', attrs={'id': 'viewConts'}).get_text().strip()
-					d_title = re.sub('[-=.#/?:$}\"\']', '', d_title)
-					d_content = re.sub('[-=.#/?:$}\"\']', '', d_content)
+					d_title = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', d_title))
+					d_content = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', d_content))
 
 					cursor.execute(f"""
 						UPDATE TBL_TOTAL_CAR_NEWS_LIST 
@@ -359,8 +359,8 @@ class GetMotorGraph() :
 					soup = get_soup(full_url)
 					d_title = soup.find('div', attrs={'class': 'article-head-title'}).get_text().strip()
 					d_content = soup.find('div', attrs={'id': 'articleBody'}).get_text().strip()
-					d_title = re.sub('[-=.#/?:$}\"\']', '', d_title)
-					d_content = re.sub('[-=.#/?:$}\"\']', '', d_content)
+					d_title = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', d_title))
+					d_content = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', d_content))
 
 					cursor.execute(f"""
 						UPDATE TBL_TOTAL_CAR_NEWS_LIST 
@@ -401,7 +401,7 @@ def load_detail_data() :
 	
 	print('뉴스 상세 내용 가져오기 완료!')
 	dbconn.commit()
-	cursor.close()
+	
 	dbconn.close()
 
 	now = time.localtime()
