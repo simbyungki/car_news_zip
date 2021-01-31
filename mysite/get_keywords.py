@@ -221,4 +221,4 @@ def run_text_mining() :
 
 
 if __name__ == '__main__' : 
-	run_text_mining('news')
+	run_text_mining()
