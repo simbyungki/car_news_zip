@@ -444,6 +444,9 @@ class GetAutoH() :
 			# 상위 15개만 가져오기
 			if idx == 14 :
 				break
+			
+		return_data_dic['autoh_new'] = data_list
+		new_car_list.append(return_data_dic)
 
 	# 오토헤럴드 중고차 (21.01.28 페이지 없어짐)
 	def used() : 
@@ -1428,7 +1431,7 @@ def insert_used_db(dbconn, cursor) :
 						url = f'http://www.automorning.com/news/article.html?no={news_code}'
 
 					subject = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', news.get('subject')))
-					re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', news.get('summary')))
+					summary = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', news.get('summary')))
 					reporter = news.get('reporter')
 					img_url = news.get('img_url')
 					date = news.get('date').replace('/', '-').replace('.', '-')
@@ -1508,7 +1511,7 @@ def insert_new_db(dbconn, cursor) :
 						# 오토모닝
 						news_code = news.get('link')[-5:]
 						url = f'http://www.automorning.com/news/article.html?no={news_code}'
-					# elif idx == 5 :
+					# elif idx == 4 :
 					# 	# 오토다이어리
 					# 	news_code = news.get('link')[-17:]
 					# 	url = f'http://www.autodiary.kr{news_code}'
@@ -1518,7 +1521,7 @@ def insert_new_db(dbconn, cursor) :
 						url = f'https://www.motorgraph.com/news/articleView.html?idxno={news_code}'
 
 					subject = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', news.get('subject')))
-					re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', news.get('summary')))
+					summary = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', news.get('summary')))
 					reporter = news.get('reporter')
 					img_url = news.get('img_url')
 					date = news.get('date').replace('/', '-').replace('.', '-')
@@ -1631,7 +1634,7 @@ def insert_review_db(dbconn, cursor) :
 						url = f'https://www.motorgraph.com/news/articleView.html?idxno={news_code}'
 					
 					subject = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', news.get('subject')))
-					re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', news.get('summary')))
+					summary = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', news.get('summary')))
 					reporter = news.get('reporter')
 					img_url = news.get('img_url')
 					date = news.get('date').replace('/', '-').replace('.', '-')
@@ -1737,7 +1740,7 @@ def insert_industry_db(dbconn, cursor) :
 						url = f'https://www.motorgraph.com/news/articleView.html?idxno={news_code}'
 
 					subject = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', news.get('subject')))
-					re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', news.get('summary')))
+					summary = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', news.get('summary')))
 					reporter = news.get('reporter')
 					img_url = news.get('img_url')
 					date = news.get('date').replace('/', '-').replace('.', '-')
@@ -1795,4 +1798,5 @@ def reload_list_data() :
 
 	
 if __name__ == '__main__' : 
+	# print(get_new_car())
 	reload_list_data()

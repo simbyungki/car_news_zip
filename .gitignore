@@ -134,11 +134,12 @@ dmypy.json
 
 # settings
 # settings.py
-secrets.json
-secrets_ap.json
-db_conn.json
-db_conn_ap.json
-db_conn_ap_test.json
+mysite/secrets.json
+mysite/secrets_ap.json
+mysite/db_conn.json
+mysite/db_conn_ap.json
+mysite/db_conn_ap_test.json
+
 
 chromedriver.exe
 /chromedriver.exe

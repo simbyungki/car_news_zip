@@ -446,6 +446,10 @@ class GetAutoH() :
 			# 상위 15개만 가져오기
 			if idx == 14 :
 				break
+			
+		return_data_dic['autoh_new'] = data_list
+		new_car_list.append(return_data_dic)
+
 
 	# 오토헤럴드 중고차 (21.01.28 페이지 없어짐)
 	def used() : 
