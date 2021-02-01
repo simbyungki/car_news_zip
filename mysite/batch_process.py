@@ -414,7 +414,7 @@ class GetItChosun() :
 # 오토헤럴드
 class GetAutoH() :
 	def new() :
-    		url = 'http://autotimes.hankyung.com/apps/news.sub_list?popup=0&nid=02&c1=02&c2=04&c3=&newscate=&isslide=&page=1'
+		url = 'http://autotimes.hankyung.com/apps/news.sub_list?popup=0&nid=02&c1=02&c2=04&c3=&newscate=&isslide=&page=1'
 		soup = get_soup(url)
 
 		data_list = []
