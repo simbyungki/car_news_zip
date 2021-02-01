@@ -1835,7 +1835,7 @@ def load_detail_data() :
 mining_result_data = []
 def text_mining(cont_type, dbconn, cursor) :
 	kkma = Kkma()
-	car_news_list = TblTotalCarNewsList.objects.all().filter(mining_status = 1).exclude(news_content = '')
+	car_news_list = TblTotalCarNewsList.objects.all().filter(mining_status=1).exclude(news_content = '')
 	except_word_list = []
 	except_keyword_list = []
 	origin_sentence_list = []
@@ -1851,47 +1851,17 @@ def text_mining(cont_type, dbconn, cursor) :
 
 	print('형태소 분석')
 
-	# step00. 긍정, 부정 단어 사전 load
-	positive_keywords = []
-	negative_keywords = []
-	va_keywords = []
-	p_keywords_list = TblNewsKeywordList.objects.all().filter(positive_yn='y')
-	n_keywords_list = TblNewsKeywordList.objects.all().filter(negative_yn='y')
-	va_keywords_list = TblNewsKeywordList.objects.all().filter(word_class='VA')
-	for idx in range(len(p_keywords_list)) :
-		positive_keywords.append(p_keywords_list[idx].word_morpheme)
-	for idx in range(len(n_keywords_list)) :
-		negative_keywords.append(n_keywords_list[idx].word_morpheme)
-	for idx in range(len(va_keywords_list)) :
-		va_keywords.append(va_keywords_list[idx].word_morpheme)
-
 	# 뉴스 본문 분석
 	if cont_type == 'news' : 
+
 		# step01. 형태소 분석 (데이터 가공)
 		for idx in range(len(car_news_list)) :
 		# for idx in range(10) :
 			re_content = regex.findall(r'[\p{Hangul}|\p{Latin}|\p{Han}]+', f'{car_news_list[idx].news_content}')
-			# print(f'[{idx}] >> {len(re_content)}')
 			origin_sentence_list.append(car_news_list[idx].news_summary)
 			# print(re_summary)
 			# print('-'*50)
 			in_result_data = []
-		# in_result_data[0] 각종 카운트 사전
-			count_dic = {}
-			# 형태소 단어 총 개수
-			count_dic['morpheme_count'] = len(re_content)
-			# 형용사 개수
-			va_count = 0
-			count_dic['va_count'] = va_count
-			# 긍정단어 개수
-			p_count = 0
-			count_dic['positive_count'] = p_count
-			# 부정단어 개수
-			n_count = 0
-			count_dic['negative_count'] = n_count
-			
-			in_result_data.append(count_dic)
-		# in_result_data[1] 뉴스 번호
 			in_result_data.append(car_news_list[idx].news_no)
 			for word in re_content :
 				in_result_word = []	
@@ -1908,18 +1878,7 @@ def text_mining(cont_type, dbconn, cursor) :
 							# print('-'*50)
 							in_result_word.append(keyword)
 					group.append(in_result_word)
-				
-				if (word in positive_keywords) :
-					p_count += 1
-				if (word in negative_keywords) :
-					n_count += 1
-				if (word in va_keywords) :
-					va_count += 1
-
 				in_result_data.append(group)
-			in_result_data[0]['positive_count'] = p_count
-			in_result_data[0]['negative_count'] = n_count
-			in_result_data[0]['va_count'] = va_count
 			mining_result_data.append(in_result_data)
 
 		# step02. DB Insert
@@ -1929,16 +1888,13 @@ def text_mining(cont_type, dbconn, cursor) :
 				print('DB Insert 2')
 				for idx, data in enumerate(data_list) :
 					try : 
-						if idx == 0 :
-							news_info = data_list[0]
-						elif idx == 1 :	
-							news_no = data_list[1]
+						if idx == 0 :	
+							news_no = data_list[0]
 						else : 
-							pass
 							origin_word = re.sub('[-=.#/?:$}\"\']', '', str(data[0])).replace('[','').replace(']','')
 							print(f'*** : [{out_idx}/{len(mining_result_data) -1}][{news_no}][{idx}/{len(data_list)}][{origin_word}]')
-							# data[1] 형태소 분석 (세트) >> ex) [('신', 'NNG'), ('차', 'NNG')]
-							for in_idx, word in enumerate(data[1]):
+
+							for in_idx, word in enumerate(data[1]) :
 								# INSERT
 								cursor.execute(f"""
 									INSERT IGNORE INTO TBL_NEWS_KEYWORD_LIST 
@@ -1963,9 +1919,7 @@ def text_mining(cont_type, dbconn, cursor) :
 								print(f'**** : [{out_idx}/{len(mining_result_data) -1}][{news_no}][{idx}/{len(data_list) - 1}][{origin_word}][{in_idx}/{len(data[1]) -1}] >> {word[0]} / {word[1]} / KEYWORD 추가 및 뉴스 매핑 완료!')
 								cursor.execute(f"""
 									UPDATE TBL_TOTAL_CAR_NEWS_LIST
-									SET MINING_STATUS = 3, MINING_DATE = NOW(), 
-										POSITIVE_COUNT = {news_info["positive_count"]}, NEGATIVE_COUNT = {news_info["negative_count"]},
-										VA_COUNT = {news_info["va_count"]}, MORPHEME_COUNT = {news_info["morpheme_count"]}
+									SET MINING_STATUS = 3, MINING_DATE = NOW() 
 									WHERE NEWS_NO = {news_no}
 								""")
 								time.sleep(0.1)
@@ -1979,10 +1933,9 @@ def text_mining(cont_type, dbconn, cursor) :
 			print(f'****** + error! >> {e} >>>>> [{idx} // {len(data_list) - 1}] >> 바깥쪽 오류!')
 			pass
 		finally : 
-			pass
 			print('바깥쪽 종료')
 
-	# # 유튜브 댓글 분석
+	# 유튜브 댓글 분석
 	elif cont_type == 'youtube_comments' : 
 		reviews = pd.read_excel('../data/youtube_comments/기아자동차레이_review_comments_youtube.xlsx')
 		df_list = reviews.values.tolist()
@@ -2091,20 +2044,19 @@ if __name__ == '__main__' :
 	# run_text_mining()
 
 	print('스케쥴 작업 시작!')
-	run_text_mining()
 
 	# Schedule Work
 	# 매일 4회 (오전 9시 / 오후 12시 / 오후 3시 / 오후 7시) 뉴스 데이터 수집
-	# schedule.every().days.at('09:00').do(reload_list_data)
-	# schedule.every().days.at('12:00').do(reload_list_data)
-	# schedule.every().days.at('15:00').do(reload_list_data)
-	# schedule.every().days.at('19:00').do(reload_list_data)
+	schedule.every().days.at('09:00').do(reload_list_data)
+	schedule.every().days.at('12:00').do(reload_list_data)
+	schedule.every().days.at('15:00').do(reload_list_data)
+	schedule.every().days.at('19:00').do(reload_list_data)
 
-	# # 매일 1회 (오전 01시) 뉴스 본문 데이터 수집
-	# schedule.every().days.at('01:00').do(load_detail_data)
+	# 매일 1회 (오전 01시) 뉴스 본문 데이터 수집
+	schedule.every().days.at('01:00').do(load_detail_data)
 
-	# # 매일 1회 (오전 05시) 뉴스 본문 데이터 분석
-	# schedule.every().days.at('06:00').do(run_text_mining)
-	# while True :
-	# 	schedule.run_pending()
-	# 	time.sleep(1)
+	# 매일 1회 (오전 05시) 뉴스 본문 데이터 분석
+	schedule.every().days.at('06:00').do(run_text_mining)
+	while True :
+		schedule.run_pending()
+		time.sleep(1)

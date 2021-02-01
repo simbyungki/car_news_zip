@@ -209,6 +209,19 @@
 					newsItem += '<span class="date">' + list.write_date + '</span>';
 					newsItem += '<span class="view-cnt" title="이 기사 조회수">👁 <strong>' + list.view_count + '</strong></span>'
 					{% comment %} newsItem += '<button type="button" class="btn-like" title="이 기사 찜하기">👍 <strong>0</strong></button>'; {% endcomment %}
+					newsItem += '</div>'
+					newsItem += '<div class="mining-result">';
+					newsItem += '<div class="positive" style="width:40%"></div>'
+					newsItem += '<div class="negative" style="width:60%"></div>'
+					newsItem += list.positive_count + '///////' + list.negative_count + '<br>'
+					if(list.positive_count > list.negative_count){
+						posiPer = list.negative_count / list.positive_count
+					}else {
+						posiPer = list.positive_count / list.negative_count
+					}
+					newsItem += posiPer
+
+					{% comment %} list.va_count  list.morpheme_count {% endcomment %}
 					newsItem += '</div>';
 					newsItem += '</li>';
 				}
@@ -257,5 +270,12 @@
 		});
 	}
 	</script>
+
+<style>
+.mining-result {position:absolute; top:-10px; left:-1px; width:100%; height:8px; border:1px solid #ddd;}
+.mining-result > div {position:absolute; top:0; height:8px; opacity:.8;} 
+.mining-result .positive {left:0; background:#2944cc;}
+.mining-result .negative {right:0; background:#ce2c2c;}
+</style>
 	{% block content %}{% endblock %}
 	
