@@ -57,7 +57,6 @@ def get_soup2(url) :
 # 기사 DB INSERT
 # Custom 쿼리 실행 함수
 
-
 # 오토뷰
 class GetAutoview() :
 	# 오토뷰 신차
