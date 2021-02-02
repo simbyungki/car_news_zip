@@ -39,14 +39,6 @@ $(function(){
 		$('.gnb-box, .header .fncs').removeClass('show');
 	});
 
-	//news view count
-	$(document).on('click', '.item-list ul li a', function(){
-		var idx = $(this).parent('li').index();
-		var nowCount = $(this).siblings('.infos').find('.view-cnt').children('strong').text();
-		var newsCode = $(this).parent('li').data('news-code');
-		viewCountUp(idx, nowCount, newsCode)
-	});
-
 	//화면 테마 (light, dark)
 	$('.view-mode-changer').on('change', function(){
 		var skinMode = $(this).val();

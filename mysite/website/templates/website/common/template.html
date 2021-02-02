@@ -130,12 +130,21 @@
 	<script>
 	$('.gnb-box .menu ul > li').removeClass('active');
 	var thisPath = window.location.pathname;		
-	console.log(thisPath)
+	{% comment %} console.log(thisPath) {% endcomment %}
 	if(thisPath == '/' || thisPath == '/news_list' || thisPath == '/news_list/'){
 		$('.gnb-box .menu > ul > li').eq(0).addClass('active');
 	}else if(thisPath == '/car_comments/' || thisPath == '/car_comments'){
 		$('.gnb-box .menu > ul > li').eq(1).addClass('active');
 	}
+	
+	//news view count
+	$(document).on('click', '.item-list ul li a', function(){
+		var idx = $(this).parent('li').index();
+		var nowCount = $(this).find('.infos').find('.view-cnt').children('strong').text();
+		var newsCode = $('this').parent('li').data('news-code');
+		alert('idx = '+ idx + ' / newscount=' + nowCount + ' / newscode = ' + newsCode)
+		viewCountUp(idx, nowCount, newsCode)
+	});
 
 	//news load
 	function loadNewsList(idx, list_type, start_idx, load_length, load_type, fnc_type, search_keyword){
