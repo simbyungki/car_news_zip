@@ -99,6 +99,10 @@
 .item-list ul li .infos .btn-like {position:absolute; right:5px; bottom:-4px; line-height:24px;}
 .item-list ul li .infos .btn-like:active {bottom:-5px;}
 .item-list ul li .infos .btn-like strong {position:relative; top:1px; margin-left:3px; font-size:16px;}
+.item-list ul li .mining-result {position:absolute; top:-10px; left:-1px; width:100%; height:8px; border:1px solid #ddd; background:#f9f9f9;}
+.item-list ul li .mining-result > div {position:absolute; bottom:0; height:4px; opacity:.8;} 
+.item-list ul li .mining-result .positive {left:0; background:#2944cc;}
+.item-list ul li .mining-result .negative {right:0; background:#ce2c2c;}
 .item-list ul.type02 li {margin:20px 0 0 1%; padding-bottom:25px; width:49.5%;}
 .item-list ul.type02 li:nth-child(4n+1),
 .item-list ul.type02 li:nth-child(5n+1) {margin-left:1%;}

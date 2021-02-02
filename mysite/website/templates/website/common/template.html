@@ -211,13 +211,20 @@
 					{% comment %} newsItem += '<button type="button" class="btn-like" title="이 기사 찜하기">👍 <strong>0</strong></button>'; {% endcomment %}
 					newsItem += '</div>'
 					if(list.positive_count > 0 || list.negative_count > 0){
-						if(list.positive_count > list.negative_count){
+
+						negaPer = Math.floor(100 * list.negative_count / (list.negative_count + list.positive_count))
+						posiPer = 100 - negaPer
+
+
+						{% comment %} if(list.positive_count > list.negative_count){
 							negaPer = Math.floor(list.negative_count / list.positive_count * 100)
 							posiPer = 100 - negaPer
 						}else if(list.positive_count < list.negative_count){
 							posiPer = Math.floor(list.positive_count / list.negative_count * 100)
 							negaPer = 100 - posiPer
-						}	
+						}	 {% endcomment %}
+
+
 						if(list.va_count > 0 || list.morpheme_count > 0){
 							vaPer = Math.floor(list.va_count / list.morpheme_count)
 						}
@@ -277,12 +284,4 @@
 		});
 	}
 	</script>
-
-<style>
-.mining-result {position:absolute; top:-6px; left:-1px; width:100%; height:4px; border:1px solid #ddd; background:#f1f1f1;}
-.mining-result > div {position:absolute; top:0; height:4px; opacity:.8;} 
-.mining-result .positive {left:0; background:#2944cc;}
-.mining-result .negative {right:0; background:#ce2c2c;}
-</style>
 	{% block content %}{% endblock %}
-	
