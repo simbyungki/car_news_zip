@@ -204,18 +204,15 @@
 						newsItem += '<p class="summary">' + list.news_summary + '</p>';
 					}
 					newsItem += '</div>';
-					newsItem += '</a>';
 					newsItem += '<div class="infos">';
 					newsItem += '<span class="date">' + list.write_date + '</span>';
 					newsItem += '<span class="view-cnt" title="이 기사 조회수">👁 <strong>' + list.view_count + '</strong></span>'
 					{% comment %} newsItem += '<button type="button" class="btn-like" title="이 기사 찜하기">👍 <strong>0</strong></button>'; {% endcomment %}
 					newsItem += '</div>'
+					newsItem += '<div class="mining-result">';
 					if(list.positive_count > 0 || list.negative_count > 0){
-
 						negaPer = Math.floor(100 * list.negative_count / (list.negative_count + list.positive_count))
 						posiPer = 100 - negaPer
-
-
 						{% comment %} if(list.positive_count > list.negative_count){
 							negaPer = Math.floor(list.negative_count / list.positive_count * 100)
 							posiPer = 100 - negaPer
@@ -224,19 +221,21 @@
 							negaPer = 100 - posiPer
 						}	 {% endcomment %}
 
-
 						if(list.va_count > 0 || list.morpheme_count > 0){
 							vaPer = Math.floor(list.va_count / list.morpheme_count)
 						}
-						newsItem += '<div class="mining-result" title="이 뉴스의 감성지수는 '+vaPer+'% ('+list.va_count+'개/'+list.morpheme_count+'개)이고, 긍/부정 단어 사용빈도율은 '+posiPer+'%/'+negaPer+'% 입니다.">';
 						newsItem += '<div class="positive" style="width:'+ posiPer +'%" title="긍정단어 노출 수 : '+list.positive_count+'"></div>'
 						newsItem += '<div class="negative" style="width:'+ negaPer +'%" title="부정단어 노출 수 : '+list.negative_count+'"></div>'	
+						newsItem += '</div>';
+						newsItem += '<div class="mining-view">'
+						newsItem += '<p>감성지수 : '+vaPer+'% ('+list.va_count+'개/'+list.morpheme_count+'개)<br>긍/부정 단어 사용 빈도율 : <span class="posi">'+posiPer+'%</span>/<span class="nega">'+negaPer+'%</span><br>긍/부정 단어 사용 수 : <span class="posi">'+list.positive_count+'개</span>/<span class="nega">'+list.negative_count+'개</span></p>'
+						newsItem += '</div>'
 					}else{
-						newsItem += '<div class="mining-result" title="분석 중인 뉴스기사입니다.">'
+						newsItem += '</div>';
+						newsItem += '<div class="mining-view"><p>분석 중인 뉴스기사입니다.</p></div>'
+						{% comment %} <div class="mining-view"><p>감성지수 : '+vaPer+'% ('+list.va_count+'개/'+list.morpheme_count+'개)<br>긍/부정 단어 사용 빈도율 : <span class="posi">'+posiPer+'%</span>/<span class="nega">'+negaPer+'%</span></p></div> {% endcomment %}
 					}
-
-					{% comment %} list.va_count  list.morpheme_count {% endcomment %}
-					newsItem += '</div>';
+					newsItem += '</a>';
 					newsItem += '</li>';
 				}
 				if(load_type == 'more'){

@@ -1784,10 +1784,13 @@ def reload_list_data() :
 	print('뉴스 받아오기 시작!')
 
 	insert_used_db(dbconn, cursor)
+	print(f'중고차 처리건수 >> [{len(used_car_list)}]')
 	insert_new_db(dbconn, cursor)
+	print(f'신차 처리건수 >> [{len(new_car_list)}]')
 	insert_review_db(dbconn, cursor)
+	print(f'시승기 처리건수 >> [{len(review_list)}]')
 	insert_industry_db(dbconn, cursor)
-
+	print(f'자동차 산업 처리건수 >> [{len(industry_list)}]')
 	dbconn.commit()
 	dbconn.close()
 

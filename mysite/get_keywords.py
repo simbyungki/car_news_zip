@@ -180,7 +180,7 @@ def text_mining(cont_type, dbconn, cursor) :
 
 	# # 유튜브 댓글 분석
 	elif cont_type == 'youtube_comments' : 
-		reviews = pd.read_excel('../data/youtube_comments/기아자동차레이_review_comments_youtube.xlsx')
+		reviews = pd.read_excel('../data/youtube_comments/쉐보레트레일블레이저_review_comments_youtube.xlsx')
 		df_list = reviews.values.tolist()
 		in_result_data = []
 
@@ -253,8 +253,8 @@ def run_text_mining() :
 	dbconn = mysql.connector.connect(host=db_infos.get('host'), user=db_infos.get('user'), password=db_infos.get('password'), database=db_infos.get('database'), port=db_infos.get('port'))
 	cursor = dbconn.cursor()
 
-	text_mining('news', dbconn, cursor)
-	# text_mining('youtube_comments', dbconn, cursor)
+	# text_mining('news', dbconn, cursor)
+	text_mining('youtube_comments', dbconn, cursor)
 
 	dbconn.commit()
 	cursor.close()
