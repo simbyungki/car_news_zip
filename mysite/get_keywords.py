@@ -46,6 +46,20 @@ def text_mining(cont_type, dbconn, cursor) :
 	# print(car_news_list[0].news_summary)
 
 	print('형태소 분석')
+	
+	# step00. 긍정, 부정 단어 사전 load
+	positive_keywords = []
+	negative_keywords = []
+	va_keywords = []
+	p_keywords_list = TblNewsKeywordList.objects.all().filter(positive_yn='y')
+	n_keywords_list = TblNewsKeywordList.objects.all().filter(negative_yn='y')
+	va_keywords_list = TblNewsKeywordList.objects.all().filter(word_class='VA')
+	for idx in range(len(p_keywords_list)) :
+		positive_keywords.append(p_keywords_list[idx].word_morpheme)
+	for idx in range(len(n_keywords_list)) :
+		negative_keywords.append(n_keywords_list[idx].word_morpheme)
+	for idx in range(len(va_keywords_list)) :
+		va_keywords.append(va_keywords_list[idx].word_morpheme)
 
 	# 뉴스 본문 분석
 	if cont_type == 'news' : 
