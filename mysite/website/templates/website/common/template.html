@@ -221,9 +221,9 @@
 						if(list.va_count > 0 || list.morpheme_count > 0){
 							vaPer = Math.floor(list.va_count / list.morpheme_count)
 						}
-						newsItem += '<div class="mining-result" title="이 뉴스의 감성지수는 '+vaPer+'% ('+list.va_count+'개/'+list.morpheme_count+'개)이고, 긍/부정 단어 사용빈도율은 '+posiPer+'%/'+negaPer+'% ('+list.positive_count+'개/'+list.negative_count+'개) 입니다.">';
-						newsItem += '<div class="positive" style="width:'+ posiPer +'%"></div>'
-						newsItem += '<div class="negative" style="width:'+ negaPer +'%"></div>'	
+						newsItem += '<div class="mining-result" title="이 뉴스의 감성지수는 '+vaPer+'% ('+list.va_count+'개/'+list.morpheme_count+'개)이고, 긍/부정 단어 사용빈도율은 '+posiPer+'%/'+negaPer+'% 입니다.">';
+						newsItem += '<div class="positive" style="width:'+ posiPer +'%" title="긍정단어 노출 수 : '+list.positive_count+'"></div>'
+						newsItem += '<div class="negative" style="width:'+ negaPer +'%" title="부정단어 노출 수 : '+list.negative_count+'"></div>'	
 					}else{
 						newsItem += '<div class="mining-result" title="분석 중인 뉴스기사입니다.">'
 					}

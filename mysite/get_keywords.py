@@ -46,7 +46,7 @@ def text_mining(cont_type, dbconn, cursor) :
 	# print(car_news_list[0].news_summary)
 
 	print('형태소 분석')
-	
+
 	# step00. 긍정, 부정 단어 사전 load
 	positive_keywords = []
 	negative_keywords = []
@@ -164,7 +164,7 @@ def text_mining(cont_type, dbconn, cursor) :
 										VA_COUNT = {news_info["va_count"]}, MORPHEME_COUNT = {news_info["morpheme_count"]}
 									WHERE NEWS_NO = {news_no}
 								""")
-								time.sleep(0.1)
+								# time.sleep(0.1)
 					except Exception as e :
 						print(f'****** + error! >> {e} >>>>> [{idx} // {len(data_list) - 1}] >> 안쪽 오류!')
 						pass
