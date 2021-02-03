@@ -42,30 +42,41 @@ def classification(dbconn, cursor) :
 		negative_keywords.append(n_keywords_list[idx].word_morpheme)
 
 	in_query = ""
-	for idx, p_keywords in enumerate(positive_keywords[:5]) :
+	for idx, p_keyword in enumerate(positive_keywords[:1]) :
+		
+		print(p_keyword)
 		if idx == 0 :
-			in_query = f"REPLACE(NEWS_SUMMARY, '{p_keywords}', '<span style=\"color:#2944cc\">{p_keywords}</span>')"
+			in_query = f"REPLACE(NEWS_SUMMARY, '{p_keyword}', '<span style=\"color:#2944cc\">{p_keyword}</span>')"
 		else :
-			in_query = f"REPLACE({in_query}, '{p_keywords}', '<span style=\"color:#2944cc\">{p_keywords}</span>')"
+			in_query = f"REPLACE({in_query}, '{p_keyword}', '<span style=\"color:#2944cc\">{p_keyword}</span>')"
 
 
+		cursor.execute(f"""
+			UPDATE 
+				TBL_TOTAL_CAR_NEWS_LIST
+			SET 
+				NEWS_SUMMARY = {in_query}
+			WHERE 
+				NEWS_SUMMARY LIKE '%{p_keyword}%'
+		""")
+
+	in_query = ""
+	for idx, n_keyword in enumerate(negative_keywords[:1]) :
+		print(n_keyword)
+		if idx == 0 :
+			in_query = f"REPLACE(NEWS_SUMMARY, '{n_keyword}', '<span style=\"color:#2944cc\">{n_keyword}</span>')"
+		else :
+			in_query = f"REPLACE({in_query}, '{n_keyword}', '<span style=\"color:#2944cc\">{n_keyword}</span>')"
 
 	
 		cursor.execute(f"""
-			SELECT R1.* FROM (
-				SELECT 
-					NEWS_SUMMARY, {in_query}
-				FROM 
-					TBL_TOTAL_CAR_NEWS_LIST
-				WHERE 
-					NEWS_SUMMARY LIKE '%{p_keywords}%'
-				) R1
-			LIMIT 0, 5
+			UPDATE 
+				TBL_TOTAL_CAR_NEWS_LIST
+			SET 
+				NEWS_SUMMARY = {in_query}
+			WHERE 
+				NEWS_SUMMARY LIKE '%{n_keyword}%'
 		""")
-
-		rows = cursor.fetchall()
-		print(rows)
-
 
 
 def run_classification() :
