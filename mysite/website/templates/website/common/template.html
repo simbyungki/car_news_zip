@@ -142,11 +142,9 @@
 		var idx = $(this).parent('li').index();
 		var nowCount = $(this).find('.infos').find('.view-cnt').children('strong').text();
 		var newsCode = $('this').parent('li').data('news-code');
-		alert('idx = '+ idx + ' / newscount=' + nowCount + ' / newscode = ' + newsCode)
+		{% comment %} alert('idx = '+ idx + ' / newscount=' + nowCount + ' / newscode = ' + newsCode) {% endcomment %}
 		viewCountUp(idx, nowCount, newsCode)
 	});
-
-	//news load
 	function loadNewsList(idx, list_type, start_idx, load_length, load_type, fnc_type, search_keyword){
 		console.log('@@@', list_type)
 		$('.loading').show();
@@ -167,7 +165,25 @@
 				var newsItem = "";		
 				json_data = JSON.parse(data.news)
 				total_length = data.total_length
-				console.log(total_length)
+				today_news = data.today_news
+				category_idx = 0
+				if(list_type == 'category'){
+					for(cnt in today_news){
+						if(today_news[cnt] > 0){
+							$('.category-list .sub-menu.category li').eq(category_idx).addClass('new')
+						}
+						category_idx++
+					}
+				}else if(list_type == 'media'){
+					for(cnt in today_news){
+						if(today_news[cnt] > 0){
+							$('.category-list .sub-menu.media li').eq(category_idx).addClass('new')
+						}
+						category_idx++
+					}
+				}
+				{% comment %} console.log(total_length) {% endcomment %}
+				console.log(json_data)
 				for(i = 0; i < json_data.length; i++){
 					list = json_data[i].fields;
 					var media_name = '';
@@ -233,8 +249,8 @@
 						if(list.va_count > 0 || list.morpheme_count > 0){
 							vaPer = Math.floor(list.va_count / list.morpheme_count)
 						}
-						newsItem += '<div class="positive" style="width:'+ posiPer +'%" title="긍정단어 노출 수 : '+list.positive_count+'">긍정 '+ posiPer +' %</div>'
-						newsItem += '<div class="negative" style="width:'+ negaPer +'%" title="부정단어 노출 수 : '+list.negative_count+'">부정 '+ negaPer +' %</div>'	
+						newsItem += '<div class="positive" style="width:'+ posiPer +'%" title="긍정단어 노출 수 : '+list.positive_count+'개">긍정 '+ posiPer +' %</div>'
+						newsItem += '<div class="negative" style="width:'+ negaPer +'%" title="부정단어 노출 수 : '+list.negative_count+'개">부정 '+ negaPer +' %</div>'	
 						newsItem += '</div>';
 						newsItem += '<div class="mining-view">'
 						newsItem += '<p>감성지수 : '+vaPer+'% ('+list.va_count+'개/'+list.morpheme_count+'개)<br>긍/부정 단어 사용 빈도율 : <span class="posi">'+posiPer+'%</span>/<span class="nega">'+negaPer+'%</span><br>긍/부정 단어 사용 수 : <span class="posi">'+list.positive_count+'개</span>/<span class="nega">'+list.negative_count+'개</span></p>'
@@ -248,6 +264,7 @@
 					newsItem += '</a>';
 					newsItem += '</li>';
 				}
+
 				if(load_type == 'more'){
 					$('.news-group').append(newsItem);
 					var nowScrollTop = $('html, body').scrollTop();
@@ -294,3 +311,16 @@
 	}
 	</script>
 	{% block content %}{% endblock %}
+{% comment %} //news load
+var date = new Date();
+var year = date.getFullYear()
+var month = new String(date.getMonth() + 1);
+var day = new String(date.getDate());
+if(month.length == 1){
+	month = '0' + month;
+}
+if(day.length == 1){
+	day = '0' + day;
+}
+todayDate = year + '-' + month + '-' + day
+alert(today) {% endcomment %}

@@ -156,6 +156,7 @@ def join(request) :
 # Ajax
 # 뉴스 목록 가져오기 ajax
 def list_data(request) :
+	today_date = datetime.today().strftime('%Y-%m-%d')
 	news_list = TblTotalCarNewsList.objects.all()
 	if request.method == 'GET' :
 		idx = int(request.GET.get('list_idx'))
@@ -164,8 +165,9 @@ def list_data(request) :
 		load_length = int(request.GET.get('load_length'))
 		search_keyword = request.GET.get('search_keyword')
 		category_num = 1
-		
+	
 	news = ''
+	today_uploads = {}
 	if list_type == 'media' : 
 		#오토헤럴드 : 100, 데일리카 : 200, 오토뷰 : 300, IT조선 : 400, 오토모닝 : 500, 오토다이어리 : 600, 카가이 : 700, 더드라이브 : 800
 		if idx == 0 :
@@ -187,6 +189,16 @@ def list_data(request) :
 		elif idx == 8 :
 			category_num = 900
 		news = news_list.filter(media_code=category_num).order_by('-write_date')
+
+		today_uploads['auto_h'] = len(news_list.filter(add_date__contains = today_date).filter(media_code = 100))
+		today_uploads['daily_car'] = len(news_list.filter(add_date__contains = today_date).filter(media_code = 200))
+		today_uploads['autoview'] = len(news_list.filter(add_date__contains = today_date).filter(media_code = 300))
+		today_uploads['it_chosun'] = len(news_list.filter(add_date__contains = today_date).filter(media_code = 400))
+		today_uploads['auto_morning'] = len(news_list.filter(add_date__contains = today_date).filter(media_code = 500))
+		today_uploads['auto_diary'] = len(news_list.filter(add_date__contains = today_date).filter(media_code = 600))
+		today_uploads['carguy'] = len(news_list.filter(add_date__contains = today_date).filter(media_code = 700))
+		today_uploads['the_drive'] = len(news_list.filter(add_date__contains = today_date).filter(media_code = 800))
+		today_uploads['motorgraph'] = len(news_list.filter(add_date__contains = today_date).filter(media_code = 900))
 	elif list_type == 'category' :
 		if idx == 0 :
 			category_num = 7
@@ -197,11 +209,16 @@ def list_data(request) :
 		elif idx == 3 :
 			category_num = 5
 		news = news_list.filter(news_category=category_num).order_by('-write_date')
+
+		today_uploads['industry'] = len(news_list.filter(add_date__contains = today_date).filter(news_category = 7))
+		today_uploads['used'] = len(news_list.filter(add_date__contains = today_date).filter(news_category = 1))
+		today_uploads['new'] = len(news_list.filter(add_date__contains = today_date).filter(news_category = 3))
+		today_uploads['review'] = len(news_list.filter(add_date__contains = today_date).filter(news_category = 5))
 	elif list_type == 'all' : 
 		news = news_list.filter(Q(news_content__icontains=search_keyword) | Q(news_title__icontains=search_keyword) ).order_by('-write_date')
 	
 	set_news = serializers.serialize('json', news[start_idx:start_idx+load_length])
-	return JsonResponse({'news': set_news, 'total_length': len(news)}, status=200)
+	return JsonResponse({'news': set_news, 'total_length': len(news), 'today_news': today_uploads}, status=200)
 
 # 뉴스 클릭 수 ajax
 def view_count(request) : 

@@ -65,7 +65,7 @@
 .item-list .txt-guide {color:#333;}
 .item-list ul {display:none; flex-wrap:wrap; padding-bottom:20px;}
 .item-list ul.show {display:flex;}
-.item-list ul li {position:relative; top:0; margin:50px 0 0 2%; padding:15px 15px 30px; width:23.5%; background:#fff; box-sizing:border-box; transition:all .2s; border:1px solid #ddd;}
+.item-list ul li {position:relative; top:0; margin:50px 0 0 2%; padding:10px 15px 30px; width:23.5%; background:#fff; box-sizing:border-box; transition:all .2s; border:1px solid #ddd;}
 .item-list ul li:hover {top:-2px; box-shadow:0 3px 15px rgba(0,0,0,.2);}
 .item-list ul li:first-child,
 .item-list ul li:nth-child(4n+1) {margin-left:0;}
@@ -74,7 +74,7 @@
 .item-list ul li .picture p {padding:54px 0 0; line-height:18px; color:#888; font-size:14px; text-align:center;}
 .item-list ul li .picture p .ico {display:block; font-size:22px;}
 .item-list ul li .info-box {height:120px;}
-.item-list ul li .tags {position:absolute; top:15px;}
+.item-list ul li .tags {position:absolute; top:10px;}
 .item-list ul li .tags span {display:inline-block; padding:0 5px; height:22px; line-height:22px; color:#fff; box-shadow:0 1px 1px rgba(0,0,0,.8);}
 .item-list ul li .tags span + span {margin-left:3px;}
 .item-list ul li .tags span.group {background:#444;}
@@ -100,7 +100,7 @@
 .item-list ul li .infos .btn-like:active {bottom:-5px;}
 .item-list ul li .infos .btn-like strong {position:relative; top:1px; margin-left:3px; font-size:16px;}
 .item-list ul li .mining-result {position:absolute; top:-24px; left:-1px; width:100%; height:22px; border:1px solid #ddd; background:#f9f9f9;}
-.item-list ul li .mining-result > div {position:absolute; bottom:0; height:22px; line-height:22px; color:#fff; font-size:14px; text-align:center; opacity:.8;} 
+.item-list ul li .mining-result > div {position:absolute; bottom:0; height:22px; line-height:22px; color:#fff; font-size:14px; text-align:center; overflow:hidden; opacity:.9;} 
 .item-list ul li .mining-result .positive {left:0; background:#2944cc;}
 .item-list ul li .mining-result .negative {right:0; background:#ce2c2c;}
 .item-list ul li .mining-view {position:absolute; left:2%; bottom:-20px; z-index:100; padding:15px; width:96%; border:1px solid #999; background:#fff; opacity:0; transition:all .3s ease-in-out; box-sizing:border-box;}
@@ -141,9 +141,10 @@
 .list-top .list-type .btn:nth-child(2):after {bottom:8px;}
 
 
-.category-list {position:fixed; top:120px; left:0; z-index:100; width:100%; height:60px; background:#444; box-sizing:border-box;}
+.category-list {position:fixed; top:120px; left:0; z-index:150; width:100%; height:60px; background:#444; box-sizing:border-box;}
 .category-list ul {display:none; flex-wrap:wrap; margin-top:5px;}
 .category-list ul.show {display:flex;}
+.category-list ul li {position:relative;}
 .category-list ul li a {color:#999; font-size:26px; font-weight:600;}
 .category-list ul li.active {border-bottom:1px solid #fff; background:#666;}
 .category-list ul li.active a {color:#fff;}
@@ -151,6 +152,7 @@
 .category-list ul li {margin-right:25px;}
 .category-list ul li:last-child {margin-right:0;}
 .category-list ul li:first-child {color:#d00;}
+.category-list ul li.new:after {display:block; content:"N"; position:absolute; right:-20px; top:-10px; width:22px; height:20px; line-height:22px; color:#fff; font-size:15px; font-weight:600; text-align:center; background:#d00; border-radius:50em;}
 .category-list .result-info {display:none; line-height:40px;}
 .category-list .result-info.show {display:flex;}
 .category-list .result-info p,
@@ -297,7 +299,7 @@
 	.header .btn-gnb:before, 
 	.header .btn-gnb:after {width:25px;}
 	.header .gnb-box .box {left:-65%; padding-top:120px; padding-left:20px; width:65%;}
-	.item-list ul li {margin-top:12px; padding-bottom:15px; width:100%;}
+	.item-list ul li {margin-top:34px; padding-bottom:15px; width:100%;}
 	.item-list ul li:nth-child(2n) {margin-left:0;}
 	.item-list ul li a {display:flex; justify-content:space-between;}
 	.item-list ul li .picture {width:125px; height:125px; overflow:hidden;}
@@ -323,7 +325,7 @@
 	.header .fncs {top:14px;}
 	/* .header .fncs a {display:block; position:fixed; bottom:0; left:0; width:100%; height:50px; line-height:50px; color:#fff; font-size:18px; font-weight:600; text-align:center; background:#444;} */
 	.header .gnb-box .box {left:-90%; width:90%;}
-	.header .search-box {margin-top:10px; width:66%;}
+	.header .search-box {margin-top:10px; width:75%;}
 	.header .search-box input[type="text"],
 	.header .search-box .btn-search {height:36px; font-size:14px;}
 	.container .inner {width:96%;}
@@ -333,7 +335,7 @@
 	.item-list {padding-bottom:0;}
 	.item-list .txt-guide {font-size:14px;}
 	.item-list ul {padding-bottom:10px;}
-	.item-list ul li {margin-top:10px; padding-top:10px; padding-bottom:10px;}
+	.item-list ul li {padding-top:10px; padding-bottom:10px;}
 	.item-list ul li .picture {width:80px; height:80px;}
 	.item-list ul li .picture p {padding:20px 0 0;}
 	.item-list ul li .tags span {padding:0 4px; height:18px; line-height:20px; font-size:11px;}
