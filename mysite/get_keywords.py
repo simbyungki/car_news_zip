@@ -253,8 +253,8 @@ def run_text_mining() :
 	dbconn = mysql.connector.connect(host=db_infos.get('host'), user=db_infos.get('user'), password=db_infos.get('password'), database=db_infos.get('database'), port=db_infos.get('port'))
 	cursor = dbconn.cursor()
 
-	# text_mining('news', dbconn, cursor)
-	text_mining('youtube_comments', dbconn, cursor)
+	text_mining('news', dbconn, cursor)
+	# text_mining('youtube_comments', dbconn, cursor)
 
 	dbconn.commit()
 	cursor.close()

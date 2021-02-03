@@ -233,13 +233,14 @@
 						if(list.va_count > 0 || list.morpheme_count > 0){
 							vaPer = Math.floor(list.va_count / list.morpheme_count)
 						}
-						newsItem += '<div class="positive" style="width:'+ posiPer +'%" title="긍정단어 노출 수 : '+list.positive_count+'"></div>'
-						newsItem += '<div class="negative" style="width:'+ negaPer +'%" title="부정단어 노출 수 : '+list.negative_count+'"></div>'	
+						newsItem += '<div class="positive" style="width:'+ posiPer +'%" title="긍정단어 노출 수 : '+list.positive_count+'">긍정 '+ posiPer +' %</div>'
+						newsItem += '<div class="negative" style="width:'+ negaPer +'%" title="부정단어 노출 수 : '+list.negative_count+'">부정 '+ negaPer +' %</div>'	
 						newsItem += '</div>';
 						newsItem += '<div class="mining-view">'
 						newsItem += '<p>감성지수 : '+vaPer+'% ('+list.va_count+'개/'+list.morpheme_count+'개)<br>긍/부정 단어 사용 빈도율 : <span class="posi">'+posiPer+'%</span>/<span class="nega">'+negaPer+'%</span><br>긍/부정 단어 사용 수 : <span class="posi">'+list.positive_count+'개</span>/<span class="nega">'+list.negative_count+'개</span></p>'
 						newsItem += '</div>'
 					}else{
+						newsItem += '<p class="txt-ing">분석 중인 뉴스기사입니다.</p>';
 						newsItem += '</div>';
 						newsItem += '<div class="mining-view"><p>분석 중인 뉴스기사입니다.</p></div>'
 						{% comment %} <div class="mining-view"><p>감성지수 : '+vaPer+'% ('+list.va_count+'개/'+list.morpheme_count+'개)<br>긍/부정 단어 사용 빈도율 : <span class="posi">'+posiPer+'%</span>/<span class="nega">'+negaPer+'%</span></p></div> {% endcomment %}
