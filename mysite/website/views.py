@@ -37,6 +37,7 @@ def execute(query, bufferd=True) :
 def news_list(request) :
 	today_date = datetime.today().strftime('%Y-%m-%d')
 	context = {'today_date': today_date}
+	context['page_group'] = 'news-list'
 	user_id = request.session.get('user')
 	if user_id :
 		memb_name = TblMemberList.objects.filter(memb_id=user_id).values()[0].get('memb_name')
@@ -46,10 +47,17 @@ def news_list(request) :
 
 	return render(request, 'website/news_list.html', context)
 
-# 목록(검색 결과)
-def search_result_list(request) :
-
-	return render(request, 'website/common/news_list.html', context)
+# 뉴스 상세
+def news_detail(request) : 
+	news_code = request.GET.get('news_code')
+	keyword = request.GET.get('keyword')
+	news = TblTotalCarNewsList.objects.values().filter(news_code=news_code)
+	context = {}
+	context['news'] = news[0]
+	context['keyword'] = keyword
+	context['page_group'] = 'news-detail-p'
+	print(news_code, keyword)
+	return render(request, 'website/news_detail.html', context)
 
 # 뉴스 분석
 def text_mining_result(request) :
@@ -75,7 +83,6 @@ def text_mining_result(request) :
 
 # 로그인
 def login(request) :
-	newsList = TblTotalCarNewsList.objects.all().filter(media_code=100)
 	context = {'page_group': 'login-p'}
 	user_id = request.session.get('user')
 	if user_id :

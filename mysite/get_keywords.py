@@ -27,26 +27,19 @@ db_info_file = os.path.join(BASE_DIR, 'db_conn.json')
 with open(db_info_file) as f :
 	db_infos = json.loads(f.read())
 
+
+
 # 뉴스 분석
 mining_result_data = []
 def text_mining(cont_type, dbconn, cursor) :
 	kkma = Kkma()
-	car_news_list = TblTotalCarNewsList.objects.all().filter(mining_status=1).exclude(news_content = '')
+	# car_news_list = TblTotalCarNewsList.objects.all().filter(mining_status=1).exclude(news_content = '')
+	car_news_list = TblTotalCarNewsList.objects.all().filter(media_code = 900)
 	except_word_list = []
 	except_keyword_list = []
 	origin_sentence_list = []
 	news_no = 0
-	# user_id = request.session.get('user')
-	# if user_id :
-	# 	memb_name = TblMemberList.objects.filter(memb_id=user_id).values()[0].get('memb_name')
-	# 	context['user'] = memb_name
-	# else : 
-	# 	context['user'] = None
-
-	# print(car_news_list[0].news_summary)
-
-	print('형태소 분석')
-
+	
 	# step00. 긍정, 부정 단어 사전 load
 	positive_keywords = []
 	negative_keywords = []
@@ -61,14 +54,23 @@ def text_mining(cont_type, dbconn, cursor) :
 	for idx in range(len(va_keywords_list)) :
 		va_keywords.append(va_keywords_list[idx].word_morpheme)
 
+	print(f'형태소 분석 시작 ({len(car_news_list)}건)')
+
 	# 뉴스 본문 분석
 	if cont_type == 'news' : 
 		# step01. 형태소 분석 (데이터 가공)
-		for idx in range(len(car_news_list)) :
-		# for idx in range(10) :
+		# for idx in range(len(car_news_list)) :
+		for idx in range(2) :
+			print(f'[{idx} // {len(car_news_list)}] 데이터 가공 완료')
+			replace_news_content = car_news_list[idx].news_content
+			replace_news_content = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', replace_news_content))
+			replace_news_summary = car_news_list[idx].news_summary
+			replace_news_summary = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', replace_news_summary))
 			re_content = regex.findall(r'[\p{Hangul}|\p{Latin}|\p{Han}]+', f'{car_news_list[idx].news_content}')
+			re_summary = regex.findall(r'[\p{Hangul}|\p{Latin}|\p{Han}]+', f'{car_news_list[idx].news_summary}')
 			# print(f'[{idx}] >> {len(re_content)}')
-			origin_sentence_list.append(car_news_list[idx].news_summary)
+			# 원 문장
+			# origin_sentence_list.append(car_news_list[idx].news_summary)
 			# print(re_summary)
 			# print('-'*50)
 			in_result_data = []
@@ -89,6 +91,7 @@ def text_mining(cont_type, dbconn, cursor) :
 			in_result_data.append(count_dic)
 		# in_result_data[1] 뉴스 번호
 			in_result_data.append(car_news_list[idx].news_no)
+			# 뉴스 본문
 			for word in re_content :
 				in_result_word = []	
 				group = []
@@ -106,77 +109,116 @@ def text_mining(cont_type, dbconn, cursor) :
 					group.append(in_result_word)
 				
 				if (word in positive_keywords) :
+					#긍정 단어 치환
+					if replace_news_content.find('|'+ word +'|') == -1 :
+						replace_news_content = replace_news_content.replace(word,'|:|'+ word +'|*|')
 					p_count += 1
 				if (word in negative_keywords) :
+					#부정 단어 치환
+					if replace_news_content.find('|'+ word +'|') == -1 :
+						replace_news_content = replace_news_content.replace(word,'|!|'+ word +'|*|')
 					n_count += 1
 				if (word in va_keywords) :
+					# 형용사 치환
+					if replace_news_content.find('|'+ word +'|') == -1 :
+						replace_news_content = replace_news_content.replace(word,'|@|'+ word +'|*|')
 					va_count += 1
 
 				in_result_data.append(group)
+			# 뉴스 요약
+			for word in re_summary :
+				if (word not in except_word_list) :
+					if (word in positive_keywords) :
+						#긍정 단어 치환
+						if replace_news_summary.find('|'+ word +'|') == -1 :
+							replace_news_summary = replace_news_summary.replace(word,'|:|'+ word +'|*|')
+					if (word in negative_keywords) :
+						#부정 단어 치환
+						if replace_news_summary.find('|'+ word +'|') == -1 :
+							replace_news_summary = replace_news_summary.replace(word,'|!|'+ word +'|*|')
+					if (word in va_keywords) :
+						# 형용사 치환
+						if replace_news_summary.find('|'+ word +'|') == -1 :
+							replace_news_summary = replace_news_summary.replace(word,'|@|'+ word +'|*|')
+
+
 			in_result_data[0]['positive_count'] = p_count
 			in_result_data[0]['negative_count'] = n_count
 			in_result_data[0]['va_count'] = va_count
+			in_result_data[0]['re_content'] = replace_news_content
+			in_result_data[0]['re_summary'] = replace_news_summary
 			mining_result_data.append(in_result_data)
 
+		print(mining_result_data[0][0]['re_summary'])
+		print(mining_result_data[1][0]['re_summary'])
 		# step02. DB Insert
 		print('DB Insert')
-		try : 
-			for out_idx, data_list in enumerate(mining_result_data) :
-				print('DB Insert 2')
-				for idx, data in enumerate(data_list) :
-					try : 
-						if idx == 0 :
-							news_info = data_list[0]
-						elif idx == 1 :	
-							news_no = data_list[1]
-						else : 
-							pass
-							origin_word = re.sub('[-=.#/?:$}\"\']', '', str(data[0])).replace('[','').replace(']','')
-							print(f'*** : [{out_idx}/{len(mining_result_data) -1}][{news_no}][{idx}/{len(data_list)}][{origin_word}]')
-							# data[1] 형태소 분석 (세트) >> ex) [('신', 'NNG'), ('차', 'NNG')]
-							for in_idx, word in enumerate(data[1]):
-								# INSERT
-								cursor.execute(f"""
-									INSERT IGNORE INTO TBL_NEWS_KEYWORD_LIST 
-									(
-										WORD_MORPHEME, WORD_CLASS, UPDATE_DATE
-									) 
-									VALUES (
-										"{word[0]}", "{word[1]}", NOW()
-									)
-								""")
-								cursor.execute(f"""
-									INSERT IGNORE INTO TBL_NEWS_KEYWORD_MAP 
-									(
-										WORD_ORIGIN, WORD_MORPHEME,
-										NEWS_NO, WORD_COUNT
-									) 
-									VALUES (
-										"{origin_word}", "{word[0]}",
-										"{news_no}", 1
-									)
-								""")
-								print(f'**** : [{out_idx}/{len(mining_result_data) -1}][{news_no}][{idx}/{len(data_list) - 1}][{origin_word}][{in_idx}/{len(data[1]) -1}] >> {word[0]} / {word[1]} / KEYWORD 추가 및 뉴스 매핑 완료!')
-								cursor.execute(f"""
-									UPDATE TBL_TOTAL_CAR_NEWS_LIST
-									SET MINING_STATUS = 3, MINING_DATE = NOW(), 
-										POSITIVE_COUNT = {news_info["positive_count"]}, NEGATIVE_COUNT = {news_info["negative_count"]},
-										VA_COUNT = {news_info["va_count"]}, MORPHEME_COUNT = {news_info["morpheme_count"]}
-									WHERE NEWS_NO = {news_no}
-								""")
-								# time.sleep(0.1)
-					except Exception as e :
-						print(f'****** + error! >> {e} >>>>> [{idx} // {len(data_list) - 1}] >> 안쪽 오류!')
-						pass
-					finally : 
-						print('-'*50)
-						print(f'***** : [{out_idx}/{len(mining_result_data) -1}][{idx}/{len(data_list) - 1}][{news_no}] >> 분석 / INSERT 완료')
-		except Exception as e :
-			print(f'****** + error! >> {e} >>>>> [{idx} // {len(data_list) - 1}] >> 바깥쪽 오류!')
-			pass
-		finally : 
-			pass
-			print('바깥쪽 종료')
+		# try : 
+		# 	for out_idx, data_list in enumerate(mining_result_data) :
+		# 		for idx, data in enumerate(data_list) :
+		# 			try : 
+		# 				if idx == 0 :
+		# 					news_info = data_list[0]
+		# 				elif idx == 1 :	
+		# 					news_no = data_list[1]
+		# 				else : 
+		# 					origin_word = re.sub('[-=.#/?:$}\"\']', '', str(data[0])).replace('[','').replace(']','')
+		# 					print(f'*** : [{out_idx}/{len(mining_result_data) -1}][{news_no}][{idx}/{len(data_list)}][{origin_word}]')
+		# 					print(news_info["re_summary"])
+		# 					# data[1] 형태소 분석 (세트) >> ex) [('신', 'NNG'), ('차', 'NNG')]
+		# 					for in_idx, word in enumerate(data[1]) :
+		# 						# INSERT
+		# 						cursor.execute(f"""
+		# 							INSERT IGNORE INTO TBL_NEWS_KEYWORD_LIST 
+		# 							(
+		# 								WORD_MORPHEME, WORD_CLASS, UPDATE_DATE
+		# 							) 
+		# 							VALUES (
+		# 								"{word[0]}", "{word[1]}", NOW()
+		# 							)
+		# 						""")
+		# 						cursor.execute(f"""
+		# 							INSERT IGNORE INTO TBL_NEWS_KEYWORD_MAP 
+		# 							(
+		# 								WORD_ORIGIN, WORD_MORPHEME,
+		# 								NEWS_NO, WORD_COUNT
+		# 							) 
+		# 							VALUES (
+		# 								"{origin_word}", "{word[0]}",
+		# 								"{news_no}", 1
+		# 							)
+		# 						""")
+		# 						print(f'**** : [{out_idx}/{len(mining_result_data) -1}][{news_no}][{idx}/{len(data_list) - 1}][{origin_word}][{in_idx}/{len(data[1]) -1}] >> {word[0]} / {word[1]} / KEYWORD 추가 및 뉴스 매핑 완료!')
+		# 						time.sleep(0.1)
+		# 						cursor.execute(f"""
+		# 							UPDATE 
+		# 								TBL_TOTAL_CAR_NEWS_LIST
+		# 							SET 
+		# 								MINING_STATUS = 3, 
+		# 								MINING_DATE = NOW(), 
+		# 								POSITIVE_COUNT = {news_info["positive_count"]}, 
+		# 								NEGATIVE_COUNT = {news_info["negative_count"]},
+		# 								VA_COUNT = {news_info["va_count"]}, 
+		# 								MORPHEME_COUNT = {news_info["morpheme_count"]},
+		# 								NEWS_CONTENT = "{news_info["re_content"]}", 
+		# 								NEWS_SUMMARY = "{news_info["re_summary"]}"
+		# 							WHERE 
+		# 								NEWS_NO = {news_no}
+		# 						""")
+		# 						print(news_info["re_summary"])
+		# 						print('**** 상태값 업데이트 완료!')
+		# 			except Exception as e :
+		# 				print(f'****** + error! >> {e} >>>>> [{idx} // {len(data_list) - 1}] >> 안쪽 오류!')
+		# 				pass
+		# 			finally : 
+		# 				print('-'*50)
+		# 				print(f'***** : [{out_idx}/{len(mining_result_data) -1}][{idx}/{len(data_list) - 1}][{news_no}] >> 분석 / INSERT 완료')
+		# except Exception as e :
+		# 	print(f'****** + error! >> {e} >>>>> [{idx} // {len(data_list) - 1}] >> 바깥쪽 오류!')
+		# 	pass
+		# finally : 
+		# 	pass
+		# 	print('바깥쪽 종료')
 
 	# # 유튜브 댓글 분석
 	elif cont_type == 'youtube_comments' : 

@@ -3,7 +3,8 @@
 #wrap {min-width:350px; transition:all .3s;}
 #wrap.darkmode {background:#777;}
 #wrap.darkmode .header {background:#000; border-bottom:1px solid #555;}
-#wrap.darkmode .header .service-name {color:#fff;}
+#wrap.darkmode .header .service-name > a {color:#999;}
+#wrap.darkmode .header .service-name a span {color:#fff}
 #wrap.darkmode .header .btn-reload-data {color:#999;}
 #wrap.darkmode .header .view-mode-changer {color:#fff; background:#777;}
 #wrap.darkmode .category-list {background:#333;}
@@ -26,7 +27,7 @@
 .header .btn-gnb.active {left:40px; border:2px solid #444;}
 .header .btn-gnb.active:before {margin-top:-2px; -webkit-transform:translateX(-50%) rotate(45deg) translateZ(0); transform:translateX(-50%) rotate(45deg) translateZ(0);}
 .header .btn-gnb.active:after {margin-top:-2px; -webkit-transform:translateX(-50%) rotate(-45deg) translateZ(0); transform:translateX(-50%) rotate(-45deg) translateZ(0);}
-.header .service-name {font-size:40px; font-weight:800;}
+.header .service-name {padding-top:28px; font-size:40px; font-weight:800;}
 .header .service-name > a {color:#000;}
 .header .service-name > a:hover {color:#555;}
 .header .service-name > a span {color:#2944cc; font-size:40px;}
@@ -40,9 +41,12 @@
 .header .fncs a:hover {color:#000;}
 .header .fncs .box {display:inline-block;}
 .header .btn-open-search {display:inline-block; width:38px; height:38px; font-size:18px; vertical-align:middle;}
-.header .search-box {display:flex; margin:12px auto 0; width:22%; box-sizing:border-box;}
+.header .search-box {display:none; margin:12px auto 0; width:22%; box-sizing:border-box;}
 .header .search-box input[type="text"] {padding:0 12px; width:75%; height:45px; font-size:16px; border:0; border:1px solid #ddd; box-sizing:border-box;}
 .header .search-box .btn-search {display:block; width:25%; height:45px; color:#fff; font-size:18px; font-weight:600; background:#2944cc;}
+.header .service-name.search-on {padding-top:0;}
+.header .service-name.search-on .search-box {display:flex;}
+
 
 .header .gnb-box {position:fixed; left:0; top:0;}
 .header .gnb-box .dim {display:none; position:fixed; left:0; top:0; z-index:200; width:100%; height:100%; background:rgba(0,0,0,.7);}
@@ -59,6 +63,7 @@
 .header .gnb-box .box .menu > ul > li ul li a:hover {text-decoration:underline;}
 
 .container {padding-top:180px;}
+.news-detail-p .container {padding-top:130px;}
 .container .inner {position:relative; margin:0 auto; padding:10px 0; width:90%;}
 
 .item-list .inner {padding-top:20px;}

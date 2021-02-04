@@ -1,0 +1,57 @@
+{% extends 'website/common/template.html' %}
+{% load static %}
+{% load custom_tags %}
+{% block content %}
+	<section class="container">
+<style>
+.news-detail {margin:0 auto; padding-bottom:30px; width:90%; max-width:1100px;}
+.news-detail .n-title {padding:18px 0; line-height:30px; font-size:28px; font-weight:600; border-bottom:1px solid #ddd;}
+.news-detail .n-title .keyword {color:#2944cc; text-decoration:underline;}
+.news-detail .n-info {padding:20px 0; border-bottom:2px solid #555; text-align:right;}
+.news-detail .n-info span {display:inline-block; position:relative; padding:0 18px; font-size:15px;}
+.news-detail .n-info span:after {display:block; content:""; position:absolute; left:-1px; top:2px; width:1px; height:12px; background:#999;}
+.news-detail .n-info span:first-child:after {display:none;}
+.news-detail .n-content .details {padding:20px 12px; line-height:22px; font-size:16px; border-bottom:1px solid #ddd;}
+.news-detail .n-content .details .keyword {color:#2944cc; font-size:18px; font-weight:600; text-decoration:underline;}
+.news-detail .picture {margin-top:20px; text-align:center;}
+.news-detail .picture img {max-width:80%;}
+.page-btns {margin-top:20px;}
+.page-btns.full .btn {width:100%;}
+.page-btns .btn {display:block; height:55px; line-height:55px; font-size:20px; text-align:center;}
+.page-btns .btn.darkgray {color:#fff; background:#444;}
+.page-btns .btn.gray {color:#000; background:#ddd;}
+</style>	
+		{% comment %} {{ news }} {% endcomment %}
+		<div class="news-detail">
+			<p class="n-title"></p>
+			<div class="n-info">
+				<span class="date">{{ news.write_date }}</span>
+				<span class="view-count">{{ news.view_count }}</span>
+				<span class="repoter">{{ news.media_name }} {{ news.reporter_name|replace_entity }}</span>
+			</div>
+			<div class="n-content">
+				<div class="picture"><img src="{{news.news_img_url}}" alt=""></div>
+				<p class="details"></p>
+				<div class="page-btns full">
+					<a href="{{ news.news_url }}" class="btn gray">해당 언론사에서 보기</a>
+				</div>
+			</div>
+			<div class="page-btns full">
+				<a href="javascript:;" class="btn darkgray" onclick="window.close()">닫기</a>
+			</div>
+		</div>
+	</section>
+</div>
+<script>
+$(document).ready(function(){
+	title = '{{ news.news_title|replace_entity }}'
+	title =  title.replaceAll({{ keyword|js }}, '<strong class="keyword">'+{{ keyword|js }}+'</strong>');
+	detailContent = '{{ news.news_content|replace_entity|js }}'
+	detailContent = detailContent.replaceAll({{ keyword|js }}, '<strong class="keyword">'+{{ keyword|js }}+'</strong>');
+	$('.news-detail .n-title').html(title);
+	$('.news-detail .n-content .details').html(detailContent);
+});
+</script>
+</body>
+</html>
+{% endblock %}

@@ -60,19 +60,28 @@
 <body>
 {% if page_group == 'login-p' or page_group == 'join-p' %}
 <div id="wrap" class="member-p">
+{% elif page_group == 'news-detail-p' %}
+<div id="wrap" class="news-detail-p">
 {% else %}
 <div id="wrap">
 {% endif %}
 	<header class="header">
+		{% if page_group != 'news-detail-p' %}
 		<a href="javascript:;" class="btn-gnb" title="메뉴"></a>
+		{% endif %}
+		{% if page_group == 'news-list' %}
+		<h1 class="service-name search-on">
+		{% else %}
 		<h1 class="service-name">
+		{% endif %}
 			<a href="/"><span>C</span>a<span>R</span> <span>A</span>nalysi<span>S</span></a><sup>Beta!</sup><br>
+			
 			<div class="search-box">
 				{% csrf_token %}
 				<input type="text" id="search_keyword" name="" placeholder="검색할 단어를 입력해주세요.">
 				<button type="button" class="btn-search" onclick="keywordSearch();">검색</button>
 			</div>
-		</h1>
+		</h1>	
 		<div class="fncs">
 			{% comment %} {% if user %}
 				<a href="/logout/" class="btn-login">로그아웃</a>
@@ -80,6 +89,7 @@
 				<a href="/join/" class="btn-logout">회원가입</a>
 				<a href="/login/" class="btn-logout">로그인</a>
 			{% endif %} {% endcomment %}
+			{% if page_group != 'news-detail-p' %}
 			<div class="box">
 				<select name="" id="" class="view-mode-changer">
 					<option value="dark">Dark mode</option>
@@ -87,6 +97,7 @@
 				</select>
 				{% comment %} <button type="button" title="검색창 열기" class="btn-open-search">🔍</button> {% endcomment %}
 			</div>
+			{% endif %}
 		</div>
 		<section class="gnb-box">
 			<div class="dim"></div>
@@ -145,6 +156,31 @@
 		{% comment %} alert('idx = '+ idx + ' / newscount=' + nowCount + ' / newscode = ' + newsCode) {% endcomment %}
 		viewCountUp(idx, nowCount, newsCode)
 	});
+	//news list > view count
+	function viewCountUp(idx, nowCount, newsCode){
+		console.log(nowCount +'@@@' + newsCode)
+		$.ajax({
+			url: '{% url "view_count" %}',
+			type: 'GET',
+			data: {
+				'now_count': nowCount,
+				'news_code': newsCode
+			},
+			dataType: 'json',
+			success: function(data){
+				$('.news-group.show li').eq(idx).find('.view-cnt').children('strong').text(data);
+			}
+		});
+	}
+	function showNewsDetail(newsCode){
+		var keyword = $('#search_keyword').val();
+		if(keyword.length > 0){
+			url = '/news_detail?news_code='+ newsCode + '&keyword=' + keyword;
+		}else{
+			url = '/news_detail?news_code='+ newsCode;
+		}
+		window.open(url, '카라스 뉴스 상세보기', 'width=1040, height=850, toolbar=no, menubar=no, scrollbars=no, resizable=yes')
+	}
 	function loadNewsList(idx, list_type, start_idx, load_length, load_type, fnc_type, search_keyword){
 		console.log('@@@', list_type)
 		$('.loading').show();
@@ -207,7 +243,8 @@
 						media_name = 'motor-graph'
 					}
 					newsItem += '<li data-news-code="' + list.news_code + '">';
-					newsItem += '<a href="' + list.news_url + '" target="_blank" title="' + list.news_title + '" >';
+					newsItem += '<a href="javascript:;" title="' + list.news_title + '" onclick="showNewsDetail(\''+ list.news_code +'\')">';
+					{% comment %} newsItem += '<a href="' + list.news_url + '" target="_blank" title="' + list.news_title + '" >'; {% endcomment %}
 					if(list.media_code == '200' || /*list.media_code == '500' ||*/ list.news_img_url == 'None' || list.news_img_url == ''){
 						newsItem += '<div class="picture">';
 						newsItem += '<p><span class="ico">😰</span><br>해당 언론사에서<br>이미지를 불러올 수 없습니다.</p>';
@@ -226,6 +263,7 @@
 					if(list.news_summary.length == 0){
 						newsItem += '<p class="summary">' + list.news_content + '</p>';
 					}else {
+
 						newsItem += '<p class="summary">' + list.news_summary + '</p>';
 					}
 					newsItem += '</div>';
