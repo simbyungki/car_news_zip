@@ -9,8 +9,8 @@
 	<meta name="format-detection" content="telephone=no,address=no,email=no">
 	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0">
 	<!-- No cache -->
-	<meta http-equiv="Expires" content="-1">
 	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Expires" content="-1">
 	<meta http-equiv="Cache-Control" content="no-cache; no-store; no-save">
 	<!-- Summary -->
 	<meta name="Keywords" content="자동차, 자동차뉴스, 시승기, 중고차뉴스, 신차뉴스, 자동차업계, 자동차업계뉴스">
@@ -29,11 +29,10 @@
 	<meta name="google-site-verification" content="jt2p5-PNGgED4Z5xiMbyiENXRz7QGQtd6HxuQbAHYWw" />
 	<title>차나스 | CHA News AnalysiS</title>
 	<link rel="shortcut icon" href="{% static 'favico.png' %}" />
-	<!-- CSS -->
-	<link rel="stylesheet" href="{% static 'css/reset.css' %}">
-	<link rel="stylesheet" href="{% static 'css/jquery-ui.css' %}">
-	<link rel="stylesheet" href="{% static 'css/swiper.css' %}">
-	<link rel="stylesheet" href="{% static 'css/content.css' %}">
+	<link rel="stylesheet" href="{% static 'css/reset.css?ver=2021020501' %}">
+	<link rel="stylesheet" href="{% static 'css/jquery-ui.css?ver=2021020501' %}">
+	<link rel="stylesheet" href="{% static 'css/swiper.css?ver=2021020501' %}">
+	<link rel="stylesheet" href="{% static 'css/content.css?ver=2021020501' %}">
 	<!-- Global site tag (gtag.js) - Google Analytics -->
 	<script data-ad-client="ca-pub-3984460457062336" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 	<script async src="https://www.googletagmanager.com/gtag/js?id=G-T4CL1V9FXP"></script>
@@ -42,19 +41,6 @@
 		function gtag(){dataLayer.push(arguments);}
 		gtag('js', new Date());
 		gtag('config', 'G-T4CL1V9FXP');
-
-		function keywordSearch(){
-			var nowListLength = $('.news-group li').length;
-			var keyword = $('#search_keyword').val();
-			if(keyword.length > 0){
-				loadNewsList(99, 'all', 0, 15, 'search', null, keyword);
-				$('#wrap').prop('class', '').addClass('search-result');
-				$('.search-box').removeClass('show');
-			}else{
-				alert('검색어를 입력해주세요.');
-				$('#search_keyword').focus();
-			}
-		}
 	</script>	
 </head>
 <body>
@@ -157,7 +143,18 @@
 			$(this).blur();
 		}
 	});
-	
+	function keywordSearch(){
+		var nowListLength = $('.news-group li').length;
+		var keyword = $('#search_keyword').val();
+		if(keyword.length > 0){
+			loadNewsList(99, 'all', 0, 15, 'search', null, keyword);
+			$('#wrap').prop('class', '').addClass('search-result');
+			$('.search-box').removeClass('show');
+		}else{
+			alert('검색어를 입력해주세요.');
+			$('#search_keyword').focus();
+		}
+	}
 	function showNewsDetail(newsCode){
 		var keyword = $('#search_keyword').val();
 		if(keyword.length > 0){
