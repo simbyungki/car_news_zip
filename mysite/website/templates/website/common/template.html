@@ -20,9 +20,9 @@
 	<meta http-equiv="Reply-To" content="simbk0120@autoplus.co.kr">
 	<meta http-equiv="Email" content="simbk0120@autoplus.co.kr">
 	<meta http-equiv="Build" content="2020.12" />
-	{% comment %} <meta property="og:url" content="http://chanas.autoplus.co.kr">
-	<meta property="og:title" content="카나스 CHANAS">
-	<meta property="og:type" content="website"> {% endcomment %}
+	<meta property="og:url" content="http://chanas.autoplus.co.kr">
+	<meta property="og:title" content="차나스 CHANAS">
+	<meta property="og:type" content="website">
 	<meta property="og:image" content="{% static 'images/common/img_share.png' %}">
 	<meta property="og:description" content="차나스, 자동차 뉴스, 중고차 뉴스, 신차 뉴스, 자동차 시승기">
 	<meta name="naver-site-verification" content="c7ce06c9ed9736eb46db21ed102e4dea95dfe089" />
@@ -150,14 +150,6 @@
 		$('.gnb-box .menu > ul > li').eq(1).addClass('active');
 	}
 	
-	//news view count
-	$(document).on('click', '.item-list ul li a', function(){
-		var idx = $(this).parent('li').index();
-		var nowCount = $(this).find('.infos').find('.view-cnt').children('strong').text();
-		var newsCode = $('this').parent('li').data('news-code');
-		{% comment %} alert('idx = '+ idx + ' / newscount=' + nowCount + ' / newscode = ' + newsCode) {% endcomment %}
-		viewCountUp(idx, nowCount, newsCode)
-	});
 	//enter key 검색
 	$('#search_keyword').on('keypress', function(){
 		if(event.keyCode == 13){
@@ -165,22 +157,6 @@
 			$(this).blur();
 		}
 	});
-	//news list > view count
-	function viewCountUp(idx, nowCount, newsCode){
-		console.log(nowCount +'@@@' + newsCode)
-		$.ajax({
-			url: '{% url "view_count" %}',
-			type: 'GET',
-			data: {
-				'now_count': nowCount,
-				'news_code': newsCode
-			},
-			dataType: 'json',
-			success: function(data){
-				$('.news-group.show li').eq(idx).find('.view-cnt').children('strong').text(data);
-			}
-		});
-	}
 	
 	function showNewsDetail(newsCode){
 		var keyword = $('#search_keyword').val();
@@ -192,7 +168,7 @@
 		window.open(url, '카라스 뉴스 상세보기', 'width=1040, height=880, toolbar=no, menubar=no, scrollbars=no, resizable=yes')
 	}
 	function loadNewsList(idx, list_type, start_idx, load_length, load_type, fnc_type, search_keyword){
-		console.log('@@@', list_type)
+		{% comment %} console.log('list_type >>', list_type) {% endcomment %}
 		$('.loading').show();
 		connFlag = true;
 		$.ajax({
@@ -229,7 +205,7 @@
 					}
 				}
 				{% comment %} console.log(total_length) {% endcomment %}
-				console.log(json_data)
+				{% comment %} console.log(json_data) {% endcomment %}
 				for(i = 0; i < json_data.length; i++){
 					list = json_data[i].fields;
 					var media_name = '';
@@ -324,7 +300,6 @@
 				}
 
 				//sub menu
-				console.log(list_type)
 				if(fnc_type == 'change'){
 					$('.category-list ul').removeClass('show');
 					$('.category-list ul li').removeClass('active');

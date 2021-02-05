@@ -105,17 +105,20 @@ class GetItChosun() :
 				try : 
 					soup = get_soup(full_url)
 					d_title = soup.find('h1', attrs={'id': 'news_title_text_id'}).get_text().strip()
-					d_content = soup.find('div', attrs={'id': 'news_body_id'}).get_text().strip()
-					
+					d_content = soup.find('div', attrs={'id': 'news_body_id'}).findAll('div', attrs={'class', 'par'})
+					contents = ''
+					for content in d_content :
+						contents += content.get_text().strip()
+
 					d_title = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', d_title))
-					d_content = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', d_content))
+					d_content = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', contents))
 
 					cursor.execute(f"""
 						UPDATE TBL_TOTAL_CAR_NEWS_LIST 
 						SET NEWS_TITLE = "{d_title}", NEWS_CONTENT = "{d_content}"
 						WHERE NEWS_CODE = "{newsList.values()[idx].get('news_code')}" AND NEWS_CONTENT = ""
 					""")
-					time.sleep(3)
+					time.sleep(0.1)
 					print(f'{newsList.values()[idx].get("news_code")} :: 기사 본문 스크랩 완료! [{idx + 1} / {len(newsList)}]')
 				except Exception as e :
 					print(f'*+++++ + error! >> {e}')	
@@ -399,7 +402,6 @@ def load_detail_data() :
 	GetTheDrive.detail(dbconn, cursor)
 	GetMotorGraph.detail(dbconn, cursor)
 	
-	print('뉴스 상세 내용 가져오기 완료!')
 	dbconn.commit()
 	
 	dbconn.close()

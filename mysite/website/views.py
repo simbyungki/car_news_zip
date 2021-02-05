@@ -29,6 +29,7 @@ def execute(query, bufferd=True) :
 		dbconn.rollback()
 		raise e
 	finally : 
+		print('commit complete!')
 		dbconn.commit()
 		cursor.close()
 		# dbconn.close()
@@ -234,11 +235,13 @@ def view_count(request) :
 		news_code = request.GET.get('news_code')
 		after_count = now_count + 1
 		try : 
-			print(f'조회수 >> {now_count} >> {after_count}')
 			execute(f"""
-				UPDATE TBL_TOTAL_CAR_NEWS_LIST 
-				SET VIEW_COUNT = "{after_count}"
-				WHERE NEWS_CODE = "{news_code}"
+				UPDATE 
+					TBL_TOTAL_CAR_NEWS_LIST 
+				SET 
+					VIEW_COUNT = "{after_count}"
+				WHERE 
+					NEWS_CODE = "{news_code}"
 			""")
 		except Exception as e :
 			print(f'****** + error! >> {e} >> 오류!')
