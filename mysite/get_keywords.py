@@ -33,8 +33,8 @@ with open(db_info_file) as f :
 mining_result_data = []
 def text_mining(cont_type, dbconn, cursor) :
 	kkma = Kkma()
-	# car_news_list = TblTotalCarNewsList.objects.all().filter(mining_status=1).exclude(news_content = '')
-	car_news_list = TblTotalCarNewsList.objects.all().filter(media_code = 900)
+	car_news_list = TblTotalCarNewsList.objects.all().filter(mining_status = 1).filter(morpheme_count = 0)
+	# car_news_list = TblTotalCarNewsList.objects.all().filter(news_code = '202012090928391')
 	except_word_list = []
 	except_keyword_list = []
 	origin_sentence_list = []
@@ -59,8 +59,8 @@ def text_mining(cont_type, dbconn, cursor) :
 	# 뉴스 본문 분석
 	if cont_type == 'news' : 
 		# step01. 형태소 분석 (데이터 가공)
-		# for idx in range(len(car_news_list)) :
-		for idx in range(2) :
+		for idx in range(len(car_news_list)) :
+		# for idx in range(2) :
 			print(f'[{idx} // {len(car_news_list)}] 데이터 가공 완료')
 			replace_news_content = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', car_news_list[idx].news_content))
 			replace_news_summary = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', car_news_list[idx].news_summary))
@@ -186,7 +186,7 @@ def text_mining(cont_type, dbconn, cursor) :
 										"{news_no}", 1, "{word_no}"
 									)
 								""")
-								time.sleep(0.5)
+								# time.sleep(0.1)
 								print(f'**** : [{out_idx}/{len(mining_result_data) -1}][{news_no}][{idx}/{len(data_list) - 1}][{origin_word}][{in_idx}/{len(data[1]) -1}] >> {word[0]} / {word[1]} / KEYWORD 추가 및 뉴스 매핑 완료!')
 					except Exception as e :
 						print(f'****** + error! >> {e} >>>>> [{idx} // {len(data_list) - 1}] >> 안쪽 오류!')
@@ -202,9 +202,7 @@ def text_mining(cont_type, dbconn, cursor) :
 						SET 
 							MINING_STATUS = 3, 
 							MINING_DATE = NOW(), 
-							MORPHEME_COUNT = {data_list[0]["morpheme_count"]},
-							NEWS_CONTENT = "{data_list[0]["re_content"]}", 
-							NEWS_SUMMARY = "{data_list[0]["re_summary"]}"
+							MORPHEME_COUNT = {data_list[0]["morpheme_count"]}
 						WHERE 
 							NEWS_NO = {data_list[1]}
 					""")
