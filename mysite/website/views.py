@@ -34,10 +34,13 @@ def execute(query, bufferd=True) :
 		cursor.close()
 		# dbconn.close()
 
+today_date = datetime.today().strftime('%Y-%m-%d')
+
+
 # 목록
 def news_list(request) :
-	today_date = datetime.today().strftime('%Y-%m-%d')
-	context = {'today_date': today_date}
+	context = {}
+	context['today_date'] = today_date
 	context['page_group'] = 'news-list'
 	user_id = request.session.get('user')
 	if user_id :
@@ -45,19 +48,19 @@ def news_list(request) :
 		context['user'] = memb_name
 	else : 
 		context['user'] = None
-
+	
 	return render(request, 'website/news_list.html', context)
 
 # 뉴스 상세
 def news_detail(request) : 
+	context = {}
 	news_code = request.GET.get('news_code')
 	keyword = request.GET.get('keyword')
 	news = TblTotalCarNewsList.objects.values().filter(news_code=news_code)
-	context = {}
+	context['today_date'] = today_date
 	context['news'] = news[0]
 	context['keyword'] = keyword
 	context['page_group'] = 'news-detail-p'
-	print(news_code, keyword)
 	return render(request, 'website/news_detail.html', context)
 
 # 뉴스 분석

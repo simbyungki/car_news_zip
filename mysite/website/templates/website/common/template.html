@@ -29,10 +29,10 @@
 	<meta name="google-site-verification" content="jt2p5-PNGgED4Z5xiMbyiENXRz7QGQtd6HxuQbAHYWw" />
 	<title>차나스 | CHA News AnalysiS</title>
 	<link rel="shortcut icon" href="{% static 'favico.png' %}" />
-	<link rel="stylesheet" href="{% static 'css/reset.css' %}">
+	<link rel="stylesheet" href="{% static 'css/reset.css' %}?ver={{ today_date }}">
 	<link rel="stylesheet" href="{% static 'css/jquery-ui.css' %}">
 	<link rel="stylesheet" href="{% static 'css/swiper.css' %}">
-	<link rel="stylesheet" href="{% static 'css/content.css' %}">
+	<link rel="stylesheet" href="{% static 'css/content.css' %}?ver={{ today_date }}">
 	<!-- Global site tag (gtag.js) - Google Analytics -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=G-T4CL1V9FXP"></script>
 	<script>
@@ -124,7 +124,7 @@
 	<script type="text/javascript" src="{% static 'js/jquery-1.12.4.min.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/jquery-ui.min.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/swiper.min.js' %}"></script>
-	<script type="text/javascript" src="{% static 'js/common.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/common.js' %}?ver={{ today_date }}"></script>
 	<script>
 	$('.gnb-box .menu ul > li').removeClass('active');
 	var thisPath = window.location.pathname;		
@@ -259,8 +259,8 @@
 						negaPer = Math.floor(100 * list.negative_count / (list.negative_count + list.positive_count))
 						posiPer = 100 - negaPer
 
-						if(list.va_count > 0 || list.morpheme_count > 0){
-							vaPer = Math.floor(list.va_count / list.morpheme_count)
+						if(list.va_count > 0 && list.morpheme_count > 0){
+							vaPer = (list.va_count / list.morpheme_count).toFixed(2);
 						}
 						newsItem += '<div class="positive" style="width:'+ posiPer +'%" title="긍정단어 노출 수 : '+list.positive_count+'개">긍정 '+ posiPer +' %</div>'
 						newsItem += '<div class="negative" style="width:'+ negaPer +'%" title="부정단어 노출 수 : '+list.negative_count+'개">부정 '+ negaPer +' %</div>'	
