@@ -14,7 +14,11 @@
 			<div class="n-info">
 				<span class="date">{{ news.write_date }}</span>
 				<span class="view-cnt" title="이 기사 조회수">👁 {{ news.view_count }}</span>
-				<span class="repoter">{{ news.media_name }} {{ news.reporter_name|replace_entity }}</span>
+				<span class="repoter">{{ news.media_name }} 
+				{% if news.reporter_name %}
+					{{ news.reporter_name|replace_entity }}
+				{% endif %}
+				</span>
 			</div>
 			<div class="n-content">
 				<div class="picture"><img src="{{news.news_img_url}}" alt=""></div>
@@ -32,7 +36,7 @@
 <script>
 $(document).ready(function(){
 	title = '{{ news.news_title|replace_entity }}'
-	title =  title.replaceAll({{ keyword|js }}, '<strong class="keyword">'+{{ keyword|js }}+'</strong>');
+	title =  title.replaceAll({{ keyword|js }}, '<strong class="keyword">'+{{ keyword|js }}+'</strong>'); 
 	detailContent = '{{ news.news_content|replace_entity|js }}'
 	detailContent = detailContent.replaceAll({{ keyword|js }}, '<strong class="keyword">'+{{ keyword|js }}+'</strong>').replaceAll('\n', '<br>');
 	$('.news-detail .n-title').html(title);

@@ -403,4 +403,6 @@
 	.car-comment .comment-info {margin-bottom:15px; line-height:18px; font-size:12px;}
 	.car-comment-list li {padding:15px;}
 	.car-comment-list li .comment {line-height:20px; font-size:14px;}
+
+	.category-list ul li.new:after {right:-9px; top:-6px; width:13px; height:13px; line-height:14px; font-size:10px;}
 }
