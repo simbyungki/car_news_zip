@@ -34,14 +34,13 @@
 	<link rel="stylesheet" href="{% static 'css/swiper.css' %}">
 	<link rel="stylesheet" href="{% static 'css/content.css' %}">
 	<!-- Global site tag (gtag.js) - Google Analytics -->
-	<script data-ad-client="ca-pub-3984460457062336" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 	<script async src="https://www.googletagmanager.com/gtag/js?id=G-T4CL1V9FXP"></script>
 	<script>
 		window.dataLayer = window.dataLayer || [];
 		function gtag(){dataLayer.push(arguments);}
 		gtag('js', new Date());
 		gtag('config', 'G-T4CL1V9FXP');
-	</script>	
+	</script>
 </head>
 <body>
 {% if page_group == 'login-p' or page_group == 'join-p' %}
@@ -166,7 +165,7 @@
 	}
 	function loadNewsList(idx, list_type, start_idx, load_length, load_type, fnc_type, search_keyword){
 		{% comment %} console.log('list_type >>', list_type) {% endcomment %}
-		$('.loading').show();
+		{% comment %} $('.loading').show(); {% endcomment %}
 		connFlag = true;
 		$.ajax({
 			url: '{% url "list_data" %}',

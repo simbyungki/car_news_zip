@@ -34,7 +34,7 @@ $(document).ready(function(){
 	title = '{{ news.news_title|replace_entity }}'
 	title =  title.replaceAll({{ keyword|js }}, '<strong class="keyword">'+{{ keyword|js }}+'</strong>');
 	detailContent = '{{ news.news_content|replace_entity|js }}'
-	detailContent = detailContent.replaceAll({{ keyword|js }}, '<strong class="keyword">'+{{ keyword|js }}+'</strong>').replaceAll('\n\n\n\n\n\n\n\n\n\n\n\n', '<br>');
+	detailContent = detailContent.replaceAll({{ keyword|js }}, '<strong class="keyword">'+{{ keyword|js }}+'</strong>').replaceAll('\n', '<br>');
 	$('.news-detail .n-title').html(title);
 	$('.news-detail .n-content .details').html(detailContent);
 

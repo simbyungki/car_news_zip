@@ -86,11 +86,11 @@
 .news-detail .n-info span {display:inline-block; position:relative; padding:0 18px; font-size:15px;}
 .news-detail .n-info span:after {display:block; content:""; position:absolute; left:-1px; top:2px; width:1px; height:12px; background:#999;}
 .news-detail .n-info span:first-child:after {display:none;}
-.news-detail .n-content .details {padding:20px 12px; line-height:22px; font-size:16px; border-bottom:1px solid #ddd; word-break:break-all;}
-.news-detail .n-content .details .keyword {color:#2944cc; font-size:18px; font-weight:600; text-decoration:underline;}
-.news-detail .n-content .details .posi_keyword {color:#2944cc;}
-.news-detail .n-content .details .nega_keyword {color:#ce2c2c;}
-.news-detail .n-content .details .va_keyword {color:#238930;}
+.news-detail .n-content .details {padding:20px 12px; line-height:22px; color:#444; font-size:14px; border-bottom:1px solid #ddd; word-break:break-all;}
+.news-detail .n-content .details .keyword {color:#fff; font-size:16px; font-weight:600; text-decoration:underline; background:#2944cc;}
+.news-detail .n-content .details .posi_keyword {color:#0e30da; font-size:16px;}
+.news-detail .n-content .details .nega_keyword {color:#e60e0e; font-size:16px;}
+.news-detail .n-content .details .va_keyword {color:#187424; font-size:16px;}
 .news-detail .picture {margin-top:20px; text-align:center;}
 .news-detail .picture img {max-width:80%;}
 .news-detail .mining-result {position:fixed; left:0; bottom:0; width:100%; height:28px; color:#888; background:#f9f9f9; border-bottom:1px solid #ddd; opacity:.9;}
