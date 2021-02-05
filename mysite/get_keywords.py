@@ -33,7 +33,7 @@ with open(db_info_file) as f :
 mining_result_data = []
 def text_mining(cont_type, dbconn, cursor) :
 	kkma = Kkma()
-	car_news_list = TblTotalCarNewsList.objects.all().filter(mining_status = 1).filter(morpheme_count = 0)
+	car_news_list = TblTotalCarNewsList.objects.all().filter(mining_status = 1).filter(morpheme_count = 0).exclude(news_content='')
 	# car_news_list = TblTotalCarNewsList.objects.all().filter(news_code = '202012090928391')
 	except_word_list = []
 	except_keyword_list = []
