@@ -14,20 +14,20 @@
 	<meta http-equiv="Cache-Control" content="no-cache; no-store; no-save">
 	<!-- Summary -->
 	<meta name="Keywords" content="자동차, 자동차뉴스, 시승기, 중고차뉴스, 신차뉴스, 자동차업계, 자동차업계뉴스">
-	<meta name="Description" content="카라스 8개 자동차 언론사들의 뉴스를 모아 제공합니다. (신차, 중고차, 시승기, 자동차업계)">
-	<meta http-equiv="Author" content="카라스">
-	<meta http-equiv="Other Agent" content="카라스">
+	<meta name="Description" content="차나스 8개 자동차 언론사들의 뉴스를 모아 제공합니다. (신차, 중고차, 시승기, 자동차업계)">
+	{% comment %} <meta http-equiv="Author" content="차나스">
+	<meta http-equiv="Other Agent" content="차나스"> {% endcomment %}
 	<meta http-equiv="Reply-To" content="simbk0120@autoplus.co.kr">
 	<meta http-equiv="Email" content="simbk0120@autoplus.co.kr">
 	<meta http-equiv="Build" content="2020.12" />
-	<meta property="og:url" content="http://caras.autoplus.co.kr">
-	<meta property="og:title" content="카라스 CarAs">
-	<meta property="og:type" content="website">
+	{% comment %} <meta property="og:url" content="http://chanas.autoplus.co.kr">
+	<meta property="og:title" content="카나스 CHANAS">
+	<meta property="og:type" content="website"> {% endcomment %}
 	<meta property="og:image" content="{% static 'images/common/img_share.png' %}">
-	<meta property="og:description" content="카라스, 자동차 뉴스, 중고차 뉴스, 신차 뉴스, 자동차 시승기">
+	<meta property="og:description" content="차나스, 자동차 뉴스, 중고차 뉴스, 신차 뉴스, 자동차 시승기">
 	<meta name="naver-site-verification" content="c7ce06c9ed9736eb46db21ed102e4dea95dfe089" />
 	<meta name="google-site-verification" content="jt2p5-PNGgED4Z5xiMbyiENXRz7QGQtd6HxuQbAHYWw" />
-	<title>카라스 | CaR AnalysiS</title>
+	<title>차나스 | CHA News AnalysiS</title>
 	<link rel="shortcut icon" href="{% static 'favico.png' %}" />
 	<!-- CSS -->
 	<link rel="stylesheet" href="{% static 'css/reset.css' %}">
@@ -47,7 +47,7 @@
 			var nowListLength = $('.news-group li').length;
 			var keyword = $('#search_keyword').val();
 			if(keyword.length > 0){
-				loadNewsList(99, 'all', 0, 12, 'search', null, keyword);
+				loadNewsList(99, 'all', 0, 15, 'search', null, keyword);
 				$('#wrap').prop('class', '').addClass('search-result');
 				$('.search-box').removeClass('show');
 			}else{
@@ -74,8 +74,11 @@
 		{% else %}
 		<h1 class="service-name">
 		{% endif %}
-			<a href="/"><span>C</span>a<span>R</span> <span>A</span>nalysi<span>S</span></a><sup>Beta!</sup><br>
-			
+		{% if page_group != 'news-detail-p' %}
+			<a href="/"><span>CHA</span> <span>N</span>ews <span>A</span>nalysi<span>S</span></a><sup>Beta!</sup><br>
+		{% else %}
+			 <a href="/" onclick="window.close()"><span>CHA</span> <span>N</span>ews <span>A</span>nalysi<span>S</span></a><sup>Beta!</sup><br>
+		{% endif %}
 			<div class="search-box">
 				{% csrf_token %}
 				<input type="text" id="search_keyword" name="" placeholder="검색할 단어를 입력해주세요.">
@@ -89,15 +92,14 @@
 				<a href="/join/" class="btn-logout">회원가입</a>
 				<a href="/login/" class="btn-logout">로그인</a>
 			{% endif %} {% endcomment %}
-			{% if page_group != 'news-detail-p' %}
+			
+			{% comment %} 			
 			<div class="box">
 				<select name="" id="" class="view-mode-changer">
 					<option value="dark">Dark mode</option>
 					<option value="light" selected>Light mode</option>
 				</select>
-				{% comment %} <button type="button" title="검색창 열기" class="btn-open-search">🔍</button> {% endcomment %}
-			</div>
-			{% endif %}
+			</div> {% endcomment %}
 		</div>
 		<section class="gnb-box">
 			<div class="dim"></div>
@@ -107,8 +109,8 @@
 						<li class="active">
 							<a href="/news_list">자동차 관련 뉴스 보기</a>
 							<ul>
-								<li class="active">&middot; <a href="javascript:;" onclick="loadNewsList(0, 'category', 0, 12, 'default', 'change');">뉴스 카테고리별 보기</a></li>
-								<li>&middot; <a href="javascript:;" onclick="loadNewsList(0, 'media', 0, 12, 'default', 'change');">언론사별 보기</a></li>
+								<li class="active">&middot; <a href="javascript:;" onclick="loadNewsList(0, 'category', 0, 15, 'default', 'change');">뉴스 카테고리별 보기</a></li>
+								<li>&middot; <a href="javascript:;" onclick="loadNewsList(0, 'media', 0, 15, 'default', 'change');">언론사별 보기</a></li>
 							</ul>
 						</li>
 						{% comment %} <li>
@@ -121,10 +123,10 @@
 							</ul>
 						</li> {% endcomment %}
 						<li>
-							<a href="javascript:;">카라스</a>
+							<a href="javascript:;">차나스</a>
 							<ul>
-								{% comment %} <li>&middot;  <a href="javascript:;">카라스 소개</a></li> {% endcomment %}
-								<li>&middot;  <a href="mailto:simbk0120@autoplus.co.kr">카라스 문의(제안)하기</a></li>
+								{% comment %} <li>&middot;  <a href="javascript:;">차나스 소개</a></li> {% endcomment %}
+								<li>&middot;  <a href="mailto:simbk0120@autoplus.co.kr">차나스 문의(제안)하기</a></li>
 							</ul>
 						</li>
 					</ul>
@@ -156,6 +158,13 @@
 		{% comment %} alert('idx = '+ idx + ' / newscount=' + nowCount + ' / newscode = ' + newsCode) {% endcomment %}
 		viewCountUp(idx, nowCount, newsCode)
 	});
+	//enter key 검색
+	$('#search_keyword').on('keypress', function(){
+		if(event.keyCode == 13){
+			keywordSearch();
+			$(this).blur();
+		}
+	});
 	//news list > view count
 	function viewCountUp(idx, nowCount, newsCode){
 		console.log(nowCount +'@@@' + newsCode)
@@ -172,6 +181,7 @@
 			}
 		});
 	}
+	
 	function showNewsDetail(newsCode){
 		var keyword = $('#search_keyword').val();
 		if(keyword.length > 0){
@@ -192,7 +202,7 @@
 				'list_idx': idx,
 				'list_type': list_type,
 				'start_idx': start_idx,
-				'load_length': load_length,
+				'load_length': 15,
 				'search_keyword': search_keyword
 			},
 			dataType: 'json',
@@ -276,13 +286,6 @@
 					if(list.positive_count > 0 || list.negative_count > 0){
 						negaPer = Math.floor(100 * list.negative_count / (list.negative_count + list.positive_count))
 						posiPer = 100 - negaPer
-						{% comment %} if(list.positive_count > list.negative_count){
-							negaPer = Math.floor(list.negative_count / list.positive_count * 100)
-							posiPer = 100 - negaPer
-						}else if(list.positive_count < list.negative_count){
-							posiPer = Math.floor(list.positive_count / list.negative_count * 100)
-							negaPer = 100 - posiPer
-						}	 {% endcomment %}
 
 						if(list.va_count > 0 || list.morpheme_count > 0){
 							vaPer = Math.floor(list.va_count / list.morpheme_count)

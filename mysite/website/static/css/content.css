@@ -1,7 +1,7 @@
 @charset "utf-8";
 /* skin */
 #wrap {min-width:350px; transition:all .3s;}
-#wrap.darkmode {background:#777;}
+#wrap.darkmode {background:#242424;}
 #wrap.darkmode .header {background:#000; border-bottom:1px solid #555;}
 #wrap.darkmode .header .service-name > a {color:#999;}
 #wrap.darkmode .header .service-name a span {color:#fff}
@@ -17,6 +17,11 @@
 #wrap.darkmode .header .gnb-box .box .menu > ul > li > a {color:#fff;}
 #wrap.darkmode .header .gnb-box .box .menu > ul > li > ul,
 #wrap.darkmode .header .gnb-box .box .menu > ul > li > li a {color:#999;}
+#wrap.darkmode .news-detail .n-info span,
+#wrap.darkmode .news-detail .n-content .details,
+#wrap.darkmode .news-detail .n-title {color:#fff;}
+#wrap.darkmode .news-detail .n-info {border-color:#fff;}
+
 
 .header {position:fixed; top:0; left:0; z-index:200; padding-top:12px; width:100%; height:120px; text-align:center; border-bottom:1px solid #ddd; background:#fff; box-sizing:border-box;}
 .header .btn-gnb {position:absolute; left:5%; top:20px; z-index:100; width:60px; height:60px; -webkit-box-sizing:border-box; box-sizing:border-box; background:#fff; transition:all .3s; border:3px solid #444;}
@@ -47,7 +52,6 @@
 .header .service-name.search-on {padding-top:0;}
 .header .service-name.search-on .search-box {display:flex;}
 
-
 .header .gnb-box {position:fixed; left:0; top:0;}
 .header .gnb-box .dim {display:none; position:fixed; left:0; top:0; z-index:200; width:100%; height:100%; background:rgba(0,0,0,.7);}
 .header .gnb-box.show .dim {display:block;}
@@ -63,9 +67,31 @@
 .header .gnb-box .box .menu > ul > li ul li a:hover {text-decoration:underline;}
 
 .container {padding-top:180px;}
-.news-detail-p .container {padding-top:130px;}
 .container .inner {position:relative; margin:0 auto; padding:10px 0; width:90%;}
 
+.page-btns {margin-top:20px;}
+.page-btns.full .btn {width:100%;}
+.page-btns .btn {display:block; height:55px; line-height:55px; font-size:20px; text-align:center;}
+.page-btns .btn.darkgray {color:#fff; background:#444;}
+.page-btns .btn.gray {color:#000; background:#ddd;}
+
+/* detail */
+.news-detail-p .header {height:75px;}
+.news-detail-p .header .service-name {padding-top:6px;}
+.news-detail-p .container {padding-top:95px;}
+.news-detail {margin:0 auto; padding-bottom:70px; width:90%; max-width:1100px;}
+.news-detail .n-title {padding:18px 0; line-height:30px; font-size:28px; font-weight:600; border-bottom:1px solid #ddd;}
+.news-detail .n-title .keyword {color:#2944cc; text-decoration:underline;}
+.news-detail .n-info {padding:20px 0; border-bottom:2px solid #555; text-align:right;}
+.news-detail .n-info span {display:inline-block; position:relative; padding:0 18px; font-size:15px;}
+.news-detail .n-info span:after {display:block; content:""; position:absolute; left:-1px; top:2px; width:1px; height:12px; background:#999;}
+.news-detail .n-info span:first-child:after {display:none;}
+.news-detail .n-content .details {padding:20px 12px; line-height:22px; font-size:16px; border-bottom:1px solid #ddd; word-break:break-all;}
+.news-detail .n-content .details .keyword {color:#2944cc; font-size:18px; font-weight:600; text-decoration:underline;}
+.news-detail .picture {margin-top:20px; text-align:center;}
+.news-detail .picture img {max-width:80%;}
+
+/* list */
 .item-list .inner {padding-top:20px;}
 .item-list .txt-guide {color:#333;}
 .item-list ul {display:none; flex-wrap:wrap; padding-bottom:20px;}
@@ -114,7 +140,8 @@
 .item-list ul li .mining-view p .nega {color:#ce2c2c;}
 .item-list ul li .txt-ing {line-height:22px; color:#888; font-size:14px; text-align:center;}
 .item-list ul li:hover .mining-view {bottom:-10px; opacity:1;}
-.item-list ul.type02 li {margin:20px 0 0 1%; padding-bottom:25px; width:49.5%;}
+.item-list ul.type02 {padding-top:20px;}
+.item-list ul.type02 li {margin:34px 0 0 1%; padding-bottom:25px; width:49.5%;}
 .item-list ul.type02 li:nth-child(4n+1),
 .item-list ul.type02 li:nth-child(5n+1) {margin-left:1%;}
 .item-list ul.type02 li:first-child,
@@ -317,8 +344,11 @@
 	.category-list .inner {padding-bottom:0;}
 	.category-list ul {margin-top:0;}
 	.category-list ul li {margin-right:18px; margin-bottom:10px;}
-
 	.car-comment .comment-info {line-height:20px; font-size:14px;}
+	.news-detail-p .container {padding-top:75px;}
+	.news-detail .n-title {padding:14px 0; line-height:26px; font-size:20px;}
+	.news-detail .n-info {padding:10px 0;}
+	.page-btns {margin-top:14px;}
 }
 
 @media screen and (max-width: 450px) {

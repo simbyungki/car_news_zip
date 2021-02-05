@@ -2,27 +2,22 @@
 {% load static %}
 {% load custom_tags %}
 {% block content %}
-	<section class="container">
 <style>
-.news-detail {margin:0 auto; padding-bottom:30px; width:90%; max-width:1100px;}
-.news-detail .n-title {padding:18px 0; line-height:30px; font-size:28px; font-weight:600; border-bottom:1px solid #ddd;}
-.news-detail .n-title .keyword {color:#2944cc; text-decoration:underline;}
-.news-detail .n-info {padding:20px 0; border-bottom:2px solid #555; text-align:right;}
-.news-detail .n-info span {display:inline-block; position:relative; padding:0 18px; font-size:15px;}
-.news-detail .n-info span:after {display:block; content:""; position:absolute; left:-1px; top:2px; width:1px; height:12px; background:#999;}
-.news-detail .n-info span:first-child:after {display:none;}
-.news-detail .n-content .details {padding:20px 12px; line-height:22px; font-size:16px; border-bottom:1px solid #ddd;}
-.news-detail .n-content .details .keyword {color:#2944cc; font-size:18px; font-weight:600; text-decoration:underline;}
-.news-detail .picture {margin-top:20px; text-align:center;}
-.news-detail .picture img {max-width:80%;}
-.page-btns {margin-top:20px;}
-.page-btns.full .btn {width:100%;}
-.page-btns .btn {display:block; height:55px; line-height:55px; font-size:20px; text-align:center;}
-.page-btns .btn.darkgray {color:#fff; background:#444;}
-.page-btns .btn.gray {color:#000; background:#ddd;}
-</style>	
+.news-detail .mining-result {position:fixed; left:0; bottom:0; width:100%; height:28px; color:#888; background:#f9f9f9; border-bottom:1px solid #ddd; opacity:.9;}
+.news-detail .mining-result > div {position:absolute; bottom:0; height:28px; line-height:28px; color:#fff; font-size:14px; text-align:center; overflow:hidden;} 
+.news-detail .mining-result .va {bottom:28px; left:0; background:#238930;}
+.news-detail .mining-result .positive {left:0; background:#2944cc;}
+.news-detail .mining-result .negative {right:0; background:#ce2c2c;}
+.news-detail .mining-result .txt-ing {line-height:28px; color:#888; font-size:14px; text-align:center;}
+</style>
+	<section class="container">
 		{% comment %} {{ news }} {% endcomment %}
 		<div class="news-detail">
+			<div class="mining-result">
+				<div class="va"></div>
+				<div class="positive" title="긍정단어 노출 수 : 12개"></div>
+				<div class="negative" title="부정단어 노출 수 : 3개"></div>
+			</div>
 			<p class="n-title"></p>
 			<div class="n-info">
 				<span class="date">{{ news.write_date }}</span>
@@ -47,9 +42,22 @@ $(document).ready(function(){
 	title = '{{ news.news_title|replace_entity }}'
 	title =  title.replaceAll({{ keyword|js }}, '<strong class="keyword">'+{{ keyword|js }}+'</strong>');
 	detailContent = '{{ news.news_content|replace_entity|js }}'
-	detailContent = detailContent.replaceAll({{ keyword|js }}, '<strong class="keyword">'+{{ keyword|js }}+'</strong>');
+	detailContent = detailContent.replaceAll({{ keyword|js }}, '<strong class="keyword">'+{{ keyword|js }}+'</strong>').replaceAll('\n\n\n\n\n\n\n\n\n\n\n\n', '<br>');
 	$('.news-detail .n-title').html(title);
 	$('.news-detail .n-content .details').html(detailContent);
+
+	if({{ news.positive_count|js }} > 0 || {{ news.negative_count|js }} > 0){
+		negaPer = Math.floor(100 * {{ news.negative_count|js }} / ({{ news.negative_count|js }} + {{ news.positive_count|js }}))
+		posiPer = 100 - negaPer
+		if({{ news.va_count|js }} > 0){
+			vaPer = Math.floor({{ news.va_count|js }} / {{ news.morpheme_count|js }});
+			$('.mining-result .va').css('width', vaPer +'%').attr('title', '형용사 노출 수 : {{ news.va_count|js }}개').html('감성지수' + vaPer +'%');
+		}
+		$('.mining-result .positive').css('width', posiPer +'%').attr('title', '긍정단어 노출 수 : {{ news.positive_count|js }}개').html('긍정 '+ posiPer +'%');
+		$('.mining-result .negative').css('width', negaPer +'%').attr('title', '긍정단어 노출 수 : {{ news.negative_count|js }}개').html('부정' + negaPer +'%');
+	}else{
+		$('.mining-result').html('<p class="txt-ing">분석 중인 뉴스기사입니다.</p>');
+	}
 });
 </script>
 </body>
