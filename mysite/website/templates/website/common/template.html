@@ -165,7 +165,7 @@
 	}
 	function loadNewsList(idx, list_type, start_idx, load_length, load_type, fnc_type, search_keyword){
 		{% comment %} console.log('list_type >>', list_type) {% endcomment %}
-		$('.loading').show();
+		{% comment %} $('.loading').show(); {% endcomment %}
 		connFlag = true;
 		$.ajax({
 			url: '{% url "list_data" %}',
@@ -225,8 +225,8 @@
 						media_name = 'motor-graph'
 					}
 					newsItem += '<li data-news-code="' + list.news_code + '">';
-					{% comment %} newsItem += '<a href="javascript:;" title="' + list.news_title + '" onclick="showNewsDetail(\''+ list.news_code +'\')">'; {% endcomment %}
-					newsItem += '<a href="' + list.news_url + '" target="_blank" title="' + list.news_title + '" >';
+					newsItem += '<a href="javascript:;" title="' + list.news_title + '" onclick="showNewsDetail(\''+ list.news_code +'\')">';
+					{% comment %} newsItem += '<a href="' + list.news_url + '" target="_blank" title="' + list.news_title + '" >'; {% endcomment %}
 					if(list.media_code == '200' || /*list.media_code == '500' ||*/ list.news_img_url == 'None' || list.news_img_url == ''){
 						newsItem += '<div class="picture">';
 						newsItem += '<p><span class="ico">😰</span><br>해당 언론사에서<br>이미지를 불러올 수 없습니다.</p>';
