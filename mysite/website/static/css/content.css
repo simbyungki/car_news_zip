@@ -390,7 +390,7 @@
 	.item-list ul li .tags span + span {margin-left:0;}
 	.item-list ul li .info-box {width:calc(100% - 90px); height:105px;}
 	.item-list ul li .subject {margin-bottom:5px; line-height:22px; font-size:15px;}
-	.item-list ul li .summary {line-height:17px; font-size:13px;}
+	.item-list ul li .summary {height:51px; line-height:17px; font-size:13px;}
 	.item-list ul li .infos {bottom:10px; width:calc(100% - 120px);}
 	.item-list ul li .infos span {font-size:13px;}
 	.item-list ul li .infos .btn-like strong {top:0; font-size:14px;}
