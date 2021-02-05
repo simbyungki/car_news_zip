@@ -130,7 +130,7 @@
 .item-list ul li .tags span.motor-graph {background:#b4000f;}
 .item-list ul li .tags span.drive {background:#00adee;}
 .item-list ul li .subject {margin:20px 0 10px; line-height:26px; letter-spacing:-1px; font-size:20px; font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
-.item-list ul li .summary {display:-webkit-box; word-wrap:break-word; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; text-overflow:ellipsis; line-height:20px; color:#444; font-size:15px;}
+.item-list ul li .summary {display:-webkit-box; word-wrap:break-word; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; text-overflow:ellipsis; height:60px; line-height:20px; color:#444; font-size:15px;}
 .item-list ul li .summary .keyword {color:#fff; font-size:16px; font-weight:600; text-decoration:underline; background:#2944cc;}
 .item-list ul li .summary .posi_keyword {color:#0e30da; font-size:15px;}
 .item-list ul li .summary .nega_keyword {color:#e60e0e; font-size:15px;}
