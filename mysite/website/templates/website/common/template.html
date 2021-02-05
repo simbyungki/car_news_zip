@@ -261,6 +261,8 @@
 
 						if(list.va_count > 0 && list.morpheme_count > 0){
 							vaPer = (list.va_count / list.morpheme_count).toFixed(2);
+						}else{
+							vaPer = 0;
 						}
 						newsItem += '<div class="positive" style="width:'+ posiPer +'%" title="긍정단어 노출 수 : '+list.positive_count+'개">긍정 '+ posiPer +' %</div>'
 						newsItem += '<div class="negative" style="width:'+ negaPer +'%" title="부정단어 노출 수 : '+list.negative_count+'개">부정 '+ negaPer +' %</div>'	
