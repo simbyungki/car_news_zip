@@ -54,22 +54,26 @@
 		{% if page_group != 'news-detail-p' %}
 		<a href="javascript:;" class="btn-gnb" title="메뉴"></a>
 		{% endif %}
-		{% if page_group == 'news-list' %}
-		<h1 class="service-name search-on">
-		{% else %}
 		<h1 class="service-name">
-		{% endif %}
-		{% if page_group != 'news-detail-p' %}
+		{% if page_group == 'news-list' %}
 			<a href="/"><span>CHA</span> <span>N</span>ews <span>A</span>nalysi<span>S</span></a><sup>Beta!</sup><br>
+		</h1>
+		<div class="search-box">
+			{% csrf_token %}
+			<input type="text" id="search_keyword" name="" placeholder="검색할 단어를 입력해주세요.">
+			<button type="button" class="btn-search" onclick="keywordSearch($('#search_keyword').val());">검색</button>
+		</div>
+		<div class="search-recommend" title="예약 검색어">
+			<a href="javascript:;" onclick="keywordSearch('오토플러스');">오토플러스</a>
+			<a href="javascript:;" onclick="keywordSearch('리본카');">리본카</a>
+			<a href="javascript:;" onclick="keywordSearch('케이카');">케이카</a>
+			<a href="javascript:;" onclick="keywordSearch('엔카');">엔카</a>
+			<a href="javascript:;" onclick="keywordSearch('KB차차차');">KB차차차</a>
+		</div>
 		{% else %}
-			 <a href="/" onclick="window.close()"><span>CHA</span> <span>N</span>ews <span>A</span>nalysi<span>S</span></a><sup>Beta!</sup><br>
+			<a href="/" onclick="window.close()"><span>CHA</span> <span>N</span>ews <span>A</span>nalysi<span>S</span></a><sup>Beta!</sup><br>
+		</h1>
 		{% endif %}
-			<div class="search-box">
-				{% csrf_token %}
-				<input type="text" id="search_keyword" name="" placeholder="검색할 단어를 입력해주세요.">
-				<button type="button" class="btn-search" onclick="keywordSearch();">검색</button>
-			</div>
-		</h1>	
 		<div class="fncs">
 			{% comment %} {% if user %}
 				<a href="/logout/" class="btn-login">로그아웃</a>
@@ -142,13 +146,13 @@
 			$(this).blur();
 		}
 	});
-	function keywordSearch(){
+	function keywordSearch(keyword){
 		var nowListLength = $('.news-group li').length;
-		var keyword = $('#search_keyword').val();
 		if(keyword.length > 0){
 			loadNewsList(99, 'all', 0, 15, 'search', null, keyword);
 			$('#wrap').prop('class', '').addClass('search-result');
 			$('.search-box').removeClass('show');
+			$('#search_keyword').val(keyword);
 		}else{
 			alert('검색어를 입력해주세요.');
 			$('#search_keyword').focus();
