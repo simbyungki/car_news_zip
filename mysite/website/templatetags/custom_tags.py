@@ -8,12 +8,12 @@ register = template.Library()
 
 @register.filter
 def get_at_index(object_list, index):
-    return object_list[index]
+	return object_list[index]
 
 @register.filter
 def replace_entity(value):
-    return value.replace('&#8220;','"').replace('&#44;',',').replace('None', '')
+	return value.replace('&#8220;','"').replace('&#44;',',').replace('None', '')
 
 @register.filter
 def js(obj):
-    return mark_safe(json.dumps(obj))
+	return mark_safe(json.dumps(obj))
