@@ -34,13 +34,10 @@ def execute(query, bufferd=True) :
 		cursor.close()
 		# dbconn.close()
 
-today_date = datetime.today().strftime('%Y-%m-%d')
-
-
 # 목록
 def news_list(request) :
 	context = {}
-	context['today_date'] = today_date
+	context['today_date'] = datetime.today().strftime('%Y-%m-%d')
 	context['page_group'] = 'news-list'
 	user_id = request.session.get('user')
 	if user_id :
@@ -53,37 +50,15 @@ def news_list(request) :
 
 # 뉴스 상세
 def news_detail(request) : 
-	context = {}
 	news_code = request.GET.get('news_code')
 	keyword = request.GET.get('keyword')
 	news = TblTotalCarNewsList.objects.values().filter(news_code=news_code)
-	context['today_date'] = today_date
+	context = {}
+	context['today_date'] = datetime.today().strftime('%Y-%m-%d')
 	context['news'] = news[0]
 	context['keyword'] = keyword
 	context['page_group'] = 'news-detail-p'
 	return render(request, 'website/news_detail.html', context)
-
-# 뉴스 분석
-def text_mining_result(request) :
-	global mining_result_data
-	car_news_list = TblTotalCarNewsList.objects.all().filter(mining_status=1)
-	today_date = datetime.today().strftime('%Y-%m-%d')
-	context = {'today_date': today_date}
-	user_id = request.session.get('user')
-	if user_id :
-		memb_name = TblMemberList.objects.filter(memb_id=user_id).values()[0].get('memb_name')
-		context['user'] = memb_name
-	else : 
-		context['user'] = None
-	
-	origin_sentence_list = []
-
-	for idx in range(len(car_news_list)) :
-		origin_sentence_list.append(car_news_list[idx].news_summary)
-
-	context['mining_result_list'] = mining_result_data
-	context['origin_sentence_list'] = origin_sentence_list
-	return render(request, 'website/text_mining_result.html', context)
 
 # 로그인
 def login(request) :
@@ -177,59 +152,59 @@ def list_data(request) :
 		search_keyword = request.GET.get('search_keyword')
 		category_num = 1
 	
-	news = ''
-	today_uploads = {}
-	if list_type == 'media' : 
-		#오토헤럴드 : 100, 데일리카 : 200, 오토뷰 : 300, IT조선 : 400, 오토모닝 : 500, 오토다이어리 : 600, 카가이 : 700, 더드라이브 : 800
-		if idx == 0 :
-			category_num = 100
-		elif idx == 1 : 
-			category_num = 200
-		elif idx == 2 :
-			category_num = 300
-		elif idx == 3 :
-			category_num = 400
-		elif idx == 4 :
-			category_num = 500
-		elif idx == 5 :
-			category_num = 600
-		elif idx == 6 :
-			category_num = 700
-		elif idx == 7 :
-			category_num = 800
-		elif idx == 8 :
-			category_num = 900
-		news = news_list.filter(media_code=category_num).order_by('-write_date')
+		news = ''
+		today_uploads = {}
+		if list_type == 'media' : 
+			#오토헤럴드 : 100, 데일리카 : 200, 오토뷰 : 300, IT조선 : 400, 오토모닝 : 500, 오토다이어리 : 600, 카가이 : 700, 더드라이브 : 800
+			if idx == 0 :
+				category_num = 100
+			elif idx == 1 : 
+				category_num = 200
+			elif idx == 2 :
+				category_num = 300
+			elif idx == 3 :
+				category_num = 400
+			elif idx == 4 :
+				category_num = 500
+			elif idx == 5 :
+				category_num = 600
+			elif idx == 6 :
+				category_num = 700
+			elif idx == 7 :
+				category_num = 800
+			elif idx == 8 :
+				category_num = 900
+			news = news_list.filter(media_code=category_num).order_by('-write_date')
 
-		today_uploads['auto_h'] = len(news_list.filter(add_date__contains = today_date).filter(media_code = 100))
-		today_uploads['daily_car'] = len(news_list.filter(add_date__contains = today_date).filter(media_code = 200))
-		today_uploads['autoview'] = len(news_list.filter(add_date__contains = today_date).filter(media_code = 300))
-		today_uploads['it_chosun'] = len(news_list.filter(add_date__contains = today_date).filter(media_code = 400))
-		today_uploads['auto_morning'] = len(news_list.filter(add_date__contains = today_date).filter(media_code = 500))
-		today_uploads['auto_diary'] = len(news_list.filter(add_date__contains = today_date).filter(media_code = 600))
-		today_uploads['carguy'] = len(news_list.filter(add_date__contains = today_date).filter(media_code = 700))
-		today_uploads['the_drive'] = len(news_list.filter(add_date__contains = today_date).filter(media_code = 800))
-		today_uploads['motorgraph'] = len(news_list.filter(add_date__contains = today_date).filter(media_code = 900))
-	elif list_type == 'category' :
-		if idx == 0 :
-			category_num = 7
-		elif idx == 1 : 
-			category_num = 1
-		elif idx == 2 :
-			category_num = 3
-		elif idx == 3 :
-			category_num = 5
-		news = news_list.filter(news_category=category_num).order_by('-write_date')
+			today_uploads['auto_h'] = len(news_list.filter(add_date__contains = today_date).filter(media_code = 100))
+			today_uploads['daily_car'] = len(news_list.filter(add_date__contains = today_date).filter(media_code = 200))
+			today_uploads['autoview'] = len(news_list.filter(add_date__contains = today_date).filter(media_code = 300))
+			today_uploads['it_chosun'] = len(news_list.filter(add_date__contains = today_date).filter(media_code = 400))
+			today_uploads['auto_morning'] = len(news_list.filter(add_date__contains = today_date).filter(media_code = 500))
+			today_uploads['auto_diary'] = len(news_list.filter(add_date__contains = today_date).filter(media_code = 600))
+			today_uploads['carguy'] = len(news_list.filter(add_date__contains = today_date).filter(media_code = 700))
+			today_uploads['the_drive'] = len(news_list.filter(add_date__contains = today_date).filter(media_code = 800))
+			today_uploads['motorgraph'] = len(news_list.filter(add_date__contains = today_date).filter(media_code = 900))
+		elif list_type == 'category' :
+			if idx == 0 :
+				category_num = 7
+			elif idx == 1 : 
+				category_num = 1
+			elif idx == 2 :
+				category_num = 3
+			elif idx == 3 :
+				category_num = 5
+			news = news_list.filter(news_category=category_num).order_by('-write_date')
 
-		today_uploads['industry'] = len(news_list.filter(add_date__contains = today_date).filter(news_category = 7))
-		today_uploads['used'] = len(news_list.filter(add_date__contains = today_date).filter(news_category = 1))
-		today_uploads['new'] = len(news_list.filter(add_date__contains = today_date).filter(news_category = 3))
-		today_uploads['review'] = len(news_list.filter(add_date__contains = today_date).filter(news_category = 5))
-	elif list_type == 'all' : 
-		news = news_list.filter(Q(news_content__icontains=search_keyword) | Q(news_title__icontains=search_keyword) ).order_by('-write_date')
-	
-	set_news = serializers.serialize('json', news[start_idx:start_idx+load_length])
-	return JsonResponse({'news': set_news, 'total_length': len(news), 'today_news': today_uploads}, status=200)
+			today_uploads['industry'] = len(news_list.filter(add_date__contains = today_date).filter(news_category = 7))
+			today_uploads['used'] = len(news_list.filter(add_date__contains = today_date).filter(news_category = 1))
+			today_uploads['new'] = len(news_list.filter(add_date__contains = today_date).filter(news_category = 3))
+			today_uploads['review'] = len(news_list.filter(add_date__contains = today_date).filter(news_category = 5))
+		elif list_type == 'all' : 
+			news = news_list.filter(Q(news_content__icontains=search_keyword) | Q(news_title__icontains=search_keyword) ).order_by('-write_date')
+		
+		set_news = serializers.serialize('json', news[start_idx:start_idx+load_length])
+		return JsonResponse({'news': set_news, 'total_length': len(news), 'today_news': today_uploads}, status=200)
 
 # 뉴스 클릭 수 ajax
 def view_count(request) : 
@@ -252,7 +227,7 @@ def view_count(request) :
 		finally : 
 			print(f'[{news_code} 조회수 증가] {now_count} >> {after_count}')
 
-	return HttpResponse(after_count, content_type="text/json-comment-filtered")
+		return HttpResponse(after_count, content_type="text/json-comment-filtered")
 
 
 def car_comments(request) : 

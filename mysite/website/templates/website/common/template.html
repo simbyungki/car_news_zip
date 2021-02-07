@@ -237,7 +237,6 @@
 					newsItem += '<div class="info-box">';
 					newsItem += '<div class="tags">';
 					if(list.write_date == '{{ today_date|escapejs }}'){
-						alert('NEW > '+ list.news_title)
 						newsItem += '<span class="today">TODAY</span>';
 					}
 					newsItem += '<span class="'+ media_name +'">' + list.media_name + '</span>';
