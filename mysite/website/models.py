@@ -92,3 +92,25 @@ class TblTotalCarNewsList(models.Model):
 	class Meta:
 		managed = False
 		db_table = 'TBL_TOTAL_CAR_NEWS_LIST'
+
+
+class TblYoutubeCarCommentList(models.Model):
+    comment_no = models.AutoField(db_column='COMMENT_NO', primary_key=True)  # Field name made lowercase.
+    review_video_id = models.CharField(db_column='REVIEW_VIDEO_ID', max_length=100, blank=True, null=True)  # Field name made lowercase.
+    bmname = models.CharField(db_column='BMNAME', max_length=100, blank=True, null=True)  # Field name made lowercase.
+    boiname = models.CharField(db_column='BOINAME', max_length=100, blank=True, null=True)  # Field name made lowercase.
+    boname = models.CharField(db_column='BONAME', max_length=100, blank=True, null=True)  # Field name made lowercase.
+    bono = models.IntegerField(db_column='BONO', blank=True, null=True)  # Field name made lowercase.
+    review_content = models.TextField(db_column='REVIEW_CONTENT', blank=True, null=True)  # Field name made lowercase.
+    add_date = models.DateTimeField(db_column='ADD_DATE', blank=True, null=True)  # Field name made lowercase.
+    minning_status = models.CharField(db_column='MINNING_STATUS', max_length=10, blank=True, null=True)  # Field name made lowercase.
+    mining_date = models.DateTimeField(db_column='MINING_DATE', blank=True, null=True)  # Field name made lowercase.
+    positive_count = models.IntegerField(db_column='POSITIVE_COUNT', blank=True, null=True)  # Field name made lowercase.
+    negative_count = models.IntegerField(db_column='NEGATIVE_COUNT', blank=True, null=True)  # Field name made lowercase.
+    va_count = models.IntegerField(db_column='VA_COUNT', blank=True, null=True)  # Field name made lowercase.
+    morpheme_count = models.IntegerField(db_column='MORPHEME_COUNT', blank=True, null=True)  # Field name made lowercase.
+    proc_status = models.IntegerField(db_column='PROC_STATUS', blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'TBL_YOUTUBE_CAR_COMMENT_LIST'
