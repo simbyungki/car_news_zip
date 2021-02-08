@@ -172,7 +172,7 @@
 .item-list ul.type02 li .infos {position:absolute; left:auto; right:15px; bottom:15px; width:calc(100% - 260px);}
 
 .all-list-summary {position:fixed; left:0; bottom:0; z-index:100; height:36px; width:100%; background:#f9f9f9; border-top:1px solid #ddd;}
-.all-list-summary > div {position:absolute; bottom:0; height:36px; line-height:36px; color:#fff; font-size:16px; text-align:center; overflow:hidden; opacity:.9; transition:all .3s;}  
+.all-list-summary > div {position:absolute; bottom:0; height:36px; line-height:36px; color:#fff; font-size:16px; text-align:center; overflow:hidden; opacity:.8; transition:all .3s;}  
 .all-list-summary .positive {left:0; background:#2944cc;}
 .all-list-summary .negative {right:0; background:#ce2c2c;}
 .all-list-summary > div a {display:block;  text-align:center;}
@@ -197,7 +197,7 @@
 
 
 .category-list {position:fixed; top:150px; left:0; z-index:150; width:100%; height:60px; background:#444; box-sizing:border-box;}
-.category-list ul {display:none; flex-wrap:wrap; margin-top:5px;}
+.category-list ul {display:none; flex-wrap:wrap; margin-top:7px;}
 .category-list ul.show {display:flex;}
 .category-list ul li {position:relative;}
 .category-list ul li a {color:#999; font-size:26px; font-weight:600;}
