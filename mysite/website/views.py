@@ -19,6 +19,15 @@ db_info_file = os.path.join(BASE_DIR, 'db_conn.json')
 with open(db_info_file) as f :
 	db_infos = json.loads(f.read())
 
+# 접속자 IP
+def get_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
 def connect_log_insert(infos) :
 	today_date = datetime.today().strftime('%Y-%m-%d')
 	now_time = datetime.today().strftime('%H:%M:%S')
@@ -85,7 +94,7 @@ def news_list(request) :
 	infos = {}
 	infos['referer'] = request.headers.get('referer')
 	infos['page_name'] = '/news_list'
-	infos['user_ip'] = requests.get(r'http://jsonip.com').json()['ip']
+	infos['user_ip'] = get_ip(request)
 	connect_log_insert(infos)
 	
 	return render(request, 'website/news_list.html', context)
@@ -101,7 +110,11 @@ def news_detail(request) :
 	context['keyword'] = keyword
 	context['page_group'] = 'news-detail-p'
 
-	connect_log_insert('/news_detail')
+	infos = {}
+	infos['referer'] = request.headers.get('referer')
+	infos['page_name'] = '/news_detail'
+	infos['user_ip'] = get_ip(request)
+	connect_log_insert(infos)
 
 	return render(request, 'website/news_detail.html', context)
 
@@ -253,7 +266,7 @@ def list_data(request) :
 				infos['search_result_count'] = len(news)
 			else : 
 				infos['search_result_count'] = 0
-			infos['searcher_ip'] = requests.get(r'http://jsonip.com').json()['ip']
+			infos['searcher_ip'] = get_ip(request)
 			infos['search_keyword'] = search_keyword
 			search_log_insert(infos)
 
