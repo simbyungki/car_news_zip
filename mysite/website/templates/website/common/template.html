@@ -305,8 +305,8 @@
 				//전체 목록에 대한 긍/부정 지수
 				allNegativePer = Math.floor(100 * allNegativePer / (allNegativePer + allPositivePer))
 				allPositivePer = 100 - allNegativePer
-				$('.all-list-summary .positive').css('width', allPositivePer+'%').html('현재 목록의 긍정 '+ allPositivePer +'%');
-				$('.all-list-summary .negative').css('width', allNegativePer+'%').html('현재 목록의 부정 '+ allNegativePer +'%');
+				$('.all-list-summary .positive').css('width', allPositivePer+'%').html('현재 목록의 긍정 '+ allPositivePer +'%').attr('title', '현재 목록의 긍정 '+ allPositivePer +'%');
+				$('.all-list-summary .negative').css('width', allNegativePer+'%').html('현재 목록의 부정 '+ allNegativePer +'%').attr('title', '현재 목록의 부정 '+ allNegativePer +'%');
 
 				if(load_type == 'search'){
 					var keyword = $('#search_keyword').val();
