@@ -1447,7 +1447,7 @@ def insert_used_db(dbconn, cursor) :
 						VALUES (
 							"{media_code}", 1, "{media_name}", 
 							"{news_code}", "{subject}", 
-							"{summary}", "", "{reporter}",
+							"{summary}", "수집 중입니다.", "{reporter}",
 							"{img_url}", "{url}", "{date}", 
 							NOW(), 1
 						) 
@@ -1785,7 +1785,6 @@ def reload_list_data() :
 	insert_industry_db(dbconn, cursor)
 
 	dbconn.commit()
-	cursor.close()
 	dbconn.close()
 
 	now = time.localtime()

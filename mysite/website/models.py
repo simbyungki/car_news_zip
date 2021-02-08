@@ -14,6 +14,31 @@ class TblMemberList(models.Model):
 		managed = False
 		db_table = 'TBL_MEMBER_LIST'
 
+class LogConnectList(models.Model):
+	log_no = models.AutoField(db_column='LOG_NO', primary_key=True)  # Field name made lowercase.
+	page_name = models.CharField(db_column='PAGE_NAME', max_length=500, blank=True, null=True)  # Field name made lowercase.    
+	referer_url = models.CharField(db_column='REFERER_URL', max_length=500, blank=True, null=True)  # Field name made lowercase.
+	add_ip = models.CharField(db_column='ADD_IP', max_length=30, blank=True, null=True)  # Field name made lowercase.
+	search_ymd = models.CharField(db_column='SEARCH_YMD', max_length=30, blank=True, null=True)  # Field name made lowercase.
+	search_time = models.CharField(db_column='SEARCH_TIME', max_length=30, blank=True, null=True)  # Field name made lowercase.
+	search_date = models.DateTimeField(db_column='SEARCH_DATE', blank=True, null=True)  # Field name made lowercase.
+
+	class Meta:
+		managed = False
+		db_table = 'LOG_CONNECT_LIST'
+
+class LogSearchList(models.Model):
+	log_no = models.AutoField(db_column='LOG_NO', primary_key=True)  # Field name made lowercase.
+	search_word = models.CharField(db_column='SEARCH_WORD', max_length=500, blank=True, null=True)  # Field name made lowercase.
+	search_return_count = models.IntegerField(db_column='SEARCH_RETURN_COUNT', blank=True, null=True)  # Field name made lowercase.
+	add_ip = models.CharField(db_column='ADD_IP', max_length=30, blank=True, null=True)  # Field name made lowercase.
+	search_ymd = models.CharField(db_column='SEARCH_YMD', max_length=30, blank=True, null=True)  # Field name made lowercase.
+	search_time = models.CharField(db_column='SEARCH_TIME', max_length=30, blank=True, null=True)  # Field name made lowercase.
+	search_date = models.DateTimeField(db_column='SEARCH_DATE', blank=True, null=True)  # Field name made lowercase.
+
+	class Meta:
+		managed = False
+		db_table = 'LOG_SEARCH_LIST'
 
 class TblNewsKeywordList(models.Model):
 	word_no = models.AutoField(db_column='WORD_NO', primary_key=True)  # Field name made lowercase.

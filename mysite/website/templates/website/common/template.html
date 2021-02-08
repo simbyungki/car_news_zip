@@ -142,7 +142,7 @@
 	//enter key 검색
 	$('#search_keyword').on('keypress', function(){
 		if(event.keyCode == 13){
-			keywordSearch();
+			keywordSearch($(this).val())
 			$(this).blur();
 		}
 	});

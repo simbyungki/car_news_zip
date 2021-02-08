@@ -151,7 +151,7 @@
 .item-list ul li .mining-result > div {position:absolute; bottom:0; height:22px; line-height:22px; color:#fff; font-size:14px; text-align:center; overflow:hidden; opacity:.9;} 
 .item-list ul li .mining-result .positive {left:0; background:#2944cc;}
 .item-list ul li .mining-result .negative {right:0; background:#ce2c2c;}
-.item-list ul li .mining-view {position:absolute; left:2%; bottom:-20px; z-index:100; padding:15px; width:96%; border:1px solid #999; background:#fff; opacity:0; transition:all .3s ease-in-out; box-sizing:border-box;}
+.item-list ul li .mining-view {position:absolute; left:2%; bottom:10px; z-index:100; padding:15px; width:96%; border:1px solid #999; background:#fff; opacity:0; transition:all .3s ease-in-out; box-sizing:border-box;}
 .item-list ul li .mining-view p {line-height:20px; font-size:15px;}
 .item-list ul li .mining-view p .posi {color:#2944cc;}
 .item-list ul li .mining-view p .nega {color:#ce2c2c;}
@@ -194,7 +194,6 @@
 .list-top .list-type .btn:nth-child(2):after {left:5px; width:18px; height:3px;}
 .list-top .list-type .btn:nth-child(2):before {top:8px;}
 .list-top .list-type .btn:nth-child(2):after {bottom:8px;}
-
 
 .category-list {position:fixed; top:150px; left:0; z-index:150; width:100%; height:60px; background:#444; box-sizing:border-box;}
 .category-list ul {display:none; flex-wrap:wrap; margin-top:7px;}
@@ -268,7 +267,6 @@
 .car-comment .choice-model {position:absolute; right:0; top:7px;}
 .car-comment .choice-model select {color:#444; vertical-align:middle;}
 .car-comment .choice-model .btn-choice {display:inline-block; padding:0 20px; height:38px; font-size:14px; vertical-align:middle;}
-
 
 /***** 
     responsive 

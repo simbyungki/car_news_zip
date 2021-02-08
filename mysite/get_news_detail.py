@@ -403,7 +403,6 @@ def load_detail_data() :
 	GetMotorGraph.detail(dbconn, cursor)
 	
 	dbconn.commit()
-	
 	dbconn.close()
 
 	now = time.localtime()

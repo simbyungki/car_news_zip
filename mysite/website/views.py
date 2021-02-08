@@ -7,10 +7,10 @@ from datetime import datetime
 from django.http import HttpResponse
 from django.core import serializers
 
+import requests
 import pandas as pd
 import time
 import mysql.connector
-
 import os, json
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.abspath('./mysite'))
@@ -18,21 +18,6 @@ BASE_DIR = os.path.dirname(os.path.abspath('./mysite'))
 db_info_file = os.path.join(BASE_DIR, 'db_conn.json')
 with open(db_info_file) as f :
 	db_infos = json.loads(f.read())
-
-dbconn = mysql.connector.connect(host=db_infos.get('host'), user=db_infos.get('user'), password=db_infos.get('password'), database=db_infos.get('database'), port=db_infos.get('port'))
-def execute(query, bufferd=True) :
-	global dbconn
-	try :
-		cursor = dbconn.cursor(buffered=bufferd)
-		cursor.execute(query)
-	except Exception as e :
-		dbconn.rollback()
-		raise e
-	finally : 
-		print('commit complete!')
-		dbconn.commit()
-		cursor.close()
-		# dbconn.close()
 
 # 목록
 def news_list(request) :
@@ -87,7 +72,6 @@ def logout(request) :
 		del request.session['user']
 
 	return redirect('/')
-
 # 회원가입
 def join(request) : 
 	context = {'page_group': 'join-p'}
@@ -143,6 +127,7 @@ def join(request) :
 # 뉴스 목록 가져오기 ajax
 def list_data(request) :
 	today_date = datetime.today().strftime('%Y-%m-%d')
+	now_time = datetime.today().strftime('%H:%M:%S')
 	news_list = TblTotalCarNewsList.objects.all()
 	if request.method == 'GET' :
 		idx = int(request.GET.get('list_idx'))
@@ -201,8 +186,37 @@ def list_data(request) :
 			today_uploads['new'] = len(news_list.filter(add_date__contains = today_date).filter(news_category = 3))
 			today_uploads['review'] = len(news_list.filter(add_date__contains = today_date).filter(news_category = 5))
 		elif list_type == 'all' : 
-			news = news_list.filter(Q(news_content__icontains=search_keyword) | Q(news_title__icontains=search_keyword) ).order_by('-write_date')
-		
+			# 검색
+			news = news_list.filter( Q(news_content__icontains=search_keyword) | Q(news_title__icontains=search_keyword) ).order_by('-write_date')
+			# LOG DB INSERT
+			try : 
+				if len(news) > 0 :
+					search_result_count = len(news)
+				else : 
+					search_result_count = 0
+				r = requests.get(r'http://jsonip.com')
+				connect_ip = r.json()['ip']
+
+				dbconn = mysql.connector.connect(host=db_infos.get('host'), user=db_infos.get('user'), password=db_infos.get('password'), database=db_infos.get('database'), port=db_infos.get('port'))
+				cursor = dbconn.cursor()
+				cursor.execute(f"""
+					INSERT INTO LOG_SEARCH_LIST (
+						SEARCH_WORD, SEARCH_RETURN_COUNT, ADD_IP, 
+						SEARCH_YMD, SEARCH_TIME, SEARCH_DATE
+					) 
+					VALUES (
+						"{search_keyword}", {search_result_count}, "{connect_ip}", 
+						"{today_date}", "{now_time}", NOW()
+					)
+				""")
+			except Exception as e :
+				print(f'****** + error! >> {e} >> 오류!')
+			else :
+				dbconn.commit()
+				dbconn.close()
+				print(f'[{today_date} {now_time}][{connect_ip}] >> {search_keyword} >> {search_result_count} >> Log commit 완료')
+				print(cursor.rowcount, "record Inserted.") 
+
 		set_news = serializers.serialize('json', news[start_idx:start_idx+load_length])
 		return JsonResponse({'news': set_news, 'total_length': len(news), 'today_news': today_uploads}, status=200)
 
@@ -213,7 +227,9 @@ def view_count(request) :
 		news_code = request.GET.get('news_code')
 		after_count = now_count + 1
 		try : 
-			execute(f"""
+			dbconn = mysql.connector.connect(host=db_infos.get('host'), user=db_infos.get('user'), password=db_infos.get('password'), database=db_infos.get('database'), port=db_infos.get('port'))
+			cursor = dbconn.cursor()
+			cursor.execute(f"""
 				UPDATE 
 					TBL_TOTAL_CAR_NEWS_LIST 
 				SET 
@@ -223,9 +239,10 @@ def view_count(request) :
 			""")
 		except Exception as e :
 			print(f'****** + error! >> {e} >> 오류!')
-			pass
-		finally : 
-			print(f'[{news_code} 조회수 증가] {now_count} >> {after_count}')
+		else : 
+			dbconn.commit()
+			dbconn.close()
+			print(f'[{news_code} 조회수 증가] {now_count} >> {after_count} >> commit 완료')
 
 		return HttpResponse(after_count, content_type="text/json-comment-filtered")
 

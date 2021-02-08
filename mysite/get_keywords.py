@@ -296,7 +296,6 @@ def run_text_mining() :
 	# text_mining('youtube_comments', dbconn, cursor)
 
 	dbconn.commit()
-	cursor.close()
 	dbconn.close()
 
 	now = time.localtime()
