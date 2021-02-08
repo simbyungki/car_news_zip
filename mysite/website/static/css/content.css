@@ -171,8 +171,8 @@
 .item-list ul.type02 li .subject {margin:0 0 10px;}
 .item-list ul.type02 li .infos {position:absolute; left:auto; right:15px; bottom:15px; width:calc(100% - 260px);}
 
-.all-list-summary {position:fixed; left:0; bottom:0; z-index:100; height:40px; width:100%; background:#f9f9f9; border-top:1px solid #ddd;}
-.all-list-summary > div {position:absolute; bottom:0; height:40px; line-height:40px; color:#fff; font-size:16px; text-align:center; overflow:hidden; opacity:.9;} 
+.all-list-summary {position:fixed; left:0; bottom:0; z-index:100; height:36px; width:100%; background:#f9f9f9; border-top:1px solid #ddd;}
+.all-list-summary > div {position:absolute; bottom:0; height:36px; line-height:36px; color:#fff; font-size:16px; text-align:center; overflow:hidden; opacity:.9;} 
 .all-list-summary .positive {left:0; background:#2944cc;}
 .all-list-summary .negative {right:0; background:#ce2c2c;}
 .all-list-summary > div a {display:block;  text-align:center;}
