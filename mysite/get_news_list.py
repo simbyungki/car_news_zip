@@ -5,7 +5,6 @@ import re
 import regex
 import mysql.connector
 import os, json
-import traceback
 ## Python이 실행될 때 DJANGO_SETTINGS_MODULE이라는 환경 변수에 현재 프로젝트의 settings.py파일 경로 등록
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite.settings")
 ## 장고 프로젝트를 사용할 수 있도록 환경을 구축

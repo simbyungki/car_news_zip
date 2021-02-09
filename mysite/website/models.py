@@ -96,14 +96,15 @@ class TblTotalCarNewsList(models.Model):
 
 class TblYoutubeCarCommentList(models.Model):
     comment_no = models.AutoField(db_column='COMMENT_NO', primary_key=True)  # Field name made lowercase.
-    review_video_id = models.CharField(db_column='REVIEW_VIDEO_ID', max_length=100, blank=True, null=True)  # Field name made lowercase.
+    comment_video_id = models.CharField(db_column='COMMENT_VIDEO_ID', max_length=100, blank=True, null=True)  # Field name made lowercase.
     bmname = models.CharField(db_column='BMNAME', max_length=100, blank=True, null=True)  # Field name made lowercase.
     boiname = models.CharField(db_column='BOINAME', max_length=100, blank=True, null=True)  # Field name made lowercase.
     boname = models.CharField(db_column='BONAME', max_length=100, blank=True, null=True)  # Field name made lowercase.
     bono = models.IntegerField(db_column='BONO', blank=True, null=True)  # Field name made lowercase.
-    review_content = models.TextField(db_column='REVIEW_CONTENT', blank=True, null=True)  # Field name made lowercase.
+    comment_content = models.TextField(db_column='COMMENT_CONTENT', blank=True, null=True)  # Field name made lowercase.
+    comment_content_length = models.IntegerField(db_column='COMMENT_CONTENT_LENGTH', blank=True, null=True)  # Field name made lowercase.
     add_date = models.DateTimeField(db_column='ADD_DATE', blank=True, null=True)  # Field name made lowercase.
-    minning_status = models.CharField(db_column='MINNING_STATUS', max_length=10, blank=True, null=True)  # Field name made lowercase.
+    minning_status = models.IntegerField(db_column='MINNING_STATUS', blank=True, null=True)  # Field name made lowercase.
     mining_date = models.DateTimeField(db_column='MINING_DATE', blank=True, null=True)  # Field name made lowercase.
     positive_count = models.IntegerField(db_column='POSITIVE_COUNT', blank=True, null=True)  # Field name made lowercase.
     negative_count = models.IntegerField(db_column='NEGATIVE_COUNT', blank=True, null=True)  # Field name made lowercase.

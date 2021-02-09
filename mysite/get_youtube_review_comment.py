@@ -4,8 +4,10 @@ from googleapiclient import errors
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from oauth2client.tools import argparser
-import os
+import os, json
 import mysql.connector
+import re
+import regex
 
 ## Python이 실행될 때 DJANGO_SETTINGS_MODULE이라는 환경 변수에 현재 프로젝트의 settings.py파일 경로 등록
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite.settings")
@@ -38,6 +40,13 @@ YOUTUBE_API_SERVICE_NAME = 'youtube'
 YOUTUBE_API_VERSION = 'v3'
 youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION, developerKey = DEVELOPER_KEY)
 
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+BASE_DIR = os.path.dirname(os.path.abspath('./mysite'))
+# SECURITY WARNING: keep the secret key used in production secret!
+db_info_file = os.path.join(BASE_DIR, 'db_conn.json')
+with open(db_info_file) as f :
+	db_infos = json.loads(f.read())
+
 def get_soup(url) :
 	options = webdriver.ChromeOptions()
 	options.headless = True
@@ -67,8 +76,8 @@ def youtube_search(keyword) :
 	search_response = youtube.search().list(
 		q = keyword,
 		part = 'id, snippet',
-		# order = 'relevance',
-		order = 'viewCount',
+		order = 'relevance',
+		# order = 'viewCount',
 		maxResults = 10
 	).execute()
 	
@@ -87,19 +96,21 @@ def youtube_search(keyword) :
 	return video_group
 
 
-def get_comments(keyword) :
+def get_comments(dbconn, cursor, keyword, bmname, boiname, boname, bono) :
 	video_group = youtube_search(f'{keyword} 시승기')
 	comment_group = []
-	for idx, video_info in enumerate(video_group[:3]) :
+	for idx, video_info in enumerate(video_group) :
 		url = f'https://www.youtube.com/watch?v={video_info.get("video_id")}'
 
 		soup = get_soup(url)
+		# video_title = soup.select('h1.title style-scope ytd-video-primary-info-renderer')
 		user_id_list = soup.select('div#header-author > a > span')
 		comment_list = soup.select('yt-formatted-string#content-text')
 		registed_date_list = soup.select('yt-formatted-string.published-time-text')
 
 		for i in range(len(user_id_list)):
 			comment_set = []
+			comment_set.append(video_info.get('video_id'))
 			str_tmp = str(user_id_list[i].text)
 			str_tmp = str_tmp.replace('\n', '')
 			str_tmp = str_tmp.replace('\t', '')
@@ -110,21 +121,41 @@ def get_comments(keyword) :
 			str_tmp = str_tmp.replace('\n', '')
 			str_tmp = str_tmp.replace('\t', '')
 			str_tmp = str_tmp.replace('   ','')
+			str_tmp = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', str_tmp))
 			comment_set.append(str_tmp)
 			comment_set.append(len(str_tmp))
 
 			str_tmp = str(registed_date_list[i].text)
 			comment_set.append(str_tmp)
 			comment_group.append(comment_set)
+		
+		print(f'[{idx +1}/{len(video_group)}] 댓글수집 완료')
 
-	dbconn = mysql.connector.connect(host=db_infos.get('host'), user=db_infos.get('user'), password=db_infos.get('password'), database=db_infos.get('database'), port=db_infos.get('port'))
-	cursor = dbconn.cursor()
+	print(f'[{keyword} 시승기] Data 구조화 완료')
 
 	# DB INSERT
-	for comment in comment_group :
+	print('DB Insert 시작')
+	for idx, comment in enumerate(comment_group) :
+		try :
+			cursor.execute(f"""
+				INSERT INTO TBL_YOUTUBE_CAR_COMMENT_LIST 
+				(
+					COMMENT_VIDEO_ID, BMNAME, BOINAME, BONAME,
+					BONO, COMMENT_CONTENT, COMMENT_CONTENT_LENGTH, ADD_DATE, 
+					MINNING_STATUS, PROC_STATUS
+				) 
+				VALUES (
+					"{comment[0]}", "{bmname}", "{boiname}", "{boname}" ,
+					{bono}, "{comment[2]}", {len(comment[2])}, NOW(), 
+					1, 1
+				) 
+			""")
+			print(f'[{idx + 1}/{len(comment_group)}] 댓글 수집 완료')
+		except Exception as e :
+			print(f'***** + error! >> {e} >> {comment[2]}')	
+		else : 
+			print(f'**** [{boname}시승기 영상] >> 유튜브 영상 댓글 수집 완료')
 		
-
-
 
 
 
@@ -185,8 +216,13 @@ if __name__ == '__main__' :
 	start = time.time()  
 
 	# 영상 검색 후 댓글 가져오기
-	get_comments('제네시스 G330')
+	dbconn = mysql.connector.connect(host=db_infos.get('host'), user=db_infos.get('user'), password=db_infos.get('password'), database=db_infos.get('database'), port=db_infos.get('port'))
+	cursor = dbconn.cursor()
+	# get_comments(dbconn, cursor, 차종, BMNAME, BOINAME, BONAME, BONO)
+	get_comments(dbconn, cursor, '쉐보레 임팔라', '쉐보레(대우)', '임팔라', '임팔라', 1568)
 
+	dbconn.commit()
+	dbconn.close()
 	# 종료 시간 (전체 수행시간을 구하기 위함)
 	end = time.time()
 	# 전체 수행시간

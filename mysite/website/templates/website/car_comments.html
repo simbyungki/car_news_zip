@@ -4,45 +4,54 @@
 {% block content %}
 	<section class="container car-comment">
 		<div class="inner">
-			<h2 class="page-title">{{car_model}} 여론 평가</h2>
+			<h2 class="page-title"><span></span> 시승기 영상 및 여론 평가</h2>
 			<form method="POST">
 				{% csrf_token %}
 				<div class="choice-model">
 					<select name="car-model">
 						<option value="default" select>차종 선택</option>
-						<option value="제네시스GV80">제네시스 GV80</option>
-						<option value="제네시스EQ900">제네시스 EQ900</option>
-						<option value="현대자동차펠리세이드">현대자동차 펠리세이드</option>
-						<option value="아반떼CN7">현대자동차 아반떼 CN7</option>
-						<option value="현대자동차쏘나타DN8">현대자동차 쏘나타 DN8</option>
-						<option value="현대자동차그렌져HG">현대자동차 그렌져 HG</option>
-						<option value="기아자동차스포티지">기아자동차 스포티지 QL</option>
-						<option value="기아자동차쏘렌토MQ4">기아자동차 쏘렌토 MQ4</option>
-						<option value="기아자동차올뉴모닝">기아자동차 올 뉴 모닝</option>
-						<option value="기아자동차레이">기아자동차 레이</option>
-						<option value="기아자동차K3">기아자동차 K3</option>
-						<option value="기아자동차K5DL3">기아자동차 K5 DL3</option>
-						<option value="기아자동차더k9">기아자동차 더 k9</option>
-						<option value="쉐보레트레일블레이저">쉐보레 트레일 블레이저</option>
-						<option value="쉐보레임팔라">쉐보레 임팔라</option>
+						<option value="2515">제네시스 G80 (G330)</option>
+						<option value="1568">쉐보레 임팔라</option>
 					</select>
-					<button type="submit" class="btn-choice btn-deep-gray">여론 평가 보기</button>
 				</div>
 			</form>
 			<p class="comment-info">
-				유튜브 기준 상위 10개의 해당 차종의 시승기 영상에 달린 댓글을 수집하였습니다.<br>
+				해당 차종의 시승기 영상 (유튜브) 상위 10개에 남겨진 댓글을 수집하였습니다.<br>
 				차량과 무관한 평가가 존재할 수 있습니다.<br>
 				<span>먼저 우측에서 차종을 선택해주세요.</span>
 			</p>
-			<div class="car-comment-list">
-				<ul>
-					{% for row in data %}
-						<li>
-							{% comment %} <strong class="info">[{{row.register}} / {{row.registed_date}}]</strong>  {% endcomment %}
-							<p class="comment">{{row.comment}}</p>
-						</li>
-					{% endfor %}
-				</ul>
+<style>
+.common-tab-content {}
+.common-tab-content .tab ul {display:flex;}
+.common-tab-content .tab ul li {width:50%; box-sizing:border-box; border:1px solid #ddd;}
+.common-tab-content .tab ul li a {display:block; width:100%; height:42px; line-height:42px; color:#444; font-size:17px; text-align:center;}
+.common-tab-content .tab ul li.active a {color:#fff; font-weight:600; background:#2944cc;}
+.common-tab-content .content {padding:20px 0;}
+.common-tab-content .content > article {display:none;}
+.common-tab-content .content .active {display:block;}
+.common-tab-content .content .video-list {padding:0 30px;}
+</style>			
+			<div class="common-tab-content">
+				<nav class="tab">
+					<ul>
+						<li class="active"><a href="javascript:;">시승기 영상 모음</a></li>
+						<li><a href="javascript:;">댓글 모음</a></li>
+					</ul>
+				</nav>
+				<div class="content">
+					<article class="videos active">
+						<div class="video-list">
+							시승기 영상 모음
+							<ul></ul>
+						</div>
+					</article>
+					<article class="comments">
+						<div class="car-comment-list">
+							리뷰
+							<ul></ul>
+						</div>
+					</article>
+				</div>
 			</div>
 		</div>
 	</section>
@@ -62,8 +71,97 @@
 <script>
 $(function(){
 	$('.choice-model select').on('change', function(){
-		$('.comment-info span').fadeOut('fast');
+		if($(this).val() == 'default'){
+			$('.video-list ul').remove();
+			$('.car-comment-list ul').remove();
+			$('.page-title span').text('');
+			$('.comment-info span').fadeIn('fast');
+		}else{
+			loadCommentList(0, 15)
+			var choiceCar = $('.choice-model option:selected').text();
+			$('.comment-info span').fadeOut('fast');
+			$('.page-title span').text(choiceCar);
+			loadCommentList(0, 20)
+		}
 	});
+
+	//스크롤 로드 (페이징)
+	$(window).on('scroll', function(e){
+		if(($(window).innerHeight() + $(window).scrollTop()) >= $('body').height() - 150) {
+			if(!connFlag){
+				var nowListLength = $('.car-comment-list li').length;
+				loadCommentList(nowListLength, 20);
+			}
+		}
+	});
+
+	function loadCommentList(start_idx, load_length){
+		connFlag = true;
+		$.ajax({
+			url: '{% url "car_comment_list_data" %}',
+			type: 'GET',
+			data: {
+				'start_idx': start_idx,
+				'load_length': 20,
+				'bono': $('.choice-model select').val()
+			},
+			dataType: 'json',
+			success: function(data){
+				$('.loading').hide();
+				var commentListItem = '';
+				var videoListItem = '';
+				json_data = JSON.parse(data.comment_list)
+				total_length = data.total_length
+				video_ids = data.video_ids
+				for(i = 0; i < json_data.length; i++){
+					list = json_data[i].fields;
+					console.log(list)
+					commentListItem += '<li>';
+					commentListItem += '<div class="mining-result">';
+					if(list.positive_count > 0 || list.negative_count > 0){
+						negaPer = Math.floor(100 * list.negative_count / (list.negative_count + list.positive_count))
+						posiPer = 100 - negaPer
+
+						if(list.va_count > 0 && list.morpheme_count > 0){
+							vaPer = (list.va_count / list.morpheme_count).toFixed(2);
+						}else{
+							vaPer = 0;
+						}
+						commentListItem += '<div class="positive" style="width:'+ posiPer +'%" title="긍정단어 노출 수 : '+list.positive_count+'개">긍정 '+ posiPer +' %</div>'
+						commentListItem += '<div class="negative" style="width:'+ negaPer +'%" title="부정단어 노출 수 : '+list.negative_count+'개">부정 '+ negaPer +' %</div>'	
+						commentListItem += '</div>';
+						commentListItem += '<div class="mining-view">'
+						commentListItem += '<p>감정지수 : '+vaPer+'% ('+list.va_count+'개/'+list.morpheme_count+'개)<br>긍/부정 단어 사용 빈도율 : <span class="posi">'+posiPer+'%</span>/<span class="nega">'+negaPer+'%</span><br>긍/부정 단어 사용 수 : <span class="posi">'+list.positive_count+'개</span>/<span class="nega">'+list.negative_count+'개</span></p>'
+						commentListItem += '</div>'
+						
+						allPositivePer += posiPer
+						allNegativePer += negaPer
+						allNewsCount += 1
+					}else{
+						commentListItem += '<p class="txt-ing">분석 중인 댓글입니다.</p>';
+						commentListItem += '</div>';
+						commentListItem += '<div class="mining-view"><p>분석 중인 댓글입니다.</p></div>'
+					}
+					commentListItem += '</div>';
+					commentListItem += '<p class="comment">'+list.comment_content+'</p>';
+					commentListItem += '</li>';
+				}
+				if($('.video-list ul').html() == ''){
+					for(i = 0; i < video_ids.length; i++){
+						videoListItem += '<li>';
+						videoListItem += '<iframe width="560" height="315" src="https://www.youtube.com/embed/'+ video_ids[i] +'" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
+						videoListItem += '</li>';
+					}	
+					$('.video-list ul').append(videoListItem);
+				}
+				$('.car-comment-list ul').append(commentListItem);
+				connFlag = false;
+			},
+			error : function(request, status, error){
+				console.log(error)
+			},
+		});
+	};
 })
 </script>
 </body>

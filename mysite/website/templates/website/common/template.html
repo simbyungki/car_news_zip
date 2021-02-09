@@ -50,7 +50,11 @@
 {% else %}
 <div id="wrap">
 {% endif %}
+	{% if page_group != 'news-list' %}
+	<header class="header no-search">
+	{% else %}
 	<header class="header">
+	{% endif %}
 		{% if page_group != 'news-detail-p' %}
 		<a href="javascript:;" class="btn-gnb" title="메뉴"></a>
 		{% endif %}
@@ -177,7 +181,7 @@
 		{% comment %} $('.loading').show(); {% endcomment %}
 		connFlag = true;
 		$.ajax({
-			url: '{% url "list_data" %}',
+			url: '{% url "news_list_data" %}',
 			type: 'GET',
 			data: {
 				'list_idx': idx,

@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.contrib import auth
 from django.db.models import Q
-from .models import TblTotalCarNewsList, TblMemberList, TblNewsKeywordList, TblNewsKeywordMap
+from .models import TblTotalCarNewsList, TblMemberList, TblNewsKeywordList, TblNewsKeywordMap, TblYoutubeCarCommentList
 from datetime import datetime
 from django.http import HttpResponse
 from django.core import serializers
@@ -77,7 +77,7 @@ def search_log_insert(infos) :
 		dbconn.commit()
 		dbconn.close()
 		print(f'[{today_date} {now_time}][{infos.get("searcher_ip")}] >> {infos.get("search_keyword")} >> Log commit 완료')
-		print(cursor.rowcount, "record Inserted.") 
+		# print(cursor.rowcount, "record Inserted.") 
 
 # 목록
 def news_list(request) :
@@ -198,7 +198,7 @@ def join(request) :
 
 # Ajax
 # 뉴스 목록 가져오기 ajax
-def list_data(request) :
+def news_list_data(request) :
 	news_list = TblTotalCarNewsList.objects.all()
 	today_date = datetime.today().strftime('%Y-%m-%d')
 	if request.method == 'GET' :
@@ -301,33 +301,31 @@ def view_count(request) :
 
 
 def car_comments(request) : 
+	infos = {}
+	infos['referer'] = request.headers.get('referer')
+	infos['page_name'] = '/car_comments'
+	infos['user_ip'] = get_ip(request)
+	connect_log_insert(infos)
 	context = {}
-	user_id = request.session.get('user')
-	if user_id :
-		memb_name = TblMemberList.objects.filter(memb_id=user_id).values()[0].get('memb_name')
-		context['user'] = memb_name
-	else : 
-		context['user'] = None
-	default_path = '../../car_news_zip/data/youtube_comments/'
+	context['page_group'] = 'car-comments-list'
+	
+	return render(request, 'website/car_comments.html', context)
+	
 
-	if request.method == 'POST' : 
-		excel_path = f'{default_path}{request.POST["car-model"]}_review_comments_youtube.xlsx'
-		df = pd.read_excel(excel_path, usecols='B:E', engine='openpyxl')
-		# 정렬 조건 (댓글 길이 기준 내림차순)
-		df = df.sort_values(by=['length'], axis=0, ascending=False)
-		comment_list = []
-		
-		for row in df.values :
-			temp_dict = {}
-			temp_dict['register'] = row[0]
-			temp_dict['comment'] = row[1]
-			temp_dict['registed_date'] = row[2]
-			comment_list.append(temp_dict)
 
-		context['data'] = comment_list
-		context['car_model'] = request.POST["car-model"]
-		
-		return render(request, 'website/car_comments.html', context)
-	else :
-		
-		return render(request, 'website/car_comments.html', context)
+def car_comment_list_data(request) : 
+	comment_list = TblYoutubeCarCommentList.objects.all()
+
+	if request.method == 'GET' :
+		start_idx = int(request.GET.get('start_idx'))
+		load_length = int(request.GET.get('load_length'))
+		bono = int(request.GET.get('bono'))
+
+		comments = comment_list.filter(bono = bono).order_by('-comment_content_length')
+		video_ids = comment_list.filter(bono = bono).values('comment_video_id').distinct()
+		video_id_list = []
+		for video_id in video_ids :
+			video_id_list.append(video_id.get('comment_video_id'))
+
+		set_comments = serializers.serialize('json', comment_list[start_idx:start_idx+load_length])
+		return JsonResponse({'comment_list': set_comments, 'total_length': len(comment_list), 'video_ids': video_id_list}, status=200)

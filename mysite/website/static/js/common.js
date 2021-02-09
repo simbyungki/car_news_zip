@@ -48,6 +48,13 @@ $(document).ready(function(){
 			$('#wrap').removeClass('darkmode');
 		}
 	});
+
+	// 탭 메뉴
+	$('.common-tab-content .tab ul li a').on('click', function(){
+		var thisIdx = $(this).parent('li').index();
+		$('.common-tab-content .tab ul li').removeClass('active').eq(thisIdx).addClass('active');
+		$('.common-tab-content article').removeClass('active').eq(thisIdx).addClass('active');
+	});
 });
 
 //Layer Content
