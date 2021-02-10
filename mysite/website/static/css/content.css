@@ -266,6 +266,9 @@
 .car-comment-list li:hover {background:#f5f5f5;}
 .car-comment-list li .info {display:block; margin-bottom:8px; font-size:18px;}
 .car-comment-list li .comment {line-height:24px; font-size:16px; word-break:break-all;}
+.car-comment-list li .comment .posi_keyword {color:#2944cc;}
+.car-comment-list li .comment .nega_keyword {color:#ce2c2c;}
+.car-comment-list li .comment .va_keyword {color:#187424;}
 .car-comment-list li .mining-result {position:absolute; top:-24px; left:-1px; width:100%; height:22px; border:1px solid #ddd; background:#f9f9f9;}
 .car-comment-list li .mining-result > div {position:absolute; bottom:0; height:22px; line-height:22px; color:#fff; font-size:14px; text-align:center; overflow:hidden; opacity:.9;} 
 .car-comment-list li .mining-result .positive {left:0; background:#2944cc;}

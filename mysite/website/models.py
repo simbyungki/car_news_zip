@@ -88,6 +88,7 @@ class TblTotalCarNewsList(models.Model):
 	va_count = models.IntegerField(db_column='VA_COUNT', blank=True, null=True)  # Field name made lowercase.
 	morpheme_count = models.IntegerField(db_column='MORPHEME_COUNT', blank=True, null=True)  # Field name made lowercase.
 	proc_status = models.CharField(db_column='PROC_STATUS', max_length=10, blank=True, null=True)  # Field name made lowercase.
+	writer_name = models.CharField(db_column='WRITER_NAME', max_length=200, blank=True, null=True)  # Field name made lowercase.
 
 	class Meta:
 		managed = False
