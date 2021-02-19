@@ -219,7 +219,7 @@ if __name__ == '__main__' :
 	dbconn = mysql.connector.connect(host=db_infos.get('host'), user=db_infos.get('user'), password=db_infos.get('password'), database=db_infos.get('database'), port=db_infos.get('port'))
 	cursor = dbconn.cursor()
 	# get_comments(dbconn, cursor, 차종, BMNAME, BOINAME, BONAME, BONO)
-	get_comments(dbconn, cursor, '쉐보레 임팔라', '쉐보레(대우)', '임팔라', '임팔라', 1568)
+	get_comments(dbconn, cursor, '제네시스 eq900', '제네시스', 'EQ900', 'EQ900', 1594)
 
 	dbconn.commit()
 	dbconn.close()

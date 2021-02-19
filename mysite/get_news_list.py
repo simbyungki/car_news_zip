@@ -1345,6 +1345,135 @@ class GetMotorGraph() :
 		finally : 
 			pass
 
+# 탑라이더
+class GetTopRider() :
+	# 신차
+	def new() :
+		url = 'http://www.top-rider.com/news/articleList.html?sc_sub_section_code=S2N3&view_type=sm'
+		soup = get_soup(url)
+
+		news_list = soup.find('section', attrs={'id': 'section-list'}).find('ul', attrs={'class': 'type2'}).findAll('li')
+		
+		data_list = []
+		return_data_dic = {}
+
+		for news in news_list :
+			link = news.find('a', attrs={'class': 'thumb'})['href']
+			img_url = news.find('a', attrs={'class': 'thumb'}).find('img')['src']
+			subject = news.find('h4', attrs={'class': 'titles'}).find('a').get_text().strip()
+			summary = news.find('p', attrs={'class': 'lead'}).get_text().strip()
+			reporter = news.find('span', attrs={'class': 'byline'}).findAll('em')[1].get_text().strip()
+			date = news.find('span', attrs={'class': 'byline'}).findAll('em')[2].get_text().strip()[0:10]
+			data_group = {}
+			data_group['link'] = 'http://www.top-rider.com' + link
+			data_group['img_url'] = img_url
+			data_group['subject'] = subject
+			data_group['summary'] = summary
+			data_group['reporter'] = reporter
+			data_group['date'] = date
+
+			data_list.append(data_group)
+
+		return_data_dic['toprider_new'] = data_list
+		new_car_list.append(return_data_dic)
+
+		print(new_car_list)
+
+	# 시승기
+	def review() :
+		url = 'http://www.top-rider.com/news/articleList.html?sc_section_code=S1N8&view_type=sm'
+		soup = get_soup(url)
+
+		news_list = soup.find('section', attrs={'id': 'section-list'}).find('ul', attrs={'class': 'type2'}).findAll('li')
+
+		data_list = []
+		return_data_dic = {}
+
+		for news in news_list :
+			link = news.find('a', attrs={'class': 'thumb'})['href']
+			img_url = news.find('a', attrs={'class': 'thumb'}).find('img')['src']
+			subject = news.find('h4', attrs={'class': 'titles'}).find('a').get_text().strip()
+			summary = news.find('p', attrs={'class': 'lead'}).get_text().strip()
+			reporter = news.find('span', attrs={'class': 'byline'}).findAll('em')[1].get_text().strip()
+			date = news.find('span', attrs={'class': 'byline'}).findAll('em')[2].get_text().strip()[0:10]
+			data_group = {}
+			data_group['link'] = 'http://www.top-rider.com' + link
+			data_group['img_url'] = img_url
+			data_group['subject'] = subject
+			data_group['summary'] = summary
+			data_group['reporter'] = reporter
+			data_group['date'] = date
+
+			data_list.append(data_group)
+
+		return_data_dic['toprider_review_k'] = data_list
+		review_list.append(return_data_dic)
+
+	# 자동차 업계
+	def industry() :
+		url = 'http://www.top-rider.com/news/articleList.html?sc_sub_section_code=S2N44&view_type=sm'
+		soup = get_soup(url)
+
+		news_list = soup.find('section', attrs={'id': 'section-list'}).find('ul', attrs={'class': 'type2'}).findAll('li')
+		
+		data_list = []
+		return_data_dic = {}
+
+		for news in news_list :
+			link = news.find('a', attrs={'class': 'thumb'})['href']
+			img_url = news.find('a', attrs={'class': 'thumb'}).find('img')['src']
+			subject = news.find('h4', attrs={'class': 'titles'}).find('a').get_text().strip()
+			summary = news.find('p', attrs={'class': 'lead'}).get_text().strip()
+			reporter = news.find('span', attrs={'class': 'byline'}).findAll('em')[1].get_text().strip()
+			date = news.find('span', attrs={'class': 'byline'}).findAll('em')[2].get_text().strip()[0:10]
+			data_group = {}
+			data_group['link'] = 'http://www.top-rider.com' + link
+			data_group['img_url'] = img_url
+			data_group['subject'] = subject
+			data_group['summary'] = summary
+			data_group['reporter'] = reporter
+			data_group['date'] = date
+
+			data_list.append(data_group)
+			
+		return_data_dic['toprider_industry'] = data_list
+		industry_list.append(return_data_dic)
+
+		print(industry_list)
+
+	# 본문 수집
+	@staticmethod
+	def detail(dbconn, cursor) :
+		newsList = TblTotalCarNewsList.objects.all().filter(media_code=1000).filter(news_content='')
+		print('-'*30)
+		print('탑라이더')
+		try :
+			print('ㅡㅡㅡ'*30)
+			for idx in range(len(newsList)) : 
+				full_url = f'http://www.top-rider.com/news/articleView.html?idxno={newsList.values()[idx].get("news_code")}'
+				print(newsList.values()[idx].get('news_code'))
+				try : 
+					soup = get_soup(full_url)
+					d_title = soup.find('h3', attrs={'class': 'heading'}).get_text().strip()
+					d_content = soup.find('article', attrs={'id': 'article-view-content-div'}).get_text().strip()
+					d_title = re.sub('[-=.#/?:$}\"\']', '', d_title)
+					d_content = re.sub('[-=.#/?:$}\"\']', '', d_content)
+
+					cursor.execute(f"""
+						UPDATE TBL_TOTAL_CAR_NEWS_LIST 
+						SET NEWS_TITLE = "{d_title}", NEWS_CONTENT = "{d_content}"
+						WHERE NEWS_CODE = "{newsList.values()[idx].get('news_code')}" AND NEWS_CONTENT = ""
+					""")
+					time.sleep(3)
+					print(f'{newsList.values()[idx].get("news_code")} :: 기사 본문 스크랩 완료! [{idx + 1} / {len(newsList)}]')
+				except Exception as e :
+					print(f'*+++++ + error! >> {e}')	
+				print('ㅡㅡㅡ'*30)
+		except Exception as e :
+			print(f'***** + error! >> {e}')	
+		finally : 
+			pass
+
 
 # 중고차 뉴스 모음
 def get_used_car() :
@@ -1362,6 +1491,7 @@ def get_new_car() :
 	GetAutoMorning.new()
 	# GetAutoDiary.new()
 	GetMotorGraph.new()
+	GetTopRider.new()
 
 	return new_car_list
 
@@ -1377,6 +1507,7 @@ def get_review() :
 	GetTheDrive.review()
 	GetMotorGraph.review_k()
 	GetMotorGraph.review_g()
+	GetTopRider.review()
 
 	return review_list
 
@@ -1390,6 +1521,7 @@ def get_industry() :
 	GetCarguy.industry()
 	GetTheDrive.industry()
 	GetMotorGraph.industry()
+	GetTopRider.industry()
 
 	return industry_list
 
@@ -1490,6 +1622,10 @@ def insert_new_db(dbconn, cursor) :
 				# 모터그래프
 				media_code = 900
 				media_name = '모터그래프'
+			elif idx == 5 :
+				# 탑라이더
+				media_code = 1000
+				media_name = '탑라이더'
 
 			for news_dict in news_list.values() :
 				for news in news_dict : 
@@ -1517,6 +1653,10 @@ def insert_new_db(dbconn, cursor) :
 						# 모터그래프
 						news_code = news.get('link')[-5:]
 						url = f'https://www.motorgraph.com/news/articleView.html?idxno={news_code}'
+					elif idx == 5 :
+						# 탑라이더
+						news_code = news.get('link')[-5:]
+						url = f'http://www.top-rider.com/news/articleView.html?idxno={news_code}'
 
 					subject = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', news.get('subject')))
 					summary = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', news.get('summary')))
@@ -1592,6 +1732,10 @@ def insert_review_db(dbconn, cursor) :
 				# 모터그래프
 				media_code = 900
 				media_name = '모터그래프'
+			elif idx == 9 :
+				# 탑라이더
+				media_code = 1000
+				media_name = '탑라이더'
 
 			for news_dict in news_list.values() :
 				for news in news_dict : 
@@ -1630,7 +1774,10 @@ def insert_review_db(dbconn, cursor) :
 					elif idx == 7 or idx == 8 :
 						news_code = news.get('link')[-5:]
 						url = f'https://www.motorgraph.com/news/articleView.html?idxno={news_code}'
-					
+					elif idx == 9 :
+						news_code = news.get('link')[-5:]
+						url = f'http://www.top-rider.com/news/articleView.html?idxno={news_code}'
+
 					subject = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', news.get('subject')))
 					summary = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', news.get('summary')))
 					reporter = news.get('reporter')
@@ -1701,6 +1848,10 @@ def insert_industry_db(dbconn, cursor) :
 				# 모터그래프
 				media_code = 900
 				media_name = '모터그래프'
+			elif idx == 7 :
+				# 탑라이더
+				media_code = 1000
+				media_name = '탑라이더'
 
 			for news_dict in news_list.values() :
 				for news in news_dict : 
@@ -1736,6 +1887,10 @@ def insert_industry_db(dbconn, cursor) :
 						# 모터그래프
 						news_code = news.get('link')[-5:]
 						url = f'https://www.motorgraph.com/news/articleView.html?idxno={news_code}'
+					elif idx == 7 :
+						# 탑라이더
+						news_code = news.get('link')[-5:]
+						url = f'http://www.top-rider.com/news/articleView.html?idxno={news_code}'
 
 					subject = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', news.get('subject')))
 					summary = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', news.get('summary')))
@@ -1796,4 +1951,4 @@ def reload_list_data() :
 	
 if __name__ == '__main__' : 
 	# print(get_new_car())
-	reload_list_data()
+	# reload_list_data()

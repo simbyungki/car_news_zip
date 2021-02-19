@@ -6,7 +6,7 @@
 ### 정보
 - 접속 URL : <a href="http://carnewszip.com">http://carnewszip.com</a>
 - 테이블 명세서 : <a href="https://docs.google.com/spreadsheets/d/1TOZSDXpLZaXQhyP-K11WmGR_dQ1tswQc181uI90sgF4/edit#gid=0">https://docs.google.com/spreadsheets/d/1TOZSDXpLZaXQhyP-K11WmGR_dQ1tswQc181uI90sgF4/edit#gid=0</a>
-- 9개 자동차 언론사 : 모터그래프, 오토헤럴드, 데일리카, 오토뷰, IT조선, 오토모닝, 오토다이어리, 카가이, 더드라이브
+- 10개 자동차 언론사 : 모터그래프, 오토헤럴드, 데일리카, 오토뷰, IT조선, 오토모닝, 오토다이어리, 카가이, 더드라이브, 탑라이더
 - 수집 분야 : 중고차/신차/자동차업계 뉴스 및 시승기
 
 ---
@@ -40,6 +40,9 @@
 ---
 
 ### History
+#### 2021.02.19 (금)
+- 뉴스 언론사 추가 (탑라이더)
+
 #### 2021.02.05 (금)
 > 3일간 배치 돌아가는 것을 확인했는데 아무 문제 없이 너무 잘 돌아주고 있다. (진작 바꿀껄..) Python Schedule에서 왜 계속 오류가 났던건진 
 아직도 모르겠지만 변경 후 잘되니 너무 후련하다. 배치 확인 및 조치하는데 쏟은 시간이 얼마인지..ㅠㅠ
