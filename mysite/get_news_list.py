@@ -1951,4 +1951,4 @@ def reload_list_data() :
 	
 if __name__ == '__main__' : 
 	# print(get_new_car())
-	# reload_list_data()
+	reload_list_data()
