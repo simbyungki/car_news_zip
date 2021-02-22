@@ -171,7 +171,7 @@ $(function(){
 		$('.gnb-box .menu > ul > li').eq(0).addClass('active');
 		//최초 목록
 		urlParams = getUrlParams();
-		if(urlParams.type == 'category' || urlParams.type == ''){
+		if(urlParams.type == 'category' || urlParams.type == undefined){
 			loadNewsList(0, 'category', 0, 15, 'default', 'change');
 			$('#wrap').addClass('category');
 			$('.gnb-box .menu > ul > li > ul > li').eq(0).addClass('active');
