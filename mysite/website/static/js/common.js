@@ -56,7 +56,12 @@ $(document).ready(function(){
 		$('.common-tab-content article').removeClass('active').eq(thisIdx).addClass('active');
 	});
 });
-
+//get parameters
+function getUrlParams(){
+	var params = {};
+	window.location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(str, key, value) { params[key] = value; });
+	return params;
+}
 //Layer Content
 function layerContShow(thisClass){
     $('.'+thisClass).show();

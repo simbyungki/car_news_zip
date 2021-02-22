@@ -60,7 +60,7 @@
 		{% endif %}
 		<h1 class="service-name">
 		{% if page_group == 'news-list' %}
-			<a href="/"><span>CHA</span> <span>N</span>ews <span>A</span>nalysi<span>S</span></a><sup>Beta!</sup><br>
+			<a href="/news_list?type=category"><span>CHA</span> <span>N</span>ews <span>A</span>nalysi<span>S</span></a><sup>Beta!</sup><br>
 		</h1>
 		<div class="search-box">
 			{% csrf_token %}
@@ -100,15 +100,15 @@
 				<nav class="menu">
 					<ul>
 						<li class="active">
-							<a href="/news_list">자동차 관련 뉴스 보기</a>
+							<a href="/news_list?type=category">자동차 관련 뉴스 보기</a>
 							<ul>
-								<li class="active">&middot; <a href="javascript:;" onclick="loadNewsList(0, 'category', 0, 15, 'default', 'change');">뉴스 카테고리별 보기</a></li>
-								<li>&middot; <a href="javascript:;" onclick="loadNewsList(0, 'media', 0, 15, 'default', 'change');">언론사별 보기</a></li>
+								<li class="active">&middot; <a href="/news_list?type=category">뉴스 카테고리별 보기</a></li>
+								<li>&middot; <a href="/news_list?type=media">언론사별 보기</a></li>
 							</ul>
 						</li>
-						{% comment %} <li>
-							<a href="/car_comments/">차량 모델별 여론 평가</a>
-						</li> {% endcomment %}
+						<li>
+							<a href="/car_comments/">차량 모델별 시승기 / 여론 모음</a>
+						</li>
 						{% comment %} <li>
 							<a href="javascript:;">마이페이지</a>
 							<ul>
@@ -127,18 +127,59 @@
 			</div>
 		</section>
 	</header>
+	<!-- 공지사항 -->
+	<div class="notice-wrap">
+		<div class="dim"></div>
+		<div class="notice-box">
+			<a href="javascript:;" class="btn-close">X</a>
+			<h2 class="notice-title">2021.02.22 업데이트 알림</h2>
+			<div class="notice-cont">
+				<ul>
+					<li>
+						<strong class="title">신규 언론사 추가</strong>
+						<p>
+							뉴스 수집 업체에 "탑라이더" 언론사를 추가하였었습니다.
+						</p>
+					</li>
+					<li>
+						<strong class="title">차량 모델별 시승기 / 여론 모음 메뉴 추가</strong>
+						<p>
+							차량 모델별 시승기 / 여론 모음 메뉴가 추가되었습니다.<br>
+							모델별로 유튜브 시승영상 상위(연관성) 10개를 한곳에서 볼 수 있고, 
+							해당 영상들의 댓글을 모두 수집하여 노출시켜 해당 모델의 여론이 
+							어떤지 파악 할 수 있기를 기대합니다. <br>
+							(유튜브 영상의 댓글이기때문에 차량과 무관한 내용의 댓글이 존재합니다.)							
+						</p>
+					</li>
+				</ul>
+			</div>
+			<a href="javascript:;" class="btn-check">확인 (오늘하루 열지 않기)</a>
+		</div>
+	</div>
 
-	<!-- Javascript -->
-	<script type="text/javascript" src="{% static 'js/jquery-1.12.4.min.js' %}"></script>
-	<script type="text/javascript" src="{% static 'js/jquery-ui.min.js' %}"></script>
-	<script type="text/javascript" src="{% static 'js/swiper.min.js' %}"></script>
-	<script type="text/javascript" src="{% static 'js/common.js' %}?ver={{ today_date }}"></script>
-	<script>
+<!-- Javascript -->
+<script type="text/javascript" src="{% static 'js/jquery-1.12.4.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery-ui.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/swiper.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.cookie-1.4.1.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/common.js' %}?ver={{ today_date }}"></script>
+<script>
+$(function(){
 	$('.gnb-box .menu ul > li').removeClass('active');
 	var thisPath = window.location.pathname;		
-	{% comment %} console.log(thisPath) {% endcomment %}
 	if(thisPath == '/' || thisPath == '/news_list' || thisPath == '/news_list/'){
 		$('.gnb-box .menu > ul > li').eq(0).addClass('active');
+		//최초 목록
+		urlParams = getUrlParams();
+		if(urlParams.type == 'category' || urlParams.type == ''){
+			loadNewsList(0, 'category', 0, 15, 'default', 'change');
+			$('#wrap').addClass('category');
+			$('.gnb-box .menu > ul > li > ul > li').eq(0).addClass('active');
+		}else if(urlParams.type == 'media'){
+			loadNewsList(0, 'media', 0, 15, 'default', 'change');
+			$('#wrap').addClass('media');
+			$('.gnb-box .menu > ul > li > ul > li').eq(1).addClass('active');
+		}
 	}else if(thisPath == '/car_comments/' || thisPath == '/car_comments'){
 		$('.gnb-box .menu > ul > li').eq(1).addClass('active');
 	}
@@ -150,207 +191,223 @@
 			$(this).blur();
 		}
 	});
-	function keywordSearch(keyword){
-		var nowListLength = $('.news-group li').length;
-		if(keyword.length > 0){
-			loadNewsList(99, 'all', 0, 15, 'search', null, keyword);
-			$('#wrap').prop('class', '').addClass('search-result');
-			$('.search-box').removeClass('show');
-			$('#search_keyword').val(keyword);
-		}else{
-			alert('검색어를 입력해주세요.');
-			$('#search_keyword').focus();
-		}
+
+	//오늘 하루 보지 않기
+	if($.cookie('noticeCookie') == undefined){
+		$('.notice-wrap').show();
 	}
-	function showNewsDetail(newsCode){
-		var keyword = $('#search_keyword').val();
-		if(keyword.length > 0){
-			url = '/news_detail?news_code='+ newsCode + '&keyword=' + keyword;
-		}else{
-			url = '/news_detail?news_code='+ newsCode;
-		}
-		window.open(url, '카라스 뉴스 상세보기', 'width=1040, height=880, toolbar=no, menubar=no, scrollbars=no, resizable=yes')
+	$('.notice-wrap .btn-close').on('click', function(){
+		$('.notice-wrap').hide();
+	});
+	$('.notice-wrap .btn-check').on('click', function(){
+		$.cookie('noticeCookie', 'done', { expires: 1, path: '/' });
+		$('.notice-wrap').hide();
+	});
+	
+});
+
+function keywordSearch(keyword){
+	var nowListLength = $('.news-group li').length;
+	if(keyword.length > 0){
+		loadNewsList(99, 'all', 0, 15, 'search', null, keyword);
+		$('#wrap').prop('class', '').addClass('search-result');
+		$('.search-box').removeClass('show');
+		$('#search_keyword').val(keyword);
+	}else{
+		alert('검색어를 입력해주세요.');
+		$('#search_keyword').focus();
 	}
+}
+function showNewsDetail(newsCode){
+	var keyword = $('#search_keyword').val();
+	if(keyword.length > 0){
+		url = '/news_detail?news_code='+ newsCode + '&keyword=' + keyword;
+	}else{
+		url = '/news_detail?news_code='+ newsCode;
+	}
+	window.open(url, '카라스 뉴스 상세보기', 'width=1040, height=880, toolbar=no, menubar=no, scrollbars=no, resizable=yes')
+}
 
-	//전체 긍/부정 지수
-	var allPositivePer = 0
-	var allNegativePer = 0
-	var allNewsCount = 0
-	function loadNewsList(idx, list_type, start_idx, load_length, load_type, fnc_type, search_keyword){
-		{% comment %} console.log('list_type >>', list_type) {% endcomment %}
-		{% comment %} $('.loading').show(); {% endcomment %}
-		connFlag = true;
-		$.ajax({
-			url: '{% url "news_list_data" %}',
-			type: 'GET',
-			data: {
-				'list_idx': idx,
-				'list_type': list_type,
-				'start_idx': start_idx,
-				'load_length': 15,
-				'search_keyword': search_keyword
-			},
-			dataType: 'json',
-			success: function(data){
-				$('.loading').hide();
-				var newsItem = "";		
-				json_data = JSON.parse(data.news)
-				total_length = data.total_length
-				today_news = data.today_news
-				category_idx = 0
-				if(list_type == 'category'){
-					for(cnt in today_news){
-						if(today_news[cnt] > 0){
-							$('.category-list .sub-menu.category li').eq(category_idx).addClass('new')
-						}
-						category_idx++
+//전체 긍/부정 지수
+var allPositivePer = 0
+var allNegativePer = 0
+var allNewsCount = 0
+function loadNewsList(idx, list_type, start_idx, load_length, load_type, fnc_type, search_keyword){
+	{% comment %} console.log('list_type >>', list_type) {% endcomment %}
+	{% comment %} $('.loading').show(); {% endcomment %}
+	connFlag = true;
+	$.ajax({
+		url: '{% url "news_list_data" %}',
+		type: 'GET',
+		data: {
+			'list_idx': idx,
+			'list_type': list_type,
+			'start_idx': start_idx,
+			'load_length': 15,
+			'search_keyword': search_keyword
+		},
+		dataType: 'json',
+		success: function(data){
+			$('.loading').hide();
+			var newsItem = "";		
+			json_data = JSON.parse(data.news)
+			total_length = data.total_length
+			today_news = data.today_news
+			category_idx = 0
+			if(list_type == 'category'){
+				for(cnt in today_news){
+					if(today_news[cnt] > 0){
+						$('.category-list .sub-menu.category li').eq(category_idx).addClass('new')
 					}
-				}else if(list_type == 'media'){
-					for(cnt in today_news){
-						if(today_news[cnt] > 0){
-							$('.category-list .sub-menu.media li').eq(category_idx).addClass('new')
-						}
-						category_idx++
-					}
+					category_idx++
 				}
-				{% comment %} console.log(total_length) {% endcomment %}
-				{% comment %} console.log(json_data) {% endcomment %}
-				for(i = 0; i < json_data.length; i++){
-					list = json_data[i].fields;
-					var media_name = '';
-					if(list.media_code == '100'){
-						media_name = 'ah'
-					}else if(list.media_code == '200'){
-						media_name = 'daily'
-					}else if(list.media_code == '300'){
-						media_name = 'auto-view'
-					}else if(list.media_code == '400'){
-						media_name = 'chosun'
-					}else if(list.media_code == '500'){
-						media_name = 'auto-morning'
-					}else if(list.media_code == '600'){
-						media_name = 'auto-diary'
-					}else if(list.media_code == '700'){
-						media_name = 'carguy'
-					}else if(list.media_code == '800'){
-						media_name = 'drive'
-					}else if(list.media_code == '900'){
-						media_name = 'motor-graph'
-					}else if(list.media_code == '1000'){
-						media_name = 'top-rider'
+			}else if(list_type == 'media'){
+				for(cnt in today_news){
+					if(today_news[cnt] > 0){
+						$('.category-list .sub-menu.media li').eq(category_idx).addClass('new')
 					}
-					newsItem += '<li data-news-code="' + list.news_code + '">';
-					newsItem += '<a href="javascript:;" title="' + list.news_title + '" onclick="showNewsDetail(\''+ list.news_code +'\')">';
-					{% comment %} newsItem += '<a href="' + list.news_url + '" target="_blank" title="' + list.news_title + '" >'; {% endcomment %}
-					if(list.media_code == '200' || /*list.media_code == '500' ||*/ list.news_img_url == 'None' || list.news_img_url == ''){
-						newsItem += '<div class="picture">';
-						newsItem += '<p><span class="ico">😰</span><br>해당 언론사에서<br>이미지를 불러올 수 없습니다.</p>';
-						newsItem += '</div>';
-					}else{
-						newsItem += '<div class="picture" style="background:url(\'' + list.news_img_url + '\') no-repeat center; background-size:cover;"></div>';
-					}
-					newsItem += '<div class="info-box">';
-					newsItem += '<div class="tags">';
-					if(list.write_date == '{{ today_date|escapejs }}'){
-						newsItem += '<span class="today">TODAY</span>';
-					}
-					newsItem += '<span class="'+ media_name +'">' + list.media_name + '</span>';
-					newsItem += '</div>';
-					newsItem += '<p class="subject">' + list.news_title + '</p>';
-					if(list.news_summary.length == 0){
-						newsItem += '<p class="summary">' + list.news_content + '</p>';
-					}else {
-
-						newsItem += '<p class="summary">' + list.news_summary + '</p>';
-					}
-					newsItem += '</div>';
-					newsItem += '<div class="infos">';
-					newsItem += '<span class="date">' + list.write_date + '</span>';
-					newsItem += '<span class="view-cnt" title="이 기사 조회수">👁 <strong>' + list.view_count + '</strong></span>'
-					{% comment %} newsItem += '<button type="button" class="btn-like" title="이 기사 찜하기">👍 <strong>0</strong></button>'; {% endcomment %}
-					newsItem += '</div>'
-					newsItem += '<div class="mining-result">';
-					if(list.positive_count > 0 || list.negative_count > 0){
-						negaPer = Math.floor(100 * list.negative_count / (list.negative_count + list.positive_count))
-						posiPer = 100 - negaPer
-
-						if(list.va_count > 0 && list.morpheme_count > 0){
-							vaPer = (list.va_count / list.morpheme_count).toFixed(2);
-						}else{
-							vaPer = 0;
-						}
-						newsItem += '<div class="positive" style="width:'+ posiPer +'%" title="긍정단어 노출 수 : '+list.positive_count+'개">긍정 '+ posiPer +' %</div>'
-						newsItem += '<div class="negative" style="width:'+ negaPer +'%" title="부정단어 노출 수 : '+list.negative_count+'개">부정 '+ negaPer +' %</div>'	
-						newsItem += '</div>';
-						newsItem += '<div class="mining-view">'
-						newsItem += '<p>감정지수 : '+vaPer+'% ('+list.va_count+'개/'+list.morpheme_count+'개)<br>긍/부정 단어 사용 빈도율 : <span class="posi">'+posiPer+'%</span>/<span class="nega">'+negaPer+'%</span><br>긍/부정 단어 사용 수 : <span class="posi">'+list.positive_count+'개</span>/<span class="nega">'+list.negative_count+'개</span></p>'
-						newsItem += '</div>'
-						
-						allPositivePer += posiPer
-						allNegativePer += negaPer
-						allNewsCount += 1
-					}else{
-						newsItem += '<p class="txt-ing">분석 중인 뉴스기사입니다.</p>';
-						newsItem += '</div>';
-						newsItem += '<div class="mining-view"><p>분석 중인 뉴스기사입니다.</p></div>'
-						{% comment %} <div class="mining-view"><p>감정지수 : '+vaPer+'% ('+list.va_count+'개/'+list.morpheme_count+'개)<br>긍/부정 단어 사용 빈도율 : <span class="posi">'+posiPer+'%</span>/<span class="nega">'+negaPer+'%</span></p></div> {% endcomment %}
-					}
-					newsItem += '</a>';
-					newsItem += '</li>';
+					category_idx++
 				}
-
-				if(load_type == 'more'){
-					$('.news-group').append(newsItem);
-					var nowScrollTop = $('html, body').scrollTop();
-					$('html, body').animate({scrollTop: nowScrollTop + 100}, 150);
+			}
+			{% comment %} console.log(total_length) {% endcomment %}
+			{% comment %} console.log(json_data) {% endcomment %}
+			for(i = 0; i < json_data.length; i++){
+				list = json_data[i].fields;
+				var media_name = '';
+				if(list.media_code == '100'){
+					media_name = 'ah'
+				}else if(list.media_code == '200'){
+					media_name = 'daily'
+				}else if(list.media_code == '300'){
+					media_name = 'auto-view'
+				}else if(list.media_code == '400'){
+					media_name = 'chosun'
+				}else if(list.media_code == '500'){
+					media_name = 'auto-morning'
+				}else if(list.media_code == '600'){
+					media_name = 'auto-diary'
+				}else if(list.media_code == '700'){
+					media_name = 'carguy'
+				}else if(list.media_code == '800'){
+					media_name = 'drive'
+				}else if(list.media_code == '900'){
+					media_name = 'motor-graph'
+				}else if(list.media_code == '1000'){
+					media_name = 'top-rider'
+				}
+				newsItem += '<li data-news-code="' + list.news_code + '">';
+				newsItem += '<a href="javascript:;" title="' + list.news_title + '" onclick="showNewsDetail(\''+ list.news_code +'\')">';
+				{% comment %} newsItem += '<a href="' + list.news_url + '" target="_blank" title="' + list.news_title + '" >'; {% endcomment %}
+				if(list.media_code == '200' || /*list.media_code == '500' ||*/ list.news_img_url == 'None' || list.news_img_url == ''){
+					newsItem += '<div class="picture">';
+					newsItem += '<p><span class="ico">😰</span><br>해당 언론사에서<br>이미지를 불러올 수 없습니다.</p>';
+					newsItem += '</div>';
 				}else{
-					$('.news-group').html(newsItem);
-					$('document, html').scrollTop(0);
+					newsItem += '<div class="picture" style="background:url(\'' + list.news_img_url + '\') no-repeat center; background-size:cover;"></div>';
 				}
-
-				//전체 목록에 대한 긍/부정 지수
-				allNegativePer = Math.floor(100 * allNegativePer / (allNegativePer + allPositivePer))
-				allPositivePer = 100 - allNegativePer
-				$('.all-list-summary .positive').css('width', allPositivePer+'%').html('현재 목록의 긍정 '+ allPositivePer +'%').attr('title', '현재 목록의 긍정 '+ allPositivePer +'%');
-				$('.all-list-summary .negative').css('width', allNegativePer+'%').html('현재 목록의 부정 '+ allNegativePer +'%').attr('title', '현재 목록의 부정 '+ allNegativePer +'%');
-
-				if(load_type == 'search'){
-					var keyword = $('#search_keyword').val();
-					$('.result-info p span').text(keyword);
-					$('.result-info p strong').text(total_length);
-					$('.category-list .sub-menu').removeClass('show');
-					$('.category-list .result-info').addClass('show');
+				newsItem += '<div class="info-box">';
+				newsItem += '<div class="tags">';
+				if(list.write_date == '{{ today_date|escapejs }}'){
+					newsItem += '<span class="today">TODAY</span>';
 				}
+				newsItem += '<span class="'+ media_name +'">' + list.media_name + '</span>';
+				newsItem += '</div>';
+				newsItem += '<p class="subject">' + list.news_title + '</p>';
+				if(list.news_summary.length == 0){
+					newsItem += '<p class="summary">' + list.news_content + '</p>';
+				}else {
 
-				//sub menu
-				if(fnc_type == 'change'){
-					$('.category-list ul').removeClass('show');
-					$('.category-list ul li').removeClass('active');
-					$('.category-list .result-info').removeClass('show');
+					newsItem += '<p class="summary">' + list.news_summary + '</p>';
+				}
+				newsItem += '</div>';
+				newsItem += '<div class="infos">';
+				newsItem += '<span class="date">' + list.write_date + '</span>';
+				newsItem += '<span class="view-cnt" title="이 기사 조회수">👁 <strong>' + list.view_count + '</strong></span>'
+				{% comment %} newsItem += '<button type="button" class="btn-like" title="이 기사 찜하기">👍 <strong>0</strong></button>'; {% endcomment %}
+				newsItem += '</div>'
+				newsItem += '<div class="mining-result">';
+				if(list.positive_count > 0 || list.negative_count > 0){
+					negaPer = Math.floor(100 * list.negative_count / (list.negative_count + list.positive_count))
+					posiPer = 100 - negaPer
 
-					if(list_type == 'category'){
-						$('#wrap').prop('class', '').addClass('category');
-						$('.category-list ul.category').addClass('show');
-					}else if(list_type == 'media'){
-						$('#wrap').prop('class', '').addClass('media');
-						$('.category-list ul.media').addClass('show');
+					if(list.va_count > 0 && list.morpheme_count > 0){
+						vaPer = (list.va_count / list.morpheme_count).toFixed(2);
+					}else{
+						vaPer = 0;
 					}
-					$('.category-list ul.sub-menu.show li').eq(0).addClass('active');
+					newsItem += '<div class="positive" style="width:'+ posiPer +'%" title="긍정단어 노출 수 : '+list.positive_count+'개">긍정 '+ posiPer +' %</div>'
+					newsItem += '<div class="negative" style="width:'+ negaPer +'%" title="부정단어 노출 수 : '+list.negative_count+'개">부정 '+ negaPer +' %</div>'	
+					newsItem += '</div>';
+					newsItem += '<div class="mining-view">'
+					newsItem += '<p>감정지수 : '+vaPer+'% ('+list.va_count+'개/'+list.morpheme_count+'개)<br>긍/부정 단어 사용 빈도율 : <span class="posi">'+posiPer+'%</span>/<span class="nega">'+negaPer+'%</span><br>긍/부정 단어 사용 수 : <span class="posi">'+list.positive_count+'개</span>/<span class="nega">'+list.negative_count+'개</span></p>'
+					newsItem += '</div>'
+					
+					allPositivePer += posiPer
+					allNegativePer += negaPer
+					allNewsCount += 1
+				}else{
+					newsItem += '<p class="txt-ing">분석 중인 뉴스기사입니다.</p>';
+					newsItem += '</div>';
+					newsItem += '<div class="mining-view"><p>분석 중인 뉴스기사입니다.</p></div>'
+					{% comment %} <div class="mining-view"><p>감정지수 : '+vaPer+'% ('+list.va_count+'개/'+list.morpheme_count+'개)<br>긍/부정 단어 사용 빈도율 : <span class="posi">'+posiPer+'%</span>/<span class="nega">'+negaPer+'%</span></p></div> {% endcomment %}
 				}
+				newsItem += '</a>';
+				newsItem += '</li>';
+			}
 
-				//close gnb box
-				$('.header .btn-gnb').removeClass('active');
-				$('.gnb-box, .header .fncs').removeClass('show');
-				connFlag = false;
-			},
-			error : function(request, status, error){
-				console.log(error)
-			},
-		});
-	}
-	</script>
+			if(load_type == 'more'){
+				$('.news-group').append(newsItem);
+				var nowScrollTop = $('html, body').scrollTop();
+				$('html, body').animate({scrollTop: nowScrollTop + 100}, 150);
+			}else{
+				$('.news-group').html(newsItem);
+				$('document, html').scrollTop(0);
+			}
+
+			//전체 목록에 대한 긍/부정 지수
+			allNegativePer = Math.floor(100 * allNegativePer / (allNegativePer + allPositivePer))
+			allPositivePer = 100 - allNegativePer
+			$('.all-list-summary .positive').css('width', allPositivePer+'%').html('현재 목록의 긍정 '+ allPositivePer +'%').attr('title', '현재 목록의 긍정 '+ allPositivePer +'%');
+			$('.all-list-summary .negative').css('width', allNegativePer+'%').html('현재 목록의 부정 '+ allNegativePer +'%').attr('title', '현재 목록의 부정 '+ allNegativePer +'%');
+
+			if(load_type == 'search'){
+				var keyword = $('#search_keyword').val();
+				$('.result-info p span').text(keyword);
+				$('.result-info p strong').text(total_length);
+				$('.category-list .sub-menu').removeClass('show');
+				$('.category-list .result-info').addClass('show');
+			}
+
+			//sub menu
+			if(fnc_type == 'change'){
+				$('.category-list ul').removeClass('show');
+				$('.category-list ul li').removeClass('active');
+				$('.category-list .result-info').removeClass('show');
+
+				if(list_type == 'category'){
+					$('#wrap').prop('class', '').addClass('category');
+					$('.category-list ul.category').addClass('show');
+				}else if(list_type == 'media'){
+					$('#wrap').prop('class', '').addClass('media');
+					$('.category-list ul.media').addClass('show');
+				}
+				$('.category-list ul.sub-menu.show li').eq(0).addClass('active');
+			}
+
+			//close gnb box
+			$('.header .btn-gnb').removeClass('active');
+			$('.gnb-box, .header .fncs').removeClass('show');
+			connFlag = false;
+		},
+		error : function(request, status, error){
+			console.log(error)
+		},
+	});
+}
+</script>
 	{% block content %}{% endblock %}
-{% comment %} //news load
+{% comment %} 
+//news load
 var date = new Date();
 var year = date.getFullYear()
 var month = new String(date.getMonth() + 1);
@@ -362,4 +419,5 @@ if(day.length == 1){
 	day = '0' + day;
 }
 todayDate = year + '-' + month + '-' + day
-alert(today) {% endcomment %}
+alert(today) 
+{% endcomment %}

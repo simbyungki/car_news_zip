@@ -330,5 +330,12 @@ def car_comment_list_data(request) :
 		for video_id in video_ids :
 			video_id_list.append(video_id.get('comment_video_id'))
 
-		set_comments = serializers.serialize('json', comment_list[start_idx:start_idx+load_length])
-		return JsonResponse({'comment_list': set_comments, 'total_length': len(comment_list), 'video_ids': video_id_list}, status=200)
+
+		for comment in comments :
+			print(comment.boname)
+				
+			
+
+
+		set_comments = serializers.serialize('json', comments[start_idx:start_idx + load_length])
+		return JsonResponse({'comment_list': set_comments, 'total_length': len(comments), 'video_ids': video_id_list}, status=200)

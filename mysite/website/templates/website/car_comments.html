@@ -4,7 +4,7 @@
 {% block content %}
 	<section class="container car-comment">
 		<div class="inner">
-			<h2 class="page-title"><span></span> 시승기 영상 및 여론 평가</h2>
+			<h2 class="page-title"><span></span> 시승기 영상 및 여론 모음</h2>
 			<form method="POST">
 				{% csrf_token %}
 				<div class="choice-model">
@@ -17,38 +17,25 @@
 				</div>
 			</form>
 			<p class="comment-info">
-				해당 차종의 시승기 영상 (유튜브) 상위 10개에 남겨진 댓글을 수집하였습니다.<br>
-				차량과 무관한 평가가 존재할 수 있습니다.<br>
-				<span>먼저 우측에서 차종을 선택해주세요.</span>
-			</p>
-<style>
-.common-tab-content {}
-.common-tab-content .tab ul {display:flex;}
-.common-tab-content .tab ul li {width:50%; box-sizing:border-box; border:1px solid #ddd;}
-.common-tab-content .tab ul li a {display:block; width:100%; height:42px; line-height:42px; color:#444; font-size:17px; text-align:center;}
-.common-tab-content .tab ul li.active a {color:#fff; font-weight:600; background:#2944cc;}
-.common-tab-content .content {padding:20px 0;}
-.common-tab-content .content > article {display:none;}
-.common-tab-content .content .active {display:block;}
-.common-tab-content .content .video-list {padding:0 30px;}
-</style>			
+				해당 차종의 시승기 영상 (유튜브) 상위 10개에 남겨진 댓글을 수집합니다.<br>
+				차량과 무관한 내용이 존재합니다.<br>
+				<strong>먼저 차종을 선택해주세요.</strong>
+			</p>		
 			<div class="common-tab-content">
 				<nav class="tab">
 					<ul>
-						<li class="active"><a href="javascript:;">시승기 영상 모음</a></li>
-						<li><a href="javascript:;">댓글 모음</a></li>
+						<li class="active"><a href="javascript:;">댓글 모음</a></li>
+						<li><a href="javascript:;">시승기 영상 모음</a></li>
 					</ul>
 				</nav>
 				<div class="content">
-					<article class="videos">
-						<div class="video-list">
-							시승기 영상 모음
+					<article class="comments active">
+						<div class="car-comment-list">
 							<ul></ul>
 						</div>
 					</article>
-					<article class="comments active">
-						<div class="car-comment-list">
-							리뷰
+					<article class="videos">
+						<div class="video-list">
 							<ul></ul>
 						</div>
 					</article>
@@ -71,32 +58,38 @@
 </div>
 <script>
 $(function(){
+	/* $('.choice-model select').focus(); */
 	$('.choice-model select').on('change', function(){
+		console.log('selectbox 변경 > ' + $(this).val());
+		$('.video-list ul').html('');
+		$('.car-comment-list ul').html('');
 		if($(this).val() == 'default'){
-			$('.video-list ul').remove();
-			$('.car-comment-list ul').remove();
 			$('.page-title span').text('');
-			$('.comment-info span').fadeIn('fast');
+			$('.comment-info strong').fadeIn('fast');
+			$('.common-tab-content').hide();
 		}else{
-			loadCommentList(0, 15)
 			var choiceCar = $('.choice-model option:selected').text();
-			$('.comment-info span').fadeOut('fast');
 			$('.page-title span').text(choiceCar);
-			loadCommentList(0, 20)
+			$('.comment-info strong').fadeOut('fast');
+			$('.common-tab-content').show();
+			loadCommentList(0, $(this).val(), 20)
 		}
 	});
 
 	//스크롤 로드 (페이징)
 	$(window).on('scroll', function(e){
 		if(($(window).innerHeight() + $(window).scrollTop()) >= $('body').height() - 150) {
-			if(!connFlag){
-				var nowListLength = $('.car-comment-list li').length;
-				loadCommentList(nowListLength, 20);
+			if($('.common-tab-content ul li.active').index() == 0){
+				if(!connFlag){
+					var nowListLength = $('.car-comment-list li').length;
+					loadCommentList(nowListLength, $('.choice-model select').val(), 20);
+				}	
 			}
 		}
 	});
 
-	function loadCommentList(start_idx, load_length){
+	function loadCommentList(start_idx, bono, load_length){
+		$('.loading').show();
 		connFlag = true;
 		$.ajax({
 			url: '{% url "car_comment_list_data" %}',
@@ -104,7 +97,7 @@ $(function(){
 			data: {
 				'start_idx': start_idx,
 				'load_length': 20,
-				'bono': $('.choice-model select').val()
+				'bono': bono
 			},
 			dataType: 'json',
 			success: function(data){
@@ -150,7 +143,7 @@ $(function(){
 				if($('.video-list ul').html() == ''){
 					for(i = 0; i < video_ids.length; i++){
 						videoListItem += '<li>';
-						videoListItem += '<iframe width="560" height="315" src="https://www.youtube.com/embed/'+ video_ids[i] +'" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
+						videoListItem += '<iframe width="100%" height="315" src="https://www.youtube.com/embed/'+ video_ids[i] +'" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
 						videoListItem += '</li>';
 					}	
 					$('.video-list ul').append(videoListItem);

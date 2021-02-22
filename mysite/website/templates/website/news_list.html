@@ -6,7 +6,7 @@
 		<div class="category-list">
 			<div class="inner">
 				<!-- 카테고리별 뉴스 -->
-				<ul class="sub-menu category show">
+				<ul class="sub-menu category">
 					<li class="active"><a href="javascript:;">자동차 업계 뉴스</a></li>
 					<li><a href="javascript:;">중고차 뉴스</a></li>
 					<li><a href="javascript:;">신차 뉴스</a></li>
@@ -66,10 +66,7 @@
 
 <script>
 var connFlag = false;
-$(function(){
-	//최초 목록
-	loadNewsList(0, 'category', 0, 12);
-	$('#wrap').addClass('category');
+$(function(){	
 	//카테고리 클릭
 	$('.category-list ul li a').on('click', function(){
 		var choicedListType = $(this).closest('.sub-menu').hasClass('category') ? 'category' : 'media'
@@ -81,10 +78,9 @@ $(function(){
 				$(this).closest('ul').find('li').removeClass('active');
 				$(this).parent('li').addClass('active');
 				if($(this).closest('ul').hasClass('category')){
-					loadNewsList(idx, 'category', 0, 12);
+					loadNewsList(idx, 'category', 0, 15);
 				}else if($(this).closest('ul').hasClass('media')){
-					console.log(idx)
-					loadNewsList(idx, 'media', 0, 12);
+					loadNewsList(idx, 'media', 0, 15);
 				}
 			}
 			
