@@ -62,11 +62,55 @@
 			</p>
 		</div>
 	</div>
+
+	<!-- 공지사항 -->
+	<div class="notice-wrap">
+		<div class="dim"></div>
+		<div class="notice-box">
+			<a href="javascript:;" class="btn-close">X</a>
+			<h2 class="notice-title">2021.02.22 업데이트 알림</h2>
+			<div class="notice-cont">
+				<ul>
+					<li>
+						<strong class="title">신규 언론사 추가</strong>
+						<p>
+							뉴스 수집 업체에 "탑라이더" 언론사를 추가하였었습니다.
+						</p>
+					</li>
+					<li>
+						<strong class="title">차량 모델별 시승기 / 여론 모음 메뉴 추가</strong>
+						<p>
+							차량 모델별 시승기 / 여론 모음 메뉴가 추가되었습니다.<br>
+							모델별로 유튜브 시승영상 상위(연관성) 10개를 한곳에서 볼 수 있고, 
+							해당 영상들의 댓글을 모두 수집하여 노출시켜 해당 모델의 여론이 
+							어떤지 파악 할 수 있기를 기대합니다. <br>
+							(유튜브 영상의 댓글이기때문에 차량과 무관한 내용의 댓글이 존재합니다.)							
+						</p>
+					</li>
+				</ul>
+			</div>
+			<a href="javascript:;" class="btn-check">확인 (오늘하루 열지 않기)</a>
+		</div>
+	</div>
 </div>
 
 <script>
 var connFlag = false;
 $(function(){	
+	
+	//오늘 하루 보지 않기
+	if($.cookie('noticeCookie') == undefined){
+		$('.notice-wrap').show();
+		$.cookie('noticeCookie', 'done', { expires: 1, path: '/' });
+	}
+	$('.notice-wrap .btn-close').on('click', function(){
+		$('.notice-wrap').hide();
+	});
+	$('.notice-wrap .btn-check').on('click', function(){
+		$.cookie('noticeCookie', 'done', { expires: 1, path: '/' });
+		$('.notice-wrap').hide();
+	});
+
 	//카테고리 클릭
 	$('.category-list ul li a').on('click', function(){
 		var choicedListType = $(this).closest('.sub-menu').hasClass('category') ? 'category' : 'media'
