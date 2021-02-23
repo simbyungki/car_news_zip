@@ -195,6 +195,7 @@ $(function(){
 	//오늘 하루 보지 않기
 	if($.cookie('noticeCookie') == undefined){
 		$('.notice-wrap').show();
+		$.cookie('noticeCookie', 'done', { expires: 1, path: '/' });
 	}
 	$('.notice-wrap .btn-close').on('click', function(){
 		$('.notice-wrap').hide();
