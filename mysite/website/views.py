@@ -323,7 +323,7 @@ def car_comment_list_data(request) :
 		start_idx = int(request.GET.get('start_idx'))
 		load_length = int(request.GET.get('load_length'))
 		bono = int(request.GET.get('bono'))
-
+		
 		comments = comment_list.filter(bono = bono).order_by('-comment_content_length')
 		video_ids = comment_list.filter(bono = bono).values('comment_video_id').distinct()
 		video_id_list = []

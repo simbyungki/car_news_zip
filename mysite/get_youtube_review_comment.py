@@ -5,6 +5,7 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from oauth2client.tools import argparser
 import os, json
+import requests
 import mysql.connector
 import re
 import regex
@@ -71,6 +72,14 @@ def get_soup(url) :
 	soup = BeautifulSoup(browser.page_source, 'lxml')
 	return soup
 
+# BeautifulSoup
+def get_soup2(url) :
+	headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36'}
+	res = requests.get(url, headers=headers)
+	res.raise_for_status()
+	res.encoding=None
+	soup = BeautifulSoup(res.text, 'lxml')
+	return soup
 
 def youtube_search(keyword) :	
 	search_response = youtube.search().list(
@@ -96,68 +105,110 @@ def youtube_search(keyword) :
 	return video_group
 
 
-def get_comments(dbconn, cursor, keyword, bmname, boiname, boname, bono) :
+def get_comments(dbconn, cursor, keyword, bono, daum_code) :
 	video_group = youtube_search(f'{keyword} 시승기')
 	comment_group = []
-	for idx, video_info in enumerate(video_group) :
-		url = f'https://www.youtube.com/watch?v={video_info.get("video_id")}'
 
-		soup = get_soup(url)
-		# video_title = soup.select('h1.title style-scope ytd-video-primary-info-renderer')
-		user_id_list = soup.select('div#header-author > a > span')
-		comment_list = soup.select('yt-formatted-string#content-text')
-		registed_date_list = soup.select('yt-formatted-string.published-time-text')
+	# 자동차 정보 입력
+	car_infos = get_car_infos(daum_code)
+	# print(car_infos)
+	try :
+		cursor.execute(f"""
+			INSERT INTO TBL_CAR_INFOS 
+			(
+				BMNAME, BOINAME, BONAME, BONO,
+				DAUM_CODE, CAR_IMG_URL, CAR_PRICE,
+				FUEL_EFFICIENCY, CAR_CC
+			) 
+			VALUES (
+				"{bmname}", "{boiname}", {boname)}, "{bono}", 
+				"{daum_code}", "{car_infos.get('car_img_url')}", "{car_infos.get('car_price')}",
+				"{car_infos.get('car_per')}", "{car_infos.get('car_cc')}"
+			) 
+		""")
+		print(f'[{idx + 1}/{len(comment_group)}] 댓글 수집 완료')
+	except Exception as e :
+		print(f'***** + error! >> {e} >> {comment[2]}')	
+	else : 
+		print(f'**** [{boname}시승기 영상] >> 유튜브 영상 댓글 수집 완료')
 
-		for i in range(len(user_id_list)):
-			comment_set = []
-			comment_set.append(video_info.get('video_id'))
-			str_tmp = str(user_id_list[i].text)
-			str_tmp = str_tmp.replace('\n', '')
-			str_tmp = str_tmp.replace('\t', '')
-			str_tmp = str_tmp.replace('   ','')
-			comment_set.append(str_tmp)
+	# for idx, video_info in enumerate(video_group) :
+	# 	url = f'https://www.youtube.com/watch?v={video_info.get("video_id")}'
 
-			str_tmp = str(comment_list[i].text)
-			str_tmp = str_tmp.replace('\n', '')
-			str_tmp = str_tmp.replace('\t', '')
-			str_tmp = str_tmp.replace('   ','')
-			str_tmp = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', str_tmp))
-			comment_set.append(str_tmp)
-			comment_set.append(len(str_tmp))
+	# 	soup = get_soup(url)
+	# 	# video_title = soup.select('h1.title style-scope ytd-video-primary-info-renderer')
+	# 	user_id_list = soup.select('div#header-author > a > span')
+	# 	comment_list = soup.select('yt-formatted-string#content-text')
+	# 	registed_date_list = soup.select('yt-formatted-string.published-time-text')
 
-			str_tmp = str(registed_date_list[i].text)
-			comment_set.append(str_tmp)
-			comment_group.append(comment_set)
+	# 	for i in range(len(user_id_list)):
+	# 		comment_set = []
+	# 		comment_set.append(video_info.get('video_id'))
+	# 		str_tmp = str(user_id_list[i].text)
+	# 		str_tmp = str_tmp.replace('\n', '')
+	# 		str_tmp = str_tmp.replace('\t', '')
+	# 		str_tmp = str_tmp.replace('   ','')
+	# 		comment_set.append(str_tmp)
+
+	# 		str_tmp = str(comment_list[i].text)
+	# 		str_tmp = str_tmp.replace('\n', '')
+	# 		str_tmp = str_tmp.replace('\t', '')
+	# 		str_tmp = str_tmp.replace('   ','')
+	# 		str_tmp = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', str_tmp))
+	# 		comment_set.append(str_tmp)
+	# 		comment_set.append(len(str_tmp))
+
+	# 		str_tmp = str(registed_date_list[i].text)
+	# 		comment_set.append(str_tmp)
+	# 		comment_group.append(comment_set)
 		
-		print(f'[{idx +1}/{len(video_group)}] 댓글수집 완료')
+	# 	print(f'[{idx +1}/{len(video_group)}] 댓글수집 완료')
 
-	print(f'[{keyword} 시승기] Data 구조화 완료')
+	# print(f'[{keyword} 시승기] Data 구조화 완료')
 
 	# DB INSERT
 	print('DB Insert 시작')
-	for idx, comment in enumerate(comment_group) :
-		try :
-			cursor.execute(f"""
-				INSERT INTO TBL_YOUTUBE_CAR_COMMENT_LIST 
-				(
-					COMMENT_VIDEO_ID, BMNAME, BOINAME, BONAME,
-					BONO, COMMENT_CONTENT, COMMENT_CONTENT_LENGTH, ADD_DATE, 
-					MINNING_STATUS, PROC_STATUS
-				) 
-				VALUES (
-					"{comment[0]}", "{bmname}", "{boiname}", "{boname}" ,
-					{bono}, "{comment[2]}", {len(comment[2])}, NOW(), 
-					1, 1
-				) 
-			""")
-			print(f'[{idx + 1}/{len(comment_group)}] 댓글 수집 완료')
-		except Exception as e :
-			print(f'***** + error! >> {e} >> {comment[2]}')	
-		else : 
-			print(f'**** [{boname}시승기 영상] >> 유튜브 영상 댓글 수집 완료')
+	# for idx, comment in enumerate(comment_group) :
+	# 	try :
+	# 		cursor.execute(f"""
+	# 			INSERT INTO TBL_YOUTUBE_CAR_COMMENT_LIST 
+	# 			(
+	# 				COMMENT_VIDEO_ID, COMMENT_CONTENT, COMMENT_CONTENT_LENGTH, 
+	# 				ADD_DATE, MINNING_STATUS, PROC_STATUS
+	# 			) 
+	# 			VALUES (
+	# 				"{comment[0]}", "{comment[2]}", {len(comment[2])}, 
+	# 				NOW(), 1, 1
+	# 			) 
+	# 		""")
+	# 		print(f'[{idx + 1}/{len(comment_group)}] 댓글 수집 완료')
+	# 	except Exception as e :
+	# 		print(f'***** + error! >> {e} >> {comment[2]}')	
+	# 	else : 
+	# 		print(f'**** [{boname}시승기 영상] >> 유튜브 영상 댓글 수집 완료')
 		
+def get_car_infos(model_code) :
+	url = f'https://auto.daum.net/newcar/model/{model_code}'
+				
+	soup = get_soup2(url)
 
+	car_infos = {}
 
+	car_info_area = soup.find('div', attrs={'class': 'box_model'})
+	car_info_left = car_info_area.find('div', attrs={'class': 'info_model'}).findAll('table', attrs={'class', 'tbl_info'})[0]
+	car_info_right = car_info_area.find('div', attrs={'class': 'info_model'}).findAll('table', attrs={'class', 'tbl_info'})[1]
+	car_price = car_info_left.findAll('tr')[0].find('td').get_text().strip()
+	car_per = car_info_left.findAll('tr')[2].find('td').get_text().strip()
+	car_cc = car_info_right.findAll('tr')[1].find('td').get_text().strip()
+	car_img_url = soup.find('div', attrs={'class': 'wrap_model'}).find('img')['src']
+
+	# print(car_price, car_per, car_cc, netizen_grade)
+	car_infos['car_price'] = car_price
+	car_infos['car_per'] = car_per
+	car_infos['car_cc'] = car_cc
+	car_infos['car_img_url'] = car_img_url
+	
+	return car_infos
 
 def car_comments() : 
 	excel_path = '../data/youtube_comments/트레일블레이저_review_comments_youtube.xlsx'
@@ -218,10 +269,14 @@ if __name__ == '__main__' :
 	# 영상 검색 후 댓글 가져오기
 	dbconn = mysql.connector.connect(host=db_infos.get('host'), user=db_infos.get('user'), password=db_infos.get('password'), database=db_infos.get('database'), port=db_infos.get('port'))
 	cursor = dbconn.cursor()
-	# get_comments(dbconn, cursor, 차종, BMNAME, BOINAME, BONAME, BONO)
-	get_comments(dbconn, cursor, '제네시스 eq900', '제네시스', 'EQ900', 'EQ900', 1594)
+	# get_comments(dbconn, cursor, 차종, BONO, 다음자동차 모델코드)
+	get_comments(dbconn, cursor, '올뉴 K7', 1598, 'mgc00034ppzk')
+	# https://auto.daum.net/newcar/model/ma600020ppal#rating
 
-	dbconn.commit()
+	# get_car_infos(dbconn, cursor, 다음자동차 모델코드)
+	# print(get_car_infos('mgc00034ppzk'))
+
+	# dbconn.commit()
 	dbconn.close()
 	# 종료 시간 (전체 수행시간을 구하기 위함)
 	end = time.time()

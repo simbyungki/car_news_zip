@@ -75,12 +75,6 @@
 .container {padding-top:210px; padding-bottom:60px;}
 .container .inner {position:relative; margin:0 auto; padding:10px 0; width:90%;}
 
-.page-btns {margin-top:20px;}
-.page-btns.full .btn {width:100%;}
-.page-btns .btn {display:block; height:55px; line-height:55px; font-size:20px; text-align:center;}
-.page-btns .btn.darkgray {color:#fff; background:#444;}
-.page-btns .btn.gray {color:#000; background:#ddd;}
-
 .common-tab-content {display:none;}
 .common-tab-content .tab ul {display:flex;}
 .common-tab-content .tab ul li {width:50%; box-sizing:border-box; border:1px solid #ddd;}
@@ -316,6 +310,17 @@
 .car-comment .video-list li iframe,
 .car-comment .video-list li object,
 .car-comment .video-list li embed {position:absolute; top:0; left:0; width:100%; height:100%;}
+.car-comment .box {position:relative;}
+.car-comment .btn-back {display:none; width:15%; height:46px; line-height:46px; color:#fff; font-size:18px; font-weight:600; text-align:center; background:#222;}
+.car-comment .car-list {position:absolute; top:0; width:100%;}
+.car-comment .car-list ul {display:flex; justify-content:space-between; flex-wrap:wrap;}
+.car-comment .car-list ul li {margin-top:30px; width:19%;}
+.car-comment .car-list ul li a {display:block; text-align:center;}
+.car-comment .car-list ul li a .picture {height:140px;}
+.car-comment .car-list ul li a .picture img {position:relative; left:0; top:0; width:90%; transition:all .2s;} 
+.car-comment .car-list ul li a:hover .picture img {left:-5px; top:2px;}
+.car-comment .car-list ul li a strong {display:block; color:#444; font-size:20px;}
+.car-comment .common-tab-content {position:absolute; top:60px; width:100%;}
 
 /***** 
     responsive 
@@ -346,6 +351,8 @@
 	.item-list ul li:nth-child(3n+1) {margin-left:0;}
 
 	.car-comment-list li {width:49%;}
+	.car-comment .car-list ul li {width:24%;}
+	.car-comment .car-list ul li a strong {font-size:18px;}
 }                
 /*****
      1024 > w 
@@ -366,6 +373,8 @@
 	.car-comment .choice-model {position:static; margin-bottom:20px; text-align:center;}
 	.car-comment-list ul {border-top:1px solid #ddd;}
 	.car-comment-list li {width:100%; border:0; border-bottom:1px solid #ddd;}
+	.car-comment .car-list ul li {width:32%;}
+	.car-comment .car-list ul li a strong {font-size:16px;}
 }
 /*****
      880 > w 
@@ -427,6 +436,8 @@
 	.car-comment .video-list li:nth-child(1) {margin-top:0;}
 	.car-comment .video-list li:nth-child(2) {margin-top:15px;}
 	.car-comment .video-list li:nth-child(2n) {float:none;}
+	.car-comment .car-list ul li {width:49%;}
+	.car-comment .car-list ul li a strong {font-size:18px;}
 	.news-detail-p .container {padding-top:75px;}
 	.news-detail .n-title {padding:14px 0; line-height:26px; font-size:20px;}
 	.news-detail .n-info {padding:10px 0;}
@@ -436,19 +447,25 @@
 @media screen and (max-width: 450px) {
 	#wrap.category .container {padding-top:135px;}
 	#wrap.media .container {padding-top:182px;}
-	.header {height:105px;}
-	.header .service-name {font-size:32px;}
+	.header {height:125px;}
+	.header .service-name {padding-left:18px; letter-spacing:-1px; font-size:32px;}
+	.header .search-recommend a {font-size:13px;}
 	.header .btn-gnb {top:14px;}
 	.header .fncs {top:14px;}
 	/* .header .fncs a {display:block; position:fixed; bottom:0; left:0; width:100%; height:50px; line-height:50px; color:#fff; font-size:18px; font-weight:600; text-align:center; background:#444;} */
 	.header .gnb-box .box {left:-90%; width:90%;}
-	.header .search-box {margin-top:10px; width:75%;}
+	.header .search-box {margin-top:10px; width:80%;}
 	.header .search-box input[type="text"],
 	.header .search-box .btn-search {height:36px; font-size:14px;}
+	.container {padding-top:155px;}
 	.container .inner {width:96%;}
-	.category-list {top:105px;}
+	.category-list {top:125px;}
 	.category-list ul li {margin-right:10px;}
 	.category-list ul li a {font-size:13px;}
+	.category-list .result-info.show {display:block; line-height:26px; justify-content:space-between;}
+	.category-list .result-info p {font-size:13px;}
+	.category-list .result-info a {position:relative; top:-2px; margin-left:0; font-size:13px;}
+	.category-list .result-info a span {font-size:18px;}
 	.item-list {padding-bottom:0;}
 	.item-list .txt-guide {font-size:14px;}
 	.item-list ul {padding-bottom:10px;}
@@ -470,23 +487,21 @@
 
 	.container.car-comment {padding-top:100px;}
 	.car-comment .page-title {font-size:22px;}
-	.car-comment .comment-info {margin-bottom:15px; line-height:18px; font-size:12px;}
+	.car-comment .comment-info {margin-bottom:15px; line-height:18px; font-size:14px;}
 	.car-comment-list li {padding:15px;}
 	.car-comment-list li .comment {line-height:20px; font-size:14px;}
+	.car-comment .car-list ul li a strong {font-size:14px;}
+	.car-comment .btn-back {width:100%;}
 
 	.category-list ul li.new:after {right:-9px; top:-6px; width:13px; height:13px; line-height:14px; font-size:10px;}
 }
 
 @media screen and (max-width: 450px) {
-	.header {height:125px;}
-	.header .service-name {padding-left:18px; letter-spacing:-1px;}
-	.header .search-recommend a {font-size:13px;}
-	.header .search-box {width:80%;}
-	#wrap.category .container {padding-top:155px;}
-	.container {padding-top:155px;}
-	.category-list {top:125px;}
-	.category-list .result-info.show {display:block; line-height:26px; justify-content:space-between;}
-	.category-list .result-info p {font-size:13px;}
-	.category-list .result-info a {position:relative; top:-2px; margin-left:0; font-size:13px;}
-	.category-list .result-info a span {font-size:18px;}
+	
+	
+	
+	
+	
+	
+	
 }

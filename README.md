@@ -1,11 +1,12 @@
 # 카뉴스.zip 🙈 (car_news.zip)
-### 9개 자동차 관련 언론사에서 뉴스 스크래핑 및 분석
+### 10개 자동차 관련 언론사에서 뉴스 스크래핑 및 분석 / 차량정보 제공
 #### 중고차/신차/자동차업계 뉴스 및 시승기
 ![가장 편한 자동차 정보 - 카뉴스집](http://carnewszip.com/static/images/common/img_share.png "가장 편한 자동차 정보 - 카뉴스집")  
 
 ### 정보
-- 접속 URL : <a href="http://carnewszip.com">http://carnewszip.com</a>
-- 테이블 명세서 : <a href="https://docs.google.com/spreadsheets/d/1TOZSDXpLZaXQhyP-K11WmGR_dQ1tswQc181uI90sgF4/edit#gid=0">https://docs.google.com/spreadsheets/d/1TOZSDXpLZaXQhyP-K11WmGR_dQ1tswQc181uI90sgF4/edit#gid=0</a>
+- **사내 서비스로 전환되어 비공개 처리 되었습니다.**
+- 접속 URL : 
+- 테이블 명세서 : 
 - 10개 자동차 언론사 : 모터그래프, 오토헤럴드, 데일리카, 오토뷰, IT조선, 오토모닝, 오토다이어리, 카가이, 더드라이브, 탑라이더
 - 수집 분야 : 중고차/신차/자동차업계 뉴스 및 시승기
 

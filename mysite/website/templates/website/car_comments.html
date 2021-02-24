@@ -7,40 +7,62 @@
 			<h2 class="page-title"><span></span> 시승기 영상 및 여론 모음</h2>
 			<form method="POST">
 				{% csrf_token %}
-				<div class="choice-model">
-					<select name="car-model">
-						<option value="default" select>차종 선택</option>
-						<option value="2515">제네시스 G80 (G330)</option>
-						<option value="1594">제네시스 EQ900</option>
-						<option value="1568">쉐보레 임팔라</option>
-					</select>
-				</div>
 			</form>
 			<p class="comment-info">
 				해당 차종의 시승기 영상 (유튜브) 상위 10개에 남겨진 댓글을 수집합니다.<br>
-				차량과 무관한 내용이 존재합니다.<br>
-				<strong>먼저 차종을 선택해주세요.</strong>
+				차량과 무관한 내용이 존재합니다.
 			</p>		
-			<div class="common-tab-content">
-				<nav class="tab">
+			<div class="box">
+				<div class="car-list">
 					<ul>
-						<li class="active"><a href="javascript:;">댓글 모음</a></li>
-						<li><a href="javascript:;">시승기 영상 모음</a></li>
+						<li>
+							<a href="javascript:;" data-bono="2515">
+								<div class="picture">
+									<img src="https://img1.daumcdn.net/thumb/R380x0/?fname=%2Fmedia%2Fvitraya%2Fauto%2Fimage%2F1b7a66%2FB3DE67A6829A9409C5A7D01CED280D71EAD449A1108B7F57AB_4P53" alt="">
+								</div>
+								<strong>제네시스 G80 (G330)</strong>
+							</a>
+						</li>
+						<li>
+							<a href="javascript:;" data-bono="1594">
+								<div class="picture">
+									<img src="https://img1.daumcdn.net/thumb/R380x0/?fname=%2Fmedia%2Fvitraya%2Fauto%2Fimage%2F37c33b%2F8B2B3003EB0A6E2E12BAF9403019E79C148F3C43270506192B_5BNM" alt="">
+								</div>
+								<strong>제네시스 EQ900</strong>
+							</a>
+						</li>
+						<li>
+							<a href="javascript:;" data-bono="1568">
+								<div class="picture">
+									<img src="https://img1.daumcdn.net/thumb/R380x0/?fname=%2Fmedia%2Fvitraya%2Fauto%2Fimage%2Fdcf5cb%2F4DF060B5521C170248C0D21AF0D5FE288FFAC4DBF6356A057C_6NLK" alt="">
+								</div>
+								<strong>쉐보레 임팔라</strong>
+							</a>
+						</li>
 					</ul>
-				</nav>
-				<div class="content">
-					<article class="comments active">
-						<div class="car-comment-list">
-							<ul></ul>
-						</div>
-					</article>
-					<article class="videos">
-						<div class="video-list">
-							<ul></ul>
-						</div>
-					</article>
+				</div>	
+				<a href="javascript:;" class="btn-back">&lt;&nbsp;&nbsp;다른 차종 선택하기</a>
+				<div class="common-tab-content">
+					<nav class="tab">
+						<ul>
+							<li class="active"><a href="javascript:;">댓글 모음</a></li>
+							<li><a href="javascript:;">시승기 영상 모음</a></li>
+						</ul>
+					</nav>
+					<div class="content">
+						<article class="comments active">
+							<div class="car-comment-list">
+								<ul></ul>
+							</div>
+						</article>
+						<article class="videos">
+							<div class="video-list">
+								<ul></ul>
+							</div>
+						</article>
+					</div>
 				</div>
-			</div>
+			</div>	
 		</div>
 	</section>
 	<div class="loading">
@@ -58,32 +80,36 @@
 </div>
 <script>
 $(function(){
-	/* $('.choice-model select').focus(); */
-	$('.choice-model select').on('change', function(){
-		console.log('selectbox 변경 > ' + $(this).val());
-		$('.video-list ul').html('');
+	$('.car-list li a').on('click', function(){
+		var bono = $(this).data('bono');
+		var choiceCar = $(this).children('strong').text();
+		$('.car-list').hide();
+		$('.car-comment .btn-back').css('display', 'block');
+		$('.common-tab-content').show().attr('data-bono', bono);
 		$('.car-comment-list ul').html('');
-		if($(this).val() == 'default'){
-			$('.page-title span').text('');
-			$('.comment-info strong').fadeIn('fast');
-			$('.common-tab-content').hide();
-		}else{
-			var choiceCar = $('.choice-model option:selected').text();
-			$('.page-title span').text(choiceCar);
-			$('.comment-info strong').fadeOut('fast');
-			$('.common-tab-content').show();
-			loadCommentList(0, $(this).val(), 20)
-		}
+		$('.video-list ul').html('');
+		$('.page-title span').text(choiceCar);
+		loadCommentList(0, bono, 20);
+	});
+	$('.car-comment .btn-back').on('click', function(){
+		$('.page-title span').text('');
+		$('.car-comment-list ul').html('');
+		$('.video-list ul').html('');
+		$('.common-tab-content').hide().removeAttr('data-bono');
+		$('.car-comment .btn-back').hide();
+		$('.car-list').show();
 	});
 
 	//스크롤 로드 (페이징)
 	$(window).on('scroll', function(e){
-		if(($(window).innerHeight() + $(window).scrollTop()) >= $('body').height() - 150) {
-			if($('.common-tab-content ul li.active').index() == 0){
-				if(!connFlag){
-					var nowListLength = $('.car-comment-list li').length;
-					loadCommentList(nowListLength, $('.choice-model select').val(), 20);
-				}	
+		if($('.common-tab-content').is(':visible')){
+			if(($(window).innerHeight() + $(window).scrollTop()) >= $('.common-tab-content').height() - 150) {
+				if($('.common-tab-content ul li.active').index() == 0){
+					if(!connFlag){
+						var nowListLength = $('.car-comment-list li').length;
+						loadCommentList(nowListLength, $('.common-tab-content').data('bono'), 20);
+					}	
+				}
 			}
 		}
 	});
