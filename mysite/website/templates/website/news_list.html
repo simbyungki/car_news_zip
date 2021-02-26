@@ -99,6 +99,7 @@ var connFlag = false;
 $(function(){	
 	
 	//오늘 하루 보지 않기
+	/*
 	if($.cookie('noticeCookie') == undefined){
 		$('.notice-wrap').show();
 		$.cookie('noticeCookie', 'done', { expires: 1, path: '/' });
@@ -109,7 +110,7 @@ $(function(){
 	$('.notice-wrap .btn-check').on('click', function(){
 		$.cookie('noticeCookie', 'done', { expires: 1, path: '/' });
 		$('.notice-wrap').hide();
-	});
+	});*/
 
 	//카테고리 클릭
 	$('.category-list ul li a').on('click', function(){
