@@ -314,7 +314,7 @@
 .car-comment .btn-back {display:none; width:15%; height:46px; line-height:46px; color:#fff; font-size:18px; font-weight:600; text-align:center; background:#222;}
 .car-comment .car-list {position:absolute; top:0; width:100%;}
 .car-comment .car-list ul {display:flex; justify-content:space-between; flex-wrap:wrap;}
-.car-comment .car-list ul li {margin-top:30px; width:19%;}
+.car-comment .car-list ul li {margin-top:35px; width:19%;}
 .car-comment .car-list ul li a {display:block; position:relative; text-align:center;}
 .car-comment .car-list ul li a .picture {height:140px;}
 .car-comment .car-list ul li a .picture img {position:relative; left:0; top:0; width:90%; transition:all .2s;} 

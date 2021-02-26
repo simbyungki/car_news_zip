@@ -301,7 +301,8 @@ if __name__ == '__main__' :
 	# get_comments(cursor, apcursor, '제네시스 eq900', 1594, 'm06000wxpphw')
 	# get_comments(cursor, apcursor, '쉐보레 임팔라', 1568, 'myi000v1ppp2')
 	# get_comments(cursor, apcursor, '올뉴 K7', 1598, 'mgc00034ppzk')
-	get_comments(cursor, apcursor, '그랜저ig ', 2569, 'mdh000s9pp6a')
+	# get_comments(cursor, apcursor, '더뉴카니발', 2656, 'mzt0002gpp8e')
+	get_comments(cursor, apcursor, '더뉴쏘렌토', 2611, 'm3q0002oppqm')
 	# https://auto.daum.net/newcar/model/ma600020ppal#rating
 
 	# get_car_infos(dbconn, cursor, 다음자동차 모델코드)

@@ -6,6 +6,7 @@ import regex
 import mysql.connector
 import os, json
 import traceback
+from wordcloud import WordCloud
 ## Python이 실행될 때 DJANGO_SETTINGS_MODULE이라는 환경 변수에 현재 프로젝트의 settings.py파일 경로 등록
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite.settings")
 ## 장고 프로젝트를 사용할 수 있도록 환경을 구축
@@ -22,12 +23,19 @@ import pandas as pd
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.abspath('./mysite'))
+DATA_DIR = os.path.dirname(os.path.abspath('./data'))
 # SECURITY WARNING: keep the secret key used in production secret!
 db_info_file = os.path.join(BASE_DIR, 'db_conn.json')
 with open(db_info_file) as f :
 	db_infos = json.loads(f.read())
 
-
+# word cloud
+wc = WordCloud(font_path=f'{BASE_DIR}\\website\\static\\font\\NanumSquareB.ttf', \
+	background_color='white', \
+	width=720, \
+	height=600, \
+	max_words=100, \
+	max_font_size=300)
 
 # 뉴스 분석
 mining_result_data = []
@@ -308,3 +316,7 @@ def run_text_mining() :
 
 if __name__ == '__main__' : 
 	run_text_mining()
+
+	# news = '안녕하세요.'
+	# wc.generate(news)
+	# wc.to_file(f'{DATA_DIR}\\wordclouds\\filename.png')
