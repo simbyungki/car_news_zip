@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.contrib import auth
 from django.db.models import Q
-from .models import TblTotalCarNewsList, TblMemberList, TblNewsKeywordList, TblNewsKeywordMap, TblYoutubeCarCommentList
+from .models import TblTotalCarNewsList, TblMemberList, TblNewsKeywordList, TblNewsKeywordMap, TblYoutubeCarCommentList, TblCarInfos
 from datetime import datetime
 from django.http import HttpResponse
 from django.core import serializers
@@ -318,24 +318,42 @@ def car_comments(request) :
 
 def car_comment_list_data(request) : 
 	comment_list = TblYoutubeCarCommentList.objects.all()
+	car_info_list = TblCarInfos.objects.all()
 
 	if request.method == 'GET' :
 		start_idx = int(request.GET.get('start_idx'))
 		load_length = int(request.GET.get('load_length'))
 		bono = int(request.GET.get('bono'))
+
+		car_info_group = {}
+		car_infos = car_info_list.filter(bono = bono)
+		for car_info in car_infos :
+			info_no = car_info.info_no
+			car_info_group['bmname'] = car_info.bmname
+			car_info_group['boiname'] = car_info.boiname
+			car_info_group['boname'] = car_info.boname
+			car_info_group['car_img_url'] = car_info.car_img_url
+			car_info_group['car_price'] = car_info.car_price
+			car_info_group['fuel_efficiency'] = car_info.fuel_efficiency
+			car_info_group['car_cc'] = car_info.car_cc
 		
-		comments = comment_list.filter(bono = bono).order_by('-comment_content_length')
-		video_ids = comment_list.filter(bono = bono).values('comment_video_id').distinct()
+		comments = comment_list.filter(info_no = info_no).order_by('-comment_content_length')
+		video_ids = comment_list.filter(info_no = info_no).values('comment_video_id').distinct()
 		video_id_list = []
 		for video_id in video_ids :
 			video_id_list.append(video_id.get('comment_video_id'))
 
 
-		for comment in comments :
-			print(comment.boname)
+		# for comment in comments :
+		# 	print(comment.boname)
 				
-			
 
 
 		set_comments = serializers.serialize('json', comments[start_idx:start_idx + load_length])
-		return JsonResponse({'comment_list': set_comments, 'total_length': len(comments), 'video_ids': video_id_list}, status=200)
+		return JsonResponse({
+			'comment_list': set_comments, 
+			'total_length': len(comments), 
+			'video_ids': video_id_list,
+			# 'car_list': car_info_list,
+			'car_infos': car_info_group
+		}, status=200)

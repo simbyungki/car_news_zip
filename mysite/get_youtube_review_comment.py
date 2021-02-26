@@ -7,6 +7,7 @@ from oauth2client.tools import argparser
 import os, json
 import requests
 import mysql.connector
+import pymssql
 import re
 import regex
 
@@ -30,9 +31,9 @@ from selenium import webdriver
 # REBORN#
 # DEVELOPER_KEY = 'AIzaSyBdTgUi0BB1A6OYqQBP4jGrUfDkVTk00Dc'
 # BK#
-DEVELOPER_KEY = 'AIzaSyA2AZ0G5sRKq3uDTa_KzDT2X0oJ9rdcZWk'
+# DEVELOPER_KEY = 'AIzaSyA2AZ0G5sRKq3uDTa_KzDT2X0oJ9rdcZWk'
 # KING BK#
-# DEVELOPER_KEY = 'AIzaSyB08WDZOdnWGqfcDKl4FB30LIRJzQS7JCQ'
+DEVELOPER_KEY = 'AIzaSyB08WDZOdnWGqfcDKl4FB30LIRJzQS7JCQ'
 # MIN
 # DEVELOPER_KEY = 'AIzaSyBH8G4-tsgT4ooV3uKUQqOUTbSu3HckrEU'
 # YOON IRENE#
@@ -105,13 +106,31 @@ def youtube_search(keyword) :
 	return video_group
 
 
-def get_comments(dbconn, cursor, keyword, bono, daum_code) :
+def get_comments(cursor, apcursor, keyword, bono, daum_code) :
+	print(keyword, '>> 시승기 영상정보 및 댓글 수집 시작')
 	video_group = youtube_search(f'{keyword} 시승기')
 	comment_group = []
 
 	# 자동차 정보 입력
 	car_infos = get_car_infos(daum_code)
 	# print(car_infos)
+
+	# APDB에서 자동차 정보 조회
+	try : 
+		apcursor.execute(f"""
+			SELECT BMNAME, BOINAME , BONAME FROM ATB_NCAR_MODEL
+			WHERE BONO = '{bono}'
+			GROUP BY BMNAME, BOINAME, BONAME;
+		""")
+
+		aprow = apcursor.fetchone()
+		bmname = aprow[0].encode('ISO-8859-1').decode('euc-kr')
+		boiname = aprow[1].encode('ISO-8859-1').decode('euc-kr')
+		boname = aprow[2].encode('ISO-8859-1').decode('euc-kr')
+	except Exception as e :
+		print(f'***** + error! >> {e}')
+		
+
 	try :
 		cursor.execute(f"""
 			INSERT INTO TBL_CAR_INFOS 
@@ -121,71 +140,75 @@ def get_comments(dbconn, cursor, keyword, bono, daum_code) :
 				FUEL_EFFICIENCY, CAR_CC
 			) 
 			VALUES (
-				"{bmname}", "{boiname}", {boname)}, "{bono}", 
+				"{bmname}", "{boiname}", "{boname}", "{bono}", 
 				"{daum_code}", "{car_infos.get('car_img_url')}", "{car_infos.get('car_price')}",
 				"{car_infos.get('car_per')}", "{car_infos.get('car_cc')}"
 			) 
 		""")
-		print(f'[{idx + 1}/{len(comment_group)}] 댓글 수집 완료')
-	except Exception as e :
-		print(f'***** + error! >> {e} >> {comment[2]}')	
-	else : 
-		print(f'**** [{boname}시승기 영상] >> 유튜브 영상 댓글 수집 완료')
-
-	# for idx, video_info in enumerate(video_group) :
-	# 	url = f'https://www.youtube.com/watch?v={video_info.get("video_id")}'
-
-	# 	soup = get_soup(url)
-	# 	# video_title = soup.select('h1.title style-scope ytd-video-primary-info-renderer')
-	# 	user_id_list = soup.select('div#header-author > a > span')
-	# 	comment_list = soup.select('yt-formatted-string#content-text')
-	# 	registed_date_list = soup.select('yt-formatted-string.published-time-text')
-
-	# 	for i in range(len(user_id_list)):
-	# 		comment_set = []
-	# 		comment_set.append(video_info.get('video_id'))
-	# 		str_tmp = str(user_id_list[i].text)
-	# 		str_tmp = str_tmp.replace('\n', '')
-	# 		str_tmp = str_tmp.replace('\t', '')
-	# 		str_tmp = str_tmp.replace('   ','')
-	# 		comment_set.append(str_tmp)
-
-	# 		str_tmp = str(comment_list[i].text)
-	# 		str_tmp = str_tmp.replace('\n', '')
-	# 		str_tmp = str_tmp.replace('\t', '')
-	# 		str_tmp = str_tmp.replace('   ','')
-	# 		str_tmp = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', str_tmp))
-	# 		comment_set.append(str_tmp)
-	# 		comment_set.append(len(str_tmp))
-
-	# 		str_tmp = str(registed_date_list[i].text)
-	# 		comment_set.append(str_tmp)
-	# 		comment_group.append(comment_set)
+		cursor.execute("SELECT LAST_INSERT_ID();")
+		inforow = cursor.fetchone()
+		info_no = inforow[0]
 		
-	# 	print(f'[{idx +1}/{len(video_group)}] 댓글수집 완료')
+	except Exception as e :
+		print(f'***** + error! >> {e}')
+	else : 
+		print(f'**** [{boname} 시승기 영상] >> 유튜브 영상 댓글 수집 완료')
 
-	# print(f'[{keyword} 시승기] Data 구조화 완료')
+	for idx, video_info in enumerate(video_group) :
+		url = f'https://www.youtube.com/watch?v={video_info.get("video_id")}'
+
+		soup = get_soup(url)
+		# video_title = soup.select('h1.title style-scope ytd-video-primary-info-renderer')
+		user_id_list = soup.select('div#header-author > a > span')
+		comment_list = soup.select('yt-formatted-string#content-text')
+		registed_date_list = soup.select('yt-formatted-string.published-time-text')
+
+		for i in range(len(user_id_list)):
+			comment_set = []
+			comment_set.append(video_info.get('video_id'))
+			str_tmp = str(user_id_list[i].text)
+			str_tmp = str_tmp.replace('\n', '')
+			str_tmp = str_tmp.replace('\t', '')
+			str_tmp = str_tmp.replace('   ','')
+			comment_set.append(str_tmp)
+
+			str_tmp = str(comment_list[i].text)
+			str_tmp = str_tmp.replace('\n', '')
+			str_tmp = str_tmp.replace('\t', '')
+			str_tmp = str_tmp.replace('   ','')
+			str_tmp = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', str_tmp))
+			comment_set.append(str_tmp)
+			comment_set.append(len(str_tmp))
+
+			str_tmp = str(registed_date_list[i].text)
+			comment_set.append(str_tmp)
+			comment_group.append(comment_set)
+		
+		print(f'[{idx +1}/{len(video_group)}] 댓글수집 완료')
+
+	print(f'[{keyword} 시승기] Data 구조화 완료')
 
 	# DB INSERT
 	print('DB Insert 시작')
-	# for idx, comment in enumerate(comment_group) :
-	# 	try :
-	# 		cursor.execute(f"""
-	# 			INSERT INTO TBL_YOUTUBE_CAR_COMMENT_LIST 
-	# 			(
-	# 				COMMENT_VIDEO_ID, COMMENT_CONTENT, COMMENT_CONTENT_LENGTH, 
-	# 				ADD_DATE, MINNING_STATUS, PROC_STATUS
-	# 			) 
-	# 			VALUES (
-	# 				"{comment[0]}", "{comment[2]}", {len(comment[2])}, 
-	# 				NOW(), 1, 1
-	# 			) 
-	# 		""")
-	# 		print(f'[{idx + 1}/{len(comment_group)}] 댓글 수집 완료')
-	# 	except Exception as e :
-	# 		print(f'***** + error! >> {e} >> {comment[2]}')	
-	# 	else : 
-	# 		print(f'**** [{boname}시승기 영상] >> 유튜브 영상 댓글 수집 완료')
+	for idx, comment in enumerate(comment_group) :
+		try :
+			cursor.execute(f"""
+				INSERT INTO TBL_YOUTUBE_CAR_COMMENT_LIST 
+				(
+					COMMENT_VIDEO_ID, COMMENT_CONTENT, COMMENT_CONTENT_LENGTH, 
+					ADD_DATE, MINNING_STATUS, PROC_STATUS, INFO_NO
+				) 
+				VALUES (
+					"{comment[0]}", "{comment[2]}", {len(comment[2])}, 
+					NOW(), 1, 1, "{info_no}"
+				) 
+			""")
+			print(f'[{idx + 1}/{len(comment_group)}] 댓글 수집 완료')
+		except Exception as e :
+			print(f'***** + error! >> {e} >> {comment[2]}')	
+			continue
+		else : 
+			print(f'**** [{boname} 시승기 영상] >> 유튜브 영상 댓글 수집 완료')
 		
 def get_car_infos(model_code) :
 	url = f'https://auto.daum.net/newcar/model/{model_code}'
@@ -209,6 +232,7 @@ def get_car_infos(model_code) :
 	car_infos['car_img_url'] = car_img_url
 	
 	return car_infos
+
 
 def car_comments() : 
 	excel_path = '../data/youtube_comments/트레일블레이저_review_comments_youtube.xlsx'
@@ -269,14 +293,23 @@ if __name__ == '__main__' :
 	# 영상 검색 후 댓글 가져오기
 	dbconn = mysql.connector.connect(host=db_infos.get('host'), user=db_infos.get('user'), password=db_infos.get('password'), database=db_infos.get('database'), port=db_infos.get('port'))
 	cursor = dbconn.cursor()
+
+	apdbconn = pymssql.connect(host=db_infos.get('ap_host'), user=db_infos.get('ap_user'), password=db_infos.get('ap_password'), database=db_infos.get('ap_database'), port=db_infos.get('ap_port'), charset='ISO-8859-1')
+	apcursor = apdbconn.cursor()
 	# get_comments(dbconn, cursor, 차종, BONO, 다음자동차 모델코드)
-	get_comments(dbconn, cursor, '올뉴 K7', 1598, 'mgc00034ppzk')
+	# get_comments(cursor, apcursor, '제네시스 g80 dh', 2515, 'mtx000wspp9f')
+	# get_comments(cursor, apcursor, '제네시스 eq900', 1594, 'm06000wxpphw')
+	# get_comments(cursor, apcursor, '쉐보레 임팔라', 1568, 'myi000v1ppp2')
+	# get_comments(cursor, apcursor, '올뉴 K7', 1598, 'mgc00034ppzk')
+	get_comments(cursor, apcursor, '그랜저ig ', 2569, 'mdh000s9pp6a')
 	# https://auto.daum.net/newcar/model/ma600020ppal#rating
 
 	# get_car_infos(dbconn, cursor, 다음자동차 모델코드)
 	# print(get_car_infos('mgc00034ppzk'))
 
-	# dbconn.commit()
+	apdbconn.close()
+
+	dbconn.commit()
 	dbconn.close()
 	# 종료 시간 (전체 수행시간을 구하기 위함)
 	end = time.time()

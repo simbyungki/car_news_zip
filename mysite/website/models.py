@@ -40,6 +40,22 @@ class LogSearchList(models.Model):
 		managed = False
 		db_table = 'LOG_SEARCH_LIST'
 
+class TblCarInfos(models.Model):
+    info_no = models.AutoField(db_column='INFO_NO', primary_key=True)  # Field name made lowercase.
+    bmname = models.CharField(db_column='BMNAME', max_length=100, blank=True, null=True)  # Field name made lowercase.
+    boiname = models.CharField(db_column='BOINAME', max_length=100, blank=True, null=True)  # Field name made lowercase.
+    boname = models.CharField(db_column='BONAME', max_length=100, blank=True, null=True)  # Field name made lowercase.
+    bono = models.IntegerField(db_column='BONO', blank=True, null=True)  # Field name made lowercase.
+    daum_code = models.CharField(db_column='DAUM_CODE', max_length=100, blank=True, null=True)  # Field name made lowercase.
+    car_img_url = models.CharField(db_column='CAR_IMG_URL', max_length=300, blank=True, null=True)  # Field name made lowercase.
+    car_price = models.CharField(db_column='CAR_PRICE', max_length=100, blank=True, null=True)  # Field name made lowercase.
+    fuel_efficiency = models.CharField(db_column='FUEL_EFFICIENCY', max_length=100, blank=True, null=True)  # Field name made lowercase.
+    car_cc = models.CharField(db_column='CAR_CC', max_length=100, blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'TBL_CAR_INFOS'
+
 class TblNewsKeywordList(models.Model):
 	word_no = models.AutoField(db_column='WORD_NO', primary_key=True)  # Field name made lowercase.
 	word_morpheme = models.CharField(db_column='WORD_MORPHEME', unique=True, max_length=500)  # Field name made lowercase.
@@ -98,10 +114,6 @@ class TblTotalCarNewsList(models.Model):
 class TblYoutubeCarCommentList(models.Model):
     comment_no = models.AutoField(db_column='COMMENT_NO', primary_key=True)  # Field name made lowercase.
     comment_video_id = models.CharField(db_column='COMMENT_VIDEO_ID', max_length=100, blank=True, null=True)  # Field name made lowercase.
-    bmname = models.CharField(db_column='BMNAME', max_length=100, blank=True, null=True)  # Field name made lowercase.
-    boiname = models.CharField(db_column='BOINAME', max_length=100, blank=True, null=True)  # Field name made lowercase.
-    boname = models.CharField(db_column='BONAME', max_length=100, blank=True, null=True)  # Field name made lowercase.
-    bono = models.IntegerField(db_column='BONO', blank=True, null=True)  # Field name made lowercase.
     comment_content = models.TextField(db_column='COMMENT_CONTENT', blank=True, null=True)  # Field name made lowercase.
     comment_content_length = models.IntegerField(db_column='COMMENT_CONTENT_LENGTH', blank=True, null=True)  # Field name made lowercase.
     add_date = models.DateTimeField(db_column='ADD_DATE', blank=True, null=True)  # Field name made lowercase.
@@ -112,6 +124,8 @@ class TblYoutubeCarCommentList(models.Model):
     va_count = models.IntegerField(db_column='VA_COUNT', blank=True, null=True)  # Field name made lowercase.
     morpheme_count = models.IntegerField(db_column='MORPHEME_COUNT', blank=True, null=True)  # Field name made lowercase.
     proc_status = models.IntegerField(db_column='PROC_STATUS', blank=True, null=True)  # Field name made lowercase.
+    writer_name = models.CharField(db_column='WRITER_NAME', max_length=200, blank=True, null=True)  # Field name made lowercase.
+    info_no = models.IntegerField(db_column='INFO_NO')  # Field name made lowercase.
 
     class Meta:
         managed = False

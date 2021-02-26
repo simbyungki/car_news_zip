@@ -315,11 +315,16 @@
 .car-comment .car-list {position:absolute; top:0; width:100%;}
 .car-comment .car-list ul {display:flex; justify-content:space-between; flex-wrap:wrap;}
 .car-comment .car-list ul li {margin-top:30px; width:19%;}
-.car-comment .car-list ul li a {display:block; text-align:center;}
+.car-comment .car-list ul li a {display:block; position:relative; text-align:center;}
 .car-comment .car-list ul li a .picture {height:140px;}
 .car-comment .car-list ul li a .picture img {position:relative; left:0; top:0; width:90%; transition:all .2s;} 
 .car-comment .car-list ul li a:hover .picture img {left:-5px; top:2px;}
 .car-comment .car-list ul li a strong {display:block; color:#444; font-size:20px;}
+.car-comment .car-list ul li a .box {display:flex; justify-content:space-between; flex-wrap:wrap; position:absolute; left:50%; top:-80px; margin-left:-47.5%; padding:3px 15px 15px; width:95%; background:#fff; box-shadow:0 5px 12px rgba(0,0,0,.2); box-sizing:border-box; opacity:0; transition:all .3s;}
+.car-comment .car-list ul li a:hover .box {top:-100px; opacity:1;}
+.car-comment .car-list ul li a .box dt,
+.car-comment .car-list ul li a .box dd {margin-top:12px; width:50%; font-size:14px;}
+.car-comment .car-list ul li a .box dt {font-size:16px; font-weight:600;}
 .car-comment .common-tab-content {position:absolute; top:60px; width:100%;}
 
 /***** 
