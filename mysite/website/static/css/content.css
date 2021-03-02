@@ -75,6 +75,12 @@
 .container {padding-top:210px; padding-bottom:60px;}
 .container .inner {position:relative; margin:0 auto; padding:10px 0; width:90%;}
 
+.page-btns {margin-top:20px;}
+.page-btns.full .btn {width:100%;}
+.page-btns .btn {display:block; height:55px; line-height:55px; font-size:20px; text-align:center;}
+.page-btns .btn.darkgray {color:#fff; background:#444;}
+.page-btns .btn.gray {color:#000; background:#ddd;}
+
 .common-tab-content {display:none;}
 .common-tab-content .tab ul {display:flex;}
 .common-tab-content .tab ul li {width:50%; box-sizing:border-box; border:1px solid #ddd;}
