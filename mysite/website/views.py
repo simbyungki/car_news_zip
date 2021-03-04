@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.contrib import auth
 from django.db.models import Q
-from .models import TblTotalCarNewsList, TblMemberList, TblNewsKeywordList, TblNewsKeywordMap, TblYoutubeCarCommentList, TblCarInfos
+from .models import TblTotalCarNewsList, TblMemberList, TblNewsKeywordList, TblNewsKeywordMap, TblYoutubeCarCommentList, TblCarInfos, TblNewsAllKeywordList
 from datetime import datetime
 from django.http import HttpResponse
 from django.core import serializers
@@ -120,6 +120,7 @@ def news_detail(request) :
 
 # 뉴스 트렌드
 def news_trend(request) : 
+	news_keyword_list = TblNewsAllKeywordList.objects.all()
 	context = {}
 	context['today_date'] = datetime.today().strftime('%Y-%m-%d')
 	context['page_group'] = 'news-trend-p'
@@ -309,20 +310,37 @@ def view_count(request) :
 		return HttpResponse(after_count, content_type="text/json-comment-filtered")
 
 
-def car_comments(request) : 
+def car_review_list(request) : 
 	infos = {}
 	infos['referer'] = request.headers.get('referer')
-	infos['page_name'] = '/car_comments'
+	infos['page_name'] = '/car_review_list'
 	infos['user_ip'] = get_ip(request)
 	connect_log_insert(infos)
 	context = {}
-	context['page_group'] = 'car-comments-list'
+	context['page_group'] = 'car-review-list'
 	
-	return render(request, 'website/car_comments.html', context)
+	return render(request, 'website/car_review_list.html', context)
+
+def car_review_detail(request) : 
+	infos = {}
+	infos['referer'] = request.headers.get('referer')
+	infos['page_name'] = '/car_review_detail'
+	infos['user_ip'] = get_ip(request)
+	connect_log_insert(infos)
+
+	if request.method == 'GET' :
+		bono = int(request.GET.get('bono'))
+		news_keyword_list = TblNewsAllKeywordList.objects.all()
+
+		print('bono', bono)
+
+		context = {}
+		context['page_group'] = 'car-comments-detail'
 	
+	return render(request, 'website/car_review_detail.html', context)
 
 
-def car_comment_list_data(request) : 
+def car_review_list_data(request) : 
 	comment_list = TblYoutubeCarCommentList.objects.all()
 	car_info_list = TblCarInfos.objects.all()
 

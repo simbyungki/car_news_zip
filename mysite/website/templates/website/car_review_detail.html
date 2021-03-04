@@ -13,83 +13,7 @@
 				차량과 무관한 내용이 존재합니다.
 			</p>		
 			<div class="box">
-				<div class="car-list">
-					<ul>
-						<li>
-							<a href="javascript:;" data-bono="2515">
-								<div class="picture">
-									<img src="https://img1.daumcdn.net/thumb/R380x0/?fname=%2Fmedia%2Fvitraya%2Fauto%2Fimage%2F1b7a66%2FB3DE67A6829A9409C5A7D01CED280D71EAD449A1108B7F57AB_4P53" alt="">
-								</div>
-								<strong>제네시스 G80 (G330)</strong>
-								{% comment %} <dl class="box">
-									<dt>신차 가격대</dt>
-									<dd>3,053 ~ 3,969만원</dd>
-									<dt>연비</dt>
-									<dd>10.0 ~ 14.6km/l</dd>
-									<dt>배기량</dt>
-									<dd>2199 ~ 3342cc</dd>
-								</dl> {% endcomment %}
-							</a>
-						</li>
-						<li>
-							<a href="javascript:;" data-bono="1594">
-								<div class="picture">
-									<img src="https://img1.daumcdn.net/thumb/R380x0/?fname=%2Fmedia%2Fvitraya%2Fauto%2Fimage%2F37c33b%2F8B2B3003EB0A6E2E12BAF9403019E79C148F3C43270506192B_5BNM" alt="">
-								</div>
-								<strong>제네시스 EQ900</strong>
-							</a>
-						</li>
-						<li>
-							<a href="javascript:;" data-bono="1568">
-								<div class="picture">
-									<img src="https://img1.daumcdn.net/thumb/R380x0/?fname=%2Fmedia%2Fvitraya%2Fauto%2Fimage%2Fdcf5cb%2F4DF060B5521C170248C0D21AF0D5FE288FFAC4DBF6356A057C_6NLK" alt="">
-								</div>
-								<strong>쉐보레 임팔라</strong>
-								{% comment %} <dl class="box">
-									<dt>신차 가격대</dt>
-									<dd>3,053 ~ 3,969만원</dd>
-									<dt>연비</dt>
-									<dd>10.0 ~ 14.6km/l</dd>
-									<dt>배기량</dt>
-									<dd>2199 ~ 3342cc</dd>
-								</dl> {% endcomment %}
-							</a>
-						</li>
-						<li>
-							<a href="javascript:;" data-bono="1598">
-								<div class="picture">
-									<img src="https://img1.daumcdn.net/thumb/R380x0/?fname=%2Fmedia%2Fvitraya%2Fauto%2Fimage%2F46186d%2F0733D7032FB232868EB702ED7E9BDEDA57ABBE86BDE51F0234_5Q4N" alt="">
-								</div>
-								<strong>기아 올 뉴 K7</strong>
-							</a>
-						</li>
-						<li>
-							<a href="javascript:;" data-bono="2569">
-								<div class="picture">
-									<img src="https://img1.daumcdn.net/thumb/R380x0/?fname=%2Fmedia%2Fvitraya%2Fauto%2Fimage%2F055acc%2F0AD76B406101E2B96B058EAF6FA3AB8E5B66F34C768AA906D7_66ZM" alt="">
-								</div>
-								<strong>현대 그랜저IG</strong>
-							</a>
-						</li>
-						<li>
-							<a href="javascript:;" data-bono="2656">
-								<div class="picture">
-									<img src="https://img1.daumcdn.net/thumb/R380x0/?fname=%2Fmedia%2Fvitraya%2Fauto%2Fimage%2F6bc896%2F20968F9407E04318F69CE59A33D97686DA94B0C3E34B47DCB5_7K3W" alt="">
-								</div>
-								<strong>기아 더 뉴 카니발</strong>
-							</a>
-						</li>
-						<li>
-							<a href="javascript:;" data-bono="2611">
-								<div class="picture">
-									<img src="https://img1.daumcdn.net/thumb/R380x0/?fname=%2Fmedia%2Fvitraya%2Fauto%2Fimage%2Ff87aae%2FCD3902C6F7360F433686920B9AE0F7DE3A9FA73B0AB82EEB9E_6PZ9" alt="">
-								</div>
-								<strong>기아 더 뉴 쏘렌토</strong>
-							</a>
-						</li>
-					</ul>
-				</div>	
-				<a href="javascript:;" class="btn-back">&lt;&nbsp;&nbsp;다른 차종 선택하기</a>
+				<a href="javascript:;" class="btn-back" onclick="history.back();">&lt;&nbsp;&nbsp;다른 차종 선택하기</a>
 				<div class="common-tab-content">					
 					<nav class="tab">
 						<ul>
@@ -128,25 +52,9 @@
 </div>
 <script>
 $(function(){
-	$('.car-list li a').on('click', function(){
-		var bono = $(this).data('bono');
-		var choiceCar = $(this).children('strong').text();
-		$('.car-list').hide();
-		$('.car-comment .btn-back').css('display', 'block');
-		$('.common-tab-content').show().attr('data-bono', bono);
-		$('.car-comment-list ul').html('');
-		$('.video-list ul').html('');
-		$('.page-title span').text(choiceCar);
-		loadCommentList(0, bono, 20);
-	});
-	$('.car-comment .btn-back').on('click', function(){
-		$('.page-title span').text('');
-		$('.car-comment-list ul').html('');
-		$('.video-list ul').html('');
-		$('.common-tab-content').hide().removeAttr('data-bono');
-		$('.car-comment .btn-back').hide();
-		$('.car-list').show();
-	});
+	urlParams = getUrlParams();
+	var bono = urlParams.bono;
+	loadReviewList(0, bono, 20);
 
 	//스크롤 로드 (페이징)
 	$(window).on('scroll', function(e){
@@ -155,18 +63,18 @@ $(function(){
 				if($('.common-tab-content ul li.active').index() == 0){
 					if(!connFlag){
 						var nowListLength = $('.car-comment-list li').length;
-						loadCommentList(nowListLength, $('.common-tab-content').data('bono'), 20);
+						loadReviewList(nowListLength, bono, 20);
 					}	
 				}
 			}
 		}
 	});
 
-	function loadCommentList(start_idx, bono, load_length){
+	function loadReviewList(start_idx, bono, load_length){
 		$('.loading').show();
 		connFlag = true;
 		$.ajax({
-			url: '{% url "car_comment_list_data" %}',
+			url: '{% url "car_review_list_data" %}',
 			type: 'GET',
 			data: {
 				'start_idx': start_idx,
@@ -178,12 +86,13 @@ $(function(){
 				$('.loading').hide();
 				var commentListItem = '';
 				var videoListItem = '';
-				json_data = JSON.parse(data.comment_list)
-				total_length = data.total_length
-				video_ids = data.video_ids
-				for(i = 0; i < json_data.length; i++){
-					list = json_data[i].fields;
-					console.log(list)
+				comment_list_data = JSON.parse(data.comment_list);
+
+				total_length = data.total_length;
+				video_ids = data.video_ids;
+				for(i = 0; i < comment_list_data.length; i++){
+					list = comment_list_data[i].fields;
+					{% comment %} console.log(list) {% endcomment %}
 					commentListItem += '<li>';
 					commentListItem += '<div class="mining-result">';
 					if(list.positive_count > 0 || list.negative_count > 0){
@@ -223,6 +132,9 @@ $(function(){
 					$('.video-list ul').append(videoListItem);
 				}
 				$('.car-comment-list ul').append(commentListItem);
+
+				$('.page-title span').html(data.car_infos.bmname + ' ' + data.car_infos.boiname);
+
 				connFlag = false;
 			},
 			error : function(request, status, error){

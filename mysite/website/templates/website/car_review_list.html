@@ -1,0 +1,115 @@
+{% extends 'website/common/template.html' %}
+{% load static %}
+{% load custom_tags %}
+{% block content %}
+	<section class="container car-comment">
+		<div class="inner">
+			<h2 class="page-title"><span></span> 시승기 영상 및 여론 모음</h2>
+			<form method="POST">
+				{% csrf_token %}
+			</form>
+			<p class="comment-info">
+				해당 차종의 시승기 영상 (유튜브) 상위 10개에 남겨진 댓글을 수집합니다.<br>
+				차량과 무관한 내용이 존재합니다.
+			</p>		
+			<div class="box">
+				<div class="car-list">
+					<ul>
+						<li>
+							<a href="/car_review_detail?bono=2515">
+								<div class="picture">
+									<img src="https://img1.daumcdn.net/thumb/R380x0/?fname=%2Fmedia%2Fvitraya%2Fauto%2Fimage%2F1b7a66%2FB3DE67A6829A9409C5A7D01CED280D71EAD449A1108B7F57AB_4P53" alt="">
+								</div>
+								<strong>제네시스 G80 (G330)</strong>
+								{% comment %} <dl class="box">
+									<dt>신차 가격대</dt>
+									<dd>3,053 ~ 3,969만원</dd>
+									<dt>연비</dt>
+									<dd>10.0 ~ 14.6km/l</dd>
+									<dt>배기량</dt>
+									<dd>2199 ~ 3342cc</dd>
+								</dl> {% endcomment %}
+							</a>
+						</li>
+						<li>
+							<a href="/car_review_detail?bono=1594">
+								<div class="picture">
+									<img src="https://img1.daumcdn.net/thumb/R380x0/?fname=%2Fmedia%2Fvitraya%2Fauto%2Fimage%2F37c33b%2F8B2B3003EB0A6E2E12BAF9403019E79C148F3C43270506192B_5BNM" alt="">
+								</div>
+								<strong>제네시스 EQ900</strong>
+							</a>
+						</li>
+						<li>
+							<a href="/car_review_detail?bono=1568">
+								<div class="picture">
+									<img src="https://img1.daumcdn.net/thumb/R380x0/?fname=%2Fmedia%2Fvitraya%2Fauto%2Fimage%2Fdcf5cb%2F4DF060B5521C170248C0D21AF0D5FE288FFAC4DBF6356A057C_6NLK" alt="">
+								</div>
+								<strong>쉐보레 임팔라</strong>
+								{% comment %} <dl class="box">
+									<dt>신차 가격대</dt>
+									<dd>3,053 ~ 3,969만원</dd>
+									<dt>연비</dt>
+									<dd>10.0 ~ 14.6km/l</dd>
+									<dt>배기량</dt>
+									<dd>2199 ~ 3342cc</dd>
+								</dl> {% endcomment %}
+							</a>
+						</li>
+						<li>
+							<a href="/car_review_detail?bono=1598">
+								<div class="picture">
+									<img src="https://img1.daumcdn.net/thumb/R380x0/?fname=%2Fmedia%2Fvitraya%2Fauto%2Fimage%2F46186d%2F0733D7032FB232868EB702ED7E9BDEDA57ABBE86BDE51F0234_5Q4N" alt="">
+								</div>
+								<strong>기아 올 뉴 K7</strong>
+							</a>
+						</li>
+						<li>
+							<a href="/car_review_detail?bono=2569">
+								<div class="picture">
+									<img src="https://img1.daumcdn.net/thumb/R380x0/?fname=%2Fmedia%2Fvitraya%2Fauto%2Fimage%2F055acc%2F0AD76B406101E2B96B058EAF6FA3AB8E5B66F34C768AA906D7_66ZM" alt="">
+								</div>
+								<strong>현대 그랜저IG</strong>
+							</a>
+						</li>
+						<li>
+							<a href="/car_review_detail?bono=2656">
+								<div class="picture">
+									<img src="https://img1.daumcdn.net/thumb/R380x0/?fname=%2Fmedia%2Fvitraya%2Fauto%2Fimage%2F6bc896%2F20968F9407E04318F69CE59A33D97686DA94B0C3E34B47DCB5_7K3W" alt="">
+								</div>
+								<strong>기아 더 뉴 카니발</strong>
+							</a>
+						</li>
+						<li>
+							<a href="/car_review_detail?bono=2611">
+								<div class="picture">
+									<img src="https://img1.daumcdn.net/thumb/R380x0/?fname=%2Fmedia%2Fvitraya%2Fauto%2Fimage%2Ff87aae%2FCD3902C6F7360F433686920B9AE0F7DE3A9FA73B0AB82EEB9E_6PZ9" alt="">
+								</div>
+								<strong>기아 더 뉴 쏘렌토</strong>
+							</a>
+						</li>
+					</ul>
+				</div>	
+			</div>	
+		</div>
+	</section>
+	<div class="loading">
+		<div class="dim"></div>
+		<div class="loading-box">
+			<div class="out-box">
+				<i class="in-box"></i>
+			</div>
+			<p>
+				데이터를 불러오는 중입니다.<br>
+				(잠시만 기다려주세요.)
+			</p>
+		</div>
+	</div>
+</div>
+<script>
+$(function(){
+	
+})
+</script>
+</body>
+</html>
+{% endblock %}

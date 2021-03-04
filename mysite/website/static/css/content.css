@@ -81,7 +81,6 @@
 .page-btns .btn.darkgray {color:#fff; background:#444;}
 .page-btns .btn.gray {color:#000; background:#ddd;}
 
-.common-tab-content {display:none;}
 .common-tab-content .tab ul {display:flex;}
 .common-tab-content .tab ul li {width:50%; box-sizing:border-box; border:1px solid #ddd;}
 .common-tab-content .tab ul li a {display:block; width:100%; height:42px; line-height:42px; color:#444; font-size:17px; text-align:center;}
@@ -300,7 +299,7 @@
 
 /* car comment */
 .container.car-comment {padding-top:135px;}
-.page-title {margin-bottom:20px; font-size:32px; text-align:center;}
+.page-title {margin-bottom:20px; line-height:38px; font-size:32px; text-align:center;}
 .car-comment .comment-info {margin-bottom:30px; line-height:28px; font-size:18px; text-align:center;}
 .car-comment-list {padding:0 30px;}
 .car-comment-list ul {display:flex; flex-wrap:wrap;}
@@ -335,7 +334,7 @@
 .car-comment .video-list li object,
 .car-comment .video-list li embed {position:absolute; top:0; left:0; width:100%; height:100%;}
 .car-comment .box {position:relative;}
-.car-comment .btn-back {display:none; width:15%; height:46px; line-height:46px; color:#fff; font-size:18px; font-weight:600; text-align:center; background:#222;}
+.car-comment .btn-back {display:block; width:15%; height:46px; line-height:46px; color:#fff; font-size:18px; font-weight:600; text-align:center; background:#222;}
 .car-comment .car-list {position:absolute; top:0; width:100%;}
 .car-comment .car-list ul {display:flex; justify-content:space-between; flex-wrap:wrap;}
 .car-comment .car-list ul li {margin-top:35px; width:19%;}
