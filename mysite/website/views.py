@@ -83,7 +83,7 @@ def search_log_insert(infos) :
 def news_list(request) :
 	context = {}
 	context['today_date'] = datetime.today().strftime('%Y-%m-%d')
-	context['page_group'] = 'news-list'
+	context['page_group'] = 'news-list-p'
 	user_id = request.session.get('user')
 	if user_id :
 		memb_name = TblMemberList.objects.filter(memb_id=user_id).values()[0].get('memb_name')
@@ -118,9 +118,18 @@ def news_detail(request) :
 
 	return render(request, 'website/news_detail.html', context)
 
+# 뉴스 트렌드
+def news_trend(request) : 
+	context = {}
+	context['today_date'] = datetime.today().strftime('%Y-%m-%d')
+	context['page_group'] = 'news-trend-p'
+
+	return render(request, 'website/news_trend.html', context)
+
 # 로그인
 def login(request) :
-	context = {'page_group': 'login-p'}
+	context = {}
+	context['page_group'] = 'login-p'
 	user_id = request.session.get('user')
 	if user_id :
 		memb_name = TblMemberList.objects.filter(memb_id=user_id).values()[0].get('memb_name')
@@ -147,7 +156,8 @@ def logout(request) :
 	return redirect('/')
 # 회원가입
 def join(request) : 
-	context = {'page_group': 'join-p'}
+	context = {}
+	context['page_group'] = 'join-p'
 	user_id = request.session.get('user')
 	if user_id :
 		memb_name = TblMemberList.objects.filter(memb_id=user_id).values()[0].get('memb_name')
@@ -166,18 +176,14 @@ def join(request) :
 			return render(request, 'website/join.html', context)
 		elif password != re_password : 
 			context['error'] = '* 비밀번호가 다릅니다.'
-			context = {
-				'memb_id': memb_id,
-				'memb_name': memb_name,
-				'gender': gender
-			}
+			context['memb_id'] = memb_id
+			context['memb_name'] = memb_name
+			context['gender'] = gender
 			return render(request, 'website/join.html', context)
 		elif TblMemberList.objects.filter(memb_id = memb_id).exists() == True : 
 			context['error'] = '* 이미 존재하는 아이디입니다.'
-			context = {
-				'memb_name': memb_name,
-				'gender': gender
-			}
+			context['memb_name'] = memb_name
+			context['gender'] = gender
 			return render(request, 'website/join.html', context)
 		else :
 			new_member = TblMemberList(

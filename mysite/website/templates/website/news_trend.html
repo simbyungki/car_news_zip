@@ -1,0 +1,328 @@
+{% extends 'website/common/template.html' %}
+{% load static %}
+{% load custom_tags %}
+{% block content %}
+	<section class="container">
+		<div class="inner">
+			<!-- 키워드 -->
+			<div class="trend-view-groups">
+				<div class="trend-view-group">
+					<div class="title-row">
+						<h2 class="group-title">오늘의 키워드</h2>
+						<p class="group-summary">- 오늘 뉴스에 자주 등장한 키워드 집합입니다. (매일 오후 3시 업데이트)</p>
+					</div>
+					<div class="view">
+						<div class="chart chart01" id="chart01">chart01</div>
+					</div>
+				</div>
+				<div class="trend-view-group">
+					<div class="title-row">
+						<h2 class="group-title"></h2>
+						<p class="group-summary">- 언론사 별 하루 업데이트 되는 뉴스 평균 개수 입니다. (매일 오후 9시에 업데이트)</p>
+					</div>
+					<div class="view">
+						<div class="chart chart02" id="chart02">chart02</div>
+					</div>
+				</div>
+				<div class="trend-view-group">
+					<div class="title-row">
+						<h2 class="group-title"></h2>
+						<p class="group-summary">- 언론사 별 하루 업데이트 되는 뉴스 평균 개수 입니다. (매일 오후 9시에 업데이트)</p>
+					</div>
+					<div class="view">
+						<div class="chart chart03" id="chart03">chart03</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- 업데이트 -->
+			<div class="trend-view-groups">
+				<div class="trend-view-group">
+					<div class="title-row">
+						<h2 class="group-title">일자별 업데이트 되는 뉴스 수</h2>
+						<p class="group-summary">- 일자별로 업데이트 된 뉴스 수를 차트로 표시합니다. (매일 오후 9시 업데이트)</p>
+					</div>
+					<div class="view">
+						<div class="chart chart04" id="chart04">chart04</div>
+					</div>
+				</div>
+				<div class="trend-view-group">
+					<div class="title-row">
+						<h2 class="group-title">언론사별 일 평균 뉴스 업데이트 수</h2>
+						<p class="group-summary">- 언론사별 업데이트 되는 뉴스 평균 개수 입니다. (매일 오후 9시 업데이트)</p>
+					</div>
+					<div class="view">
+						<div class="chart chart05" id="chart05">chart05</div>
+					</div>
+				</div>
+				<div class="trend-view-group">
+					<div class="title-row">
+						<h2 class="group-title">카테고리 별 일 평균 뉴스 업데이트 수</h2>
+						<p class="group-summary">- 카테고리 별 하루 업데이트 되는 뉴스 평균 개수 입니다. (매일 오후 9시 업데이트)</p>
+					</div>
+					<div class="view">
+						<div class="chart chart06" id="chart06">chart06</div>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+	</section>
+	<div class="loading">
+		<div class="dim"></div>
+		<div class="loading-box">
+			<div class="out-box">
+				<i class="in-box"></i>
+			</div>
+			<p>
+				데이터를 불러오는 중입니다.<br>
+				(잠시만 기다려주세요.)
+			</p>
+		</div>
+	</div>
+
+</div>
+
+<script>
+$(function(){
+	AmCharts.makeChart("chart01", {
+		"type": "pie",
+		"labelText": "[[title]]\n[[percents]]%",
+		"balloonText": "[[title]]<br><span style='font-size:14px'><b>[[value]]</b> ([[percents]]%)</span>",
+		"labelRadius": 5,
+		/*"labelText": "[[title]]",*/
+		"colors": [
+			"#fad048",
+			"#25a0a7",
+			"#64d3da",
+			"#79d69f",
+			"#70ba6d",
+			"#cbe989",
+			"#edf28c",
+			"#ffd1d4",
+			"#5ee1dc",
+			"#b0eead",
+			"#fef85a",
+			"#8badd2"
+		],
+		/*"labelsEnabled": false,*/
+		"labelTickColor": "#0000FF",
+		"maxLabelWidth": 60,
+		"outlineAlpha": 0.98,
+		"titleField": "carType",
+		"valueField": "count",
+		"color": "#000000",
+		"fontSize": 13,
+		"theme": "chalk",
+		"dataProvider": [
+			{
+				"carType": "신규평가",
+				"count": "47150"
+			},
+			{
+				"carType": "미평가",
+				"count": "26000"
+			},
+			{
+				"carType": "미정의",
+				"count": "3000"
+			}
+		],
+	});
+		
+	AmCharts.makeChart("chart04", {
+		"type": "serial",
+		"theme": "light",
+		"marginRight": 20,
+		"dataProvider": [{
+			"date": "2021-02-24",
+			"visits": 32,
+			"color": "#fdac12"
+		},
+		{
+			"date": "2021-02-25",
+			"visits": 44,
+			"color": "#fdac12"
+		},
+		{
+			"date": "2021-02-26",
+			"visits": 31,
+			"color": "#fdac12"
+		},
+		{
+			"date": "2021-02-27",
+			"visits": 27,
+			"color": "#fdac12"
+		},
+		{
+			"date": "2021-02-28",
+			"visits": 50,
+			"color": "#fdac12"
+		},
+		{
+			"date": "2021-03-01",
+			"visits": 52,
+			"color": "#fdac12"
+		},
+		{
+			"date": "2021-03-02",
+			"visits": 21,
+			"color": "#fdac12"
+		}],
+		"startDuration": 1,
+		"graphs": [{
+			"labelText": "[[value]]",
+			"fillColorsField": "color",
+			"fillAlphas": 0.9,
+			"lineAlpha": 0.2,
+			"type": "column",
+			"valueField": "visits"
+		}],
+		"chartCursor": {
+			"categoryBalloonEnabled": false,
+			"cursorAlpha": 0,
+			"zoomable": false
+		},
+		"categoryField": "date",
+		"categoryAxis": {
+			"gridPosition": "start",
+			"labelRotation": 45
+		},
+		"export": {
+			"enabled": true
+		},
+		"rotate": false
+	});
+
+	AmCharts.makeChart("chart05", {
+		"type": "serial",
+		"theme": "light",
+		"marginRight": 20,
+		"dataProvider": [{
+			"media": "오토헤럴드",
+			"visits": 4,
+			"color": "#555"
+		},
+		{
+			"media": "데일리카",
+			"visits": 2,
+			"color": "#c90824"
+		},
+		{
+			"media": "오토뷰",
+			"visits": 6,
+			"color": "#f36f21"
+		},
+		{
+			"media": "IT조선",
+			"visits": 1,
+			"color": "#ce2c2c"
+		},
+		{
+			"media": "오토모닝",
+			"visits": 1,
+			"color": "#093aa7"
+		},
+		{
+			"media": "오토다이어리",
+			"visits": 3,
+			"color": "#620027"
+		},
+		{
+			"media": "카가이",
+			"visits": 5,
+			"color": "#000"
+		},
+		{
+			"media": "더드라이브",
+			"visits": 4,
+			"color": "#00adee"
+		},
+		{
+			"media": "모터그래프",
+			"visits": 2,
+			"color": "#b4000f"
+		},
+		{
+			"media": "탑라이더",
+			"visits": 1,
+			"color": "#000"
+		}],
+		"startDuration": 1,
+		"graphs": [{
+			"labelText": "[[value]]",
+			"fillColorsField": "color",
+			"fillAlphas": 0.9,
+			"lineAlpha": 0.2,
+			"type": "column",
+			"valueField": "visits"
+		}],
+		"chartCursor": {
+			"categoryBalloonEnabled": false,
+			"cursorAlpha": 0,
+			"zoomable": false
+		},
+		"categoryField": "media",
+		"categoryAxis": {
+			"gridPosition": "start",
+			"labelRotation": 45
+		},
+		"export": {
+			"enabled": true
+		},
+		"rotate": false
+	});
+
+	AmCharts.makeChart("chart06", {
+		"type": "serial",
+		"theme": "light",
+		"marginRight": 20,
+		"dataProvider": [{
+			"category": "업계 뉴스",
+			"visits": 4,
+			"color": "#555"
+		},
+		{
+			"category": "중고차 뉴스",
+			"visits": 2,
+			"color": "#c90824"
+		},
+		{
+			"category": "신차 뉴스",
+			"visits": 6,
+			"color": "#f36f21"
+		},
+		{
+			"category": "시승기",
+			"visits": 1,
+			"color": "#ce2c2c"
+		}],
+		"startDuration": 1,
+		"graphs": [{
+			"labelText": "[[value]]",
+			"fillColorsField": "color",
+			"fillAlphas": 0.9,
+			"lineAlpha": 0.2,
+			"type": "column",
+			"valueField": "visits"
+		}],
+		"chartCursor": {
+			"categoryBalloonEnabled": false,
+			"cursorAlpha": 0,
+			"zoomable": false
+		},
+		"categoryField": "category",
+		"categoryAxis": {
+			"gridPosition": "start",
+			"labelRotation": 45
+		},
+		"export": {
+			"enabled": true
+		},
+		"rotate": false
+	});
+});
+</script>
+</body>
+</html>
+{% endblock %}

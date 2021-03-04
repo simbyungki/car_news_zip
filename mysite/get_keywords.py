@@ -41,6 +41,7 @@ wc = WordCloud(font_path=f'{BASE_DIR}\\website\\static\\font\\NanumSquareB.ttf',
 mining_result_data = []
 def text_mining(cont_type, dbconn, cursor) :
 	kkma = Kkma()
+	# car_news_list = TblTotalCarNewsList.objects.all().filter(mining_status = 1).filter(morpheme_count = 0)
 	car_news_list = TblTotalCarNewsList.objects.all().filter(mining_status = 1).filter(morpheme_count = 0).exclude(news_content='')
 	# car_news_list = TblTotalCarNewsList.objects.all().filter(news_code = '202012090928391')
 	except_word_list = []
@@ -82,20 +83,22 @@ def text_mining(cont_type, dbconn, cursor) :
 			# print('-'*50)
 			in_result_data = []
 		# in_result_data[0] 각종 카운트 사전
-			count_dic = {}
+			etc_info_dic = {}
 			# 형태소 단어 총 개수
-			count_dic['morpheme_count'] = len(re_content)
+			etc_info_dic['morpheme_count'] = len(re_content)
 			# 형용사 개수
 			va_count = 0
-			count_dic['va_count'] = va_count
+			etc_info_dic['va_count'] = va_count
 			# 긍정단어 개수
 			p_count = 0
-			count_dic['positive_count'] = p_count
+			etc_info_dic['positive_count'] = p_count
 			# 부정단어 개수
 			n_count = 0
-			count_dic['negative_count'] = n_count
+			etc_info_dic['negative_count'] = n_count
+			# 미디어 코드
+			etc_info_dic['media_code'] = car_news_list[idx].media_code
 			
-			in_result_data.append(count_dic)
+			in_result_data.append(etc_info_dic)
 		# in_result_data[1] 뉴스 번호
 			in_result_data.append(car_news_list[idx].news_no)
 			# 뉴스 본문
@@ -154,6 +157,8 @@ def text_mining(cont_type, dbconn, cursor) :
 		print('DB Insert')
 		try : 
 			for out_idx, data_list in enumerate(mining_result_data) :
+				media_code = data_list[0].get('media_code')
+				print('미디어코드 = ', media_code)
 				for idx, data in enumerate(data_list) :
 					try : 
 						if idx > 1 : 
@@ -169,6 +174,16 @@ def text_mining(cont_type, dbconn, cursor) :
 									) 
 									VALUES (
 										"{word[0]}", "{word[1]}", NOW()
+									)
+								""")
+
+								cursor.execute(f"""
+									INSERT INTO TBL_NEWS_ALL_KEYWORD_LIST 
+									(
+										WORD_MORPHEME, WORD_CLASS, MEDIA_CODE, UPDATE_DATE
+									) 
+									VALUES (
+										"{word[0]}", "{word[1]}", "{media_code}", NOW()
 									)
 								""")
 

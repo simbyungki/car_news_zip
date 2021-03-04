@@ -47,10 +47,12 @@
 <div id="wrap" class="member-p">
 {% elif page_group == 'news-detail-p' %}
 <div id="wrap" class="news-detail-p">
+{% elif page_group == 'news-trend-p' %}
+<div id="wrap" class="news-trend-p">
 {% else %}
 <div id="wrap">
 {% endif %}
-	{% if page_group != 'news-list' %}
+	{% if page_group != 'news-list-p' %}
 	<header class="header no-search">
 	{% else %}
 	<header class="header">
@@ -59,7 +61,7 @@
 		<a href="javascript:;" class="btn-gnb" title="메뉴"></a>
 		{% endif %}
 		<h1 class="service-name">
-		{% if page_group == 'news-list' %}
+		{% if page_group == 'news-list-p' %}
 			<a href="/news_list?type=category"><span>CHA</span> <span>N</span>ews <span>A</span>nalysi<span>S</span></a><sup>Beta!</sup><br>
 		</h1>
 		<div class="search-box">
@@ -134,6 +136,15 @@
 <script type="text/javascript" src="{% static 'js/swiper.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/jquery.cookie-1.4.1.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/common.js' %}?ver={{ today_date }}"></script>
+<!-- <script type="text/javascript" src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+<script type="text/javascript" src="https://www.amcharts.com/lib/3/serial.js"></script>
+<script type="text/javascript" src="https://www.amcharts.com/lib/3/pie.js"></script> -->
+<script type="text/javascript" src="{% static 'js/amcharts3.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/amchart3_serial.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/amchart3_pie.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/amchart4_core.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/amcharts4.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/amchart4_animated.js' %}"></script>
 <script>
 $(function(){
 	$('.gnb-box .menu ul > li').removeClass('active');

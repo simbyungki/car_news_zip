@@ -56,6 +56,18 @@ class TblCarInfos(models.Model):
         managed = False
         db_table = 'TBL_CAR_INFOS'
 
+class TblNewsAllKeywordList(models.Model):
+    word_no = models.AutoField(db_column='WORD_NO', primary_key=True)  # Field name made lowercase.
+    word_morpheme = models.CharField(db_column='WORD_MORPHEME', max_length=500, blank=True, null=True)  # Field name made lowercase.
+    word_class = models.CharField(db_column='WORD_CLASS', max_length=100, blank=True, null=True)  # Field name made lowercase.
+    media_code = models.CharField(db_column='MEDIA_CODE', max_length=50, blank=True, null=True)  # Field name made lowercase.
+    news_no = models.IntegerField(db_column='NEWS_NO', blank=True, null=True)  # Field name made lowercase.
+    update_date = models.DateTimeField(db_column='UPDATE_DATE', blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'TBL_NEWS_ALL_KEYWORD_LIST'
+
 class TblNewsKeywordList(models.Model):
 	word_no = models.AutoField(db_column='WORD_NO', primary_key=True)  # Field name made lowercase.
 	word_morpheme = models.CharField(db_column='WORD_MORPHEME', unique=True, max_length=500)  # Field name made lowercase.
