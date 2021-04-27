@@ -300,7 +300,7 @@
 /* car comment */
 .container.car-comment {padding-top:135px;}
 .page-title {margin-bottom:20px; line-height:38px; font-size:32px; text-align:center;}
-.car-comment .comment-info {margin-bottom:30px; line-height:28px; font-size:18px; text-align:center;}
+.comment-info {margin-bottom:30px; line-height:28px; font-size:18px; text-align:center;}
 .car-comment-list {padding:0 30px;}
 .car-comment-list ul {display:flex; flex-wrap:wrap;}
 .car-comment-list li {position:relative; padding:20px; margin:18px 0.5%; width:32.3%; border:1px solid #ddd; box-sizing:border-box; background:#fff; transition:background .3s;}
@@ -349,6 +349,20 @@
 .car-comment .car-list ul li a .box dd {margin-top:12px; width:50%; font-size:14px;}
 .car-comment .car-list ul li a .box dt {font-size:16px; font-weight:600;}
 .car-comment .common-tab-content {position:absolute; top:60px; width:100%;}
+
+
+/* 보배드림 */
+.container.bobaedream-news {padding-top:150px;}
+.bobaedream-news .box {display:flex; justify-content:space-between; margin-top:60px;}
+.bobaedream-news .box .group {width:49%;}
+.bobaedream-news .box .group-title {margin-bottom:20px; letter-spacing:-1px; font-size:30px; font-weight:800; text-align:center;}
+.bobaedream-news .box ul li {border:1px solid #ddd;}
+.bobaedream-news .box ul li + li {margin-top:10px;}
+.bobaedream-news .box ul li a {display:flex; justify-content:space-between; align-items:center; padding:14px 20px;}
+.bobaedream-news .box ul li a .subject {font-size:18px;}
+.bobaedream-news .box ul li a .key {letter-spacing:-1px; color:#333; font-size:30px;}
+
+
 
 /***** 
     responsive 
@@ -419,7 +433,7 @@
 	.item-list ul li:nth-child(2n) {margin-left:3%;}
 
 	.car-comment .page-title {font-size:28px;}
-	.car-comment .comment-info {line-height:22px; font-size:16px;}
+	.comment-info {line-height:22px; font-size:16px;}
 	.car-comment-list {padding:0;}
 }
 /*****
@@ -458,7 +472,7 @@
 	.category-list .inner {padding-bottom:0;}
 	.category-list ul {margin-top:0;}
 	.category-list ul li {margin-right:18px; margin-bottom:10px;}
-	.car-comment .comment-info {line-height:20px; font-size:14px;}
+	.comment-info {line-height:20px; font-size:14px;}
 	.car-comment .video-list {padding:0 15px;}
 	.car-comment .video-list li {float:none; margin-top:15px; padding-bottom:56.25%; width:100%;}
 	.car-comment .video-list li:nth-child(1) {margin-top:0;}
@@ -515,7 +529,7 @@
 
 	.container.car-comment {padding-top:100px;}
 	.car-comment .page-title {font-size:22px;}
-	.car-comment .comment-info {margin-bottom:15px; line-height:18px; font-size:14px;}
+	.comment-info {margin-bottom:15px; line-height:18px; font-size:14px;}
 	.car-comment-list li {padding:15px;}
 	.car-comment-list li .comment {line-height:20px; font-size:14px;}
 	.car-comment .car-list ul li a strong {font-size:14px;}

@@ -1,0 +1,72 @@
+{% extends 'website/common/template.html' %}
+{% load static %}
+{% load custom_tags %}
+{% block content %}
+	<section class="container bobaedream-news">
+		<div class="inner">
+			<h2 class="page-title">보배드림 뉴스</h2>
+			<p class="comment-info">
+				보배드림 사이트내 자동차뉴스 게시판에서 추천, 조회수가 높은 뉴스를 수집합니다.<br>
+				수집 시점은 본 페이지 접근 기준입니다.
+			</p>		
+			<div class="box">
+				<div class="group">
+					<h3 class="group-title">추천 수 높은 뉴스</h3>
+					<ul>
+						{% for item in recommends.0.bobaedream_recoomend %}
+							<li data-count="{{ forloop.counter }}">
+								<a href="{{ item.link }}">
+									<strong class="key">{{ item.recommend_count }}</strong>
+									<p class="subject">{{ item.subject }}</p>
+									<span class="date">{{ item.date }}</span>
+									<!-- <span class="other-count">{{ item.view_count }}</span> -->
+								</a>
+							</li>
+						{% endfor %}		
+					</ul>
+				</div>
+				<div class="group">
+					<h3 class="group-title">조회수 높은 뉴스</h3>
+					<ul>
+						{% for item in view_count.0.bobaedream_view_count %}
+							<li data-count="{{ forloop.counter }}">
+								<a href="{{ item.link }}">
+									<strong class="key">{{ item.view_count }}</strong>
+									<p class="subject">{{ item.subject }}</p>
+									<span class="date">{{ item.date }}</span>
+									<!-- <span class="other-count">{{ item.recommend_count }}</span> -->
+								</a>
+							</li>
+						{% endfor %}		
+					</ul>
+				</div>
+			</div>	
+		</div>
+	</section>
+	<div class="loading">
+		<div class="dim"></div>
+		<div class="loading-box">
+			<div class="out-box">
+				<i class="in-box"></i>
+			</div>
+			<p>
+				데이터를 불러오는 중입니다.<br>
+				(잠시만 기다려주세요.)
+			</p>
+		</div>
+	</div>
+</div>
+<script>
+$(function(){
+	$('.group ul li').each(function(){
+		var count = Number($(this).find('.key').text());
+		$(this).find('.key').text(numberWithCommas(count))
+	});
+});
+function numberWithCommas(x) {
+	return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+</script>
+</body>
+</html>
+{% endblock %}

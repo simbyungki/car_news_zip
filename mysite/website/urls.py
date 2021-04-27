@@ -15,4 +15,5 @@ urlpatterns = [
 	path('login/', views.login, name='login'),
 	path('logout/', views.logout, name='logout'),
 	path('join/', views.join, name='join'),
+	path('bobaenews/', views.bobaenews, name='bobarnews')
 ]
