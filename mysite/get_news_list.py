@@ -1475,111 +1475,6 @@ class GetTopRider() :
 		finally : 
 			pass
 
-# 보배드림
-class GetBobaeDream() :
-	# 추천
-	def recommend() :
-		today_year = datetime.today().year
-
-		url = 'https://bobaedream.co.kr/list.php?code=nnews&s_cate=&maker_no=&model_no=&or_gu=30&or_se=desc&s_selday=&pagescale=30&info3=&noticeShow=&bestCode=&bestDays=&bestbbs=&vdate=&ndate=&nmdate=&s_select=Subject&s_key='
-		soup = get_soup(url)
-
-		news_list = soup.select('table.clistTable02 tbody tr')
-		# print(news_list)
-		
-		data_list = []
-		return_data_dic = {}
-
-		for idx, news in enumerate(news_list) :
-			if idx > 4 :
-				link = news.find('a', attrs={'class': 'bsubject'})['href']
-
-				photo_dom = news.find('td', attrs={'class': 'photo01'})
-				if photo_dom is not None :
-					img_url = photo_dom.find('img')['src']
-				else : 
-					img_url = ''
-
-				summary_dom = news.find('li', attrs={'class': 'board_list_text_02'})
-				if summary_dom is not None :
-					summary = summary_dom.get_text().strip()
-				else : 
-					summary = ''
-
-				subject = news.find('a', attrs={'class': 'bsubject'}).get_text().strip()
-				date = news.find('td', attrs={'class': 'date'}).get_text().strip()
-				date = date.replace('/', '-')
-				view_count = news.find('td', attrs={'class': 'count'}).get_text()
-				recommend_count = news.find('td', attrs={'class': 'recomm'}).get_text()
-
-				data_group = {}
-				data_group['link'] = 'https://www.bobaedream.co.kr' + link
-				data_group['img_url'] = 'https:' + img_url
-				data_group['subject'] = subject
-				data_group['summary'] = summary
-				data_group['reporter'] = ''
-				data_group['date'] = str(today_year) + '-' + date
-				data_group['view_count'] = view_count
-				data_group['recommend_count'] = recommend_count
-
-				data_list.append(data_group)
-
-		return_data_dic['bobaedream_recoomend'] = data_list
-		etc_list.append(return_data_dic)
-
-		print(etc_list)
-
-	def viewCount() :
-		today_year = datetime.today().year
-
-		url = 'https://bobaedream.co.kr/list.php?code=nnews&s_cate=&maker_no=&model_no=&or_gu=20&or_se=desc&s_selday=&pagescale=30&info3=&noticeShow=&bestCode=&bestDays=&bestbbs=&vdate=&ndate=&nmdate=&s_select=Subject&s_key='
-		soup = get_soup(url)
-
-		news_list = soup.select('table.clistTable02 tbody tr')
-		# print(news_list)
-		
-		data_list = []
-		return_data_dic = {}
-
-		for idx, news in enumerate(news_list) :
-			if idx > 4 :
-				link = news.find('a', attrs={'class': 'bsubject'})['href']
-
-				photo_dom = news.find('td', attrs={'class': 'photo01'})
-				if photo_dom is not None :
-					img_url = photo_dom.find('img')['src']
-				else : 
-					img_url = ''
-
-				summary_dom = news.find('li', attrs={'class': 'board_list_text_02'})
-				if summary_dom is not None :
-					summary = summary_dom.get_text().strip()
-				else : 
-					summary = ''
-
-				subject = news.find('a', attrs={'class': 'bsubject'}).get_text().strip()
-				date = news.find('td', attrs={'class': 'date'}).get_text().strip()
-				date = date.replace('/', '-')
-				view_count = news.find('td', attrs={'class': 'count'}).get_text()
-				recommend_count = news.find('td', attrs={'class': 'recomm'}).get_text()
-
-				data_group = {}
-				data_group['link'] = 'https://www.bobaedream.co.kr' + link
-				data_group['img_url'] = 'https:' + img_url
-				data_group['subject'] = subject
-				data_group['summary'] = summary
-				data_group['reporter'] = ''
-				data_group['date'] = str(today_year) + '-' + date
-				data_group['view_count'] = view_count
-				data_group['recommend_count'] = recommend_count
-
-				data_list.append(data_group)
-
-		return_data_dic['bobaedream_view_count'] = data_list
-		etc_list.append(return_data_dic)
-
-		print(etc_list)
-
 # 중고차 뉴스 모음
 def get_used_car() :
 	# GetAutoH.used()
@@ -2060,6 +1955,6 @@ def reload_list_data() :
 	
 if __name__ == '__main__' : 
 	# print(get_new_car())
-	# reload_list_data()
-	GetBobaeDream.recommend()
+	reload_list_data()
+	# GetBobaeDream.recommend()
 	# GetBobaeDream.viewCount()

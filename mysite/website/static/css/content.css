@@ -359,8 +359,10 @@
 .bobaedream-news .box ul li {border:1px solid #ddd;}
 .bobaedream-news .box ul li + li {margin-top:10px;}
 .bobaedream-news .box ul li a {display:flex; justify-content:space-between; align-items:center; padding:14px 20px;}
-.bobaedream-news .box ul li a .subject {font-size:18px;}
+.bobaedream-news .box ul li a:hover {background:#f0f0f0;}
+.bobaedream-news .box ul li a .subject {margin:0 20px; line-height:1.4; font-size:18px;}
 .bobaedream-news .box ul li a .key {letter-spacing:-1px; color:#333; font-size:30px;}
+.bobaedream-news .box ul li a .date {color:#666;}
 
 
 
@@ -417,6 +419,12 @@
 	.car-comment-list li {width:100%; border:0; border-bottom:1px solid #ddd;}
 	.car-comment .car-list ul li {width:32%;}
 	.car-comment .car-list ul li a strong {font-size:16px;}
+
+	.bobaedream-news .box {display:block;}
+	.bobaedream-news .box .group {width:100%;}
+	.bobaedream-news .box .group + .group {margin-top:45px;}
+	.bobaedream-news .box ul li a {display:block; text-align:center;}
+	.bobaedream-news .box ul li a .key {display:none;}
 }
 /*****
      880 > w 
@@ -500,6 +508,7 @@
 	.header .search-box input[type="text"],
 	.header .search-box .btn-search {height:36px; font-size:14px;}
 	.container {padding-top:155px;}
+	.container.bobaedream-news {padding-top:100px;}
 	.container .inner {width:96%;}
 	.category-list {top:125px;}
 	.category-list ul li {margin-right:10px;}

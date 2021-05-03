@@ -13,7 +13,7 @@
 				<div class="group">
 					<h3 class="group-title">추천 수 높은 뉴스</h3>
 					<ul>
-						{% for item in recommends.0.bobaedream_recoomend %}
+						{% for item in recommends %}
 							<li data-count="{{ forloop.counter }}">
 								<a href="{{ item.link }}">
 									<strong class="key">{{ item.recommend_count }}</strong>
@@ -28,9 +28,9 @@
 				<div class="group">
 					<h3 class="group-title">조회수 높은 뉴스</h3>
 					<ul>
-						{% for item in view_count.0.bobaedream_view_count %}
+						{% for item in view_count %}
 							<li data-count="{{ forloop.counter }}">
-								<a href="{{ item.link }}">
+								<a href="{{ item.link }}" target="_blank">
 									<strong class="key">{{ item.view_count }}</strong>
 									<p class="subject">{{ item.subject }}</p>
 									<span class="date">{{ item.date }}</span>
@@ -40,6 +40,7 @@
 						{% endfor %}		
 					</ul>
 				</div>
+				<!-- <p style="line-height:1.6; font-size:16px;">{{ view_count }}</p> -->
 			</div>	
 		</div>
 	</section>
