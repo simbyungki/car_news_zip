@@ -31,9 +31,13 @@ def get_soup(url) :
 	return soup
 
 # 보배드림
+today_year = 0
+today_month = 0
 class GetBobaeDream() :
 	# 추천
 	def recommend() :
+		global today_year
+		global today_month
 		today_year = datetime.today().year
 		today_month = datetime.today().month
 		if today_month < 10 :
@@ -521,7 +525,8 @@ def bobaenews(request) :
 	view_count_list = GetBobaeDream.viewCount()[0].get('bobaedream_view_count')
 	view_count_list.sort(key=sortNewsList, reverse=True)
 	context['view_count'] = view_count_list
-
+	context['today_year'] = today_year
+	context['today_month'] = today_month
 	# print(context['recommends'])
 	# print(context['view_count'])
 	# print(GetBobaeDream.viewCount()[0].get('bobaedream_view_count'))

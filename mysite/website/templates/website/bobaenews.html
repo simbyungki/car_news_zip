@@ -11,7 +11,7 @@
 			</p>		
 			<div class="box">
 				<div class="group">
-					<h3 class="group-title">추천 수 높은 뉴스</h3>
+					<h3 class="group-title">{{ today_year }}년 {{ today_month }}월 추천 수 높은 뉴스</h3>
 					<ul>
 						{% for item in recommends %}
 							<li data-count="{{ forloop.counter }}">
@@ -26,7 +26,7 @@
 					</ul>
 				</div>
 				<div class="group">
-					<h3 class="group-title">조회수 높은 뉴스</h3>
+					<h3 class="group-title">{{ today_year }}년 {{ today_month }}월 조회수 높은 뉴스</h3>
 					<ul>
 						{% for item in view_count %}
 							<li data-count="{{ forloop.counter }}">
