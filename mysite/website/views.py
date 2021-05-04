@@ -37,7 +37,7 @@ class GetBobaeDream() :
 		today_year = datetime.today().year
 		today_month = datetime.today().month
 		if today_month < 10 :
-			today_month = '0' + str(today_month)
+			today_month = '0' + str(today_month-1)
 
 		url = 'https://bobaedream.co.kr/list.php?code=nnews&s_cate=&maker_no=&model_no=&or_gu=30&or_se=desc&s_selday=&pagescale=30&info3=&noticeShow=&bestCode=&bestDays=&bestbbs=&vdate=&ndate=&nmdate=&s_select=Subject&s_key='
 		soup = get_soup(url)
@@ -95,7 +95,7 @@ class GetBobaeDream() :
 		today_year = datetime.today().year
 		today_month = datetime.today().month
 		if today_month < 10 :
-			today_month = '0' + str(today_month)
+			today_month = '0' + str(today_month-1)
 
 		url = 'https://bobaedream.co.kr/list.php?code=nnews&s_cate=&maker_no=&model_no=&or_gu=20&or_se=desc&s_selday=&pagescale=30&info3=&noticeShow=&bestCode=&bestDays=&bestbbs=&vdate=&ndate=&nmdate=&s_select=Subject&s_key='
 		soup = get_soup(url)
@@ -522,6 +522,8 @@ def bobaenews(request) :
 	view_count_list.sort(key=sortNewsList, reverse=True)
 	context['view_count'] = view_count_list
 
+	# print(context['recommends'])
+	# print(context['view_count'])
 	# print(GetBobaeDream.viewCount()[0].get('bobaedream_view_count'))
 
 	return render(request, 'website/bobaenews.html', context)
