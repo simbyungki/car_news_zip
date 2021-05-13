@@ -356,14 +356,16 @@
 .bobaedream-news .box {display:flex; justify-content:space-between; margin-top:60px;}
 .bobaedream-news .box .group {width:49%;}
 .bobaedream-news .box .group-title {margin-bottom:20px; letter-spacing:-1px; font-size:30px; font-weight:800; text-align:center;}
-.bobaedream-news .box ul li {border:1px solid #ddd;}
+.bobaedream-news .box ul li {padding:16px; border:1px solid #ddd;}
 .bobaedream-news .box ul li + li {margin-top:10px;}
-.bobaedream-news .box ul li a {display:flex; justify-content:space-between; align-items:center; padding:14px 20px;}
-.bobaedream-news .box ul li a:hover {background:#f0f0f0;}
-.bobaedream-news .box ul li a .subject {margin:0 20px; line-height:1.4; font-size:18px;}
-.bobaedream-news .box ul li a .key {letter-spacing:-1px; color:#333; font-size:30px;}
-.bobaedream-news .box ul li a .date {color:#666;}
-
+.bobaedream-news .box ul li .flex-box {display:flex; justify-content:space-between; align-items:center;}
+.bobaedream-news .box ul li .flex-box:last-child {margin:20px auto 0; width:50%;}
+.bobaedream-news .box ul li:hover {background:#f0f0f0;}
+.bobaedream-news .box ul li .subject {margin:0 20px; line-height:1.4; font-size:18px;}
+.bobaedream-news .box ul li .key {letter-spacing:-1px; color:#333; font-size:30px;}
+.bobaedream-news .box ul li .date {color:#666;}
+.bobaedream-news .box ul li .flex-box a {display:block; width:30%; height:36px; line-height:36px; color:#444; text-align:center; border:1px solid #ccc; background:#fff;}
+.bobaedream-news .box ul li .flex-box a:hover {color:#fff; background:#444;}
 
 
 /***** 
@@ -423,8 +425,11 @@
 	.bobaedream-news .box {display:block;}
 	.bobaedream-news .box .group {width:100%;}
 	.bobaedream-news .box .group + .group {margin-top:45px;}
-	.bobaedream-news .box ul li a {display:block; text-align:center;}
-	.bobaedream-news .box ul li a .key {display:none;}
+	.bobaedream-news .box ul li .flex-box {display:block; text-align:center;}
+	.bobaedream-news .box ul li .flex-box:last-child {margin:20px auto 0; width:50%;}
+	.bobaedream-news .box ul li .flex-box a {width:100%;}
+	.bobaedream-news .box ul li .flex-box a + a {margin-top:5px;}
+	.bobaedream-news .box ul li .key {display:none;}
 }
 /*****
      880 > w 
@@ -548,7 +553,7 @@
 }
 
 @media screen and (max-width: 450px) {
-	
+	.bobaedream-news .box ul li .flex-box:last-child {width:100%;}
 	
 	
 	

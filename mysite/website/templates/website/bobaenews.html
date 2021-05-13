@@ -14,13 +14,18 @@
 					<h3 class="group-title">{{ today_year }}년 {{ today_month }}월 추천 수 높은 뉴스</h3>
 					<ul>
 						{% for item in recommends %}
-							<li data-count="{{ forloop.counter }}">
-								<a href="{{ item.link }}">
+							<li data-count="{{ forloop.counter }}">								
+								<div class="flex-box">
 									<strong class="key">{{ item.recommend_count }}</strong>
 									<p class="subject">{{ item.subject }}</p>
 									<span class="date">{{ item.date }}</span>
 									<!-- <span class="other-count">{{ item.view_count }}</span> -->
-								</a>
+								</div>
+								<div class="flex-box">
+									<a href="{{ item.link }}" target="_blank" class="btn btn-link">뉴스 보기</a>
+									<a href="javascript:;" class="btn btn-subject">제목 복사</a>
+									<a href="javascript:;" class="btn btn-url">URL 복사</a>
+								</div>
 							</li>
 						{% endfor %}		
 					</ul>
@@ -30,12 +35,17 @@
 					<ul>
 						{% for item in view_count %}
 							<li data-count="{{ forloop.counter }}">
-								<a href="{{ item.link }}" target="_blank">
+								<div class="flex-box">
 									<strong class="key">{{ item.view_count }}</strong>
 									<p class="subject">{{ item.subject }}</p>
 									<span class="date">{{ item.date }}</span>
 									<!-- <span class="other-count">{{ item.recommend_count }}</span> -->
-								</a>
+								</div>
+								<div class="flex-box">
+									<a href="{{ item.link }}" target="_blank" class="btn btn-link">뉴스 보기</a>
+									<a href="javascript:;" class="btn btn-subject">제목 복사</a>
+									<a href="javascript:;" class="btn btn-url">URL 복사</a>
+								</div>
 							</li>
 						{% endfor %}		
 					</ul>
@@ -63,9 +73,28 @@ $(function(){
 		var count = Number($(this).find('.key').text());
 		$(this).find('.key').text(numberWithCommas(count))
 	});
+
+	$(document).on('click', '.btn-subject', function(){
+		var subject = $(this).closest('li').find('.subject').html();
+		clipboardCopy(subject);
+	});
+	$(document).on('click', '.btn-url', function(){
+		var url = $(this).siblings('.btn-link').attr('href');
+		clipboardCopy(url);
+	});
 });
 function numberWithCommas(x) {
 	return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+// 클립보드 복사 (PC)
+function clipboardCopy(val) {
+	var dummy = document.createElement('textarea');
+	document.body.appendChild(dummy);
+	dummy.value = val;
+	dummy.select();
+ 	document.execCommand('copy');
+	document.body.removeChild(dummy);
+	alert('복사되었습니다.');
 }
 </script>
 </body>
