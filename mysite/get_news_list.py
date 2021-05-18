@@ -1378,8 +1378,6 @@ class GetTopRider() :
 		return_data_dic['toprider_new'] = data_list
 		new_car_list.append(return_data_dic)
 
-		print(new_car_list)
-
 	# 시승기
 	def review() :
 		url = 'http://www.top-rider.com/news/articleList.html?sc_section_code=S1N8&view_type=sm'
@@ -1440,12 +1438,101 @@ class GetTopRider() :
 		return_data_dic['toprider_industry'] = data_list
 		industry_list.append(return_data_dic)
 
-		print(industry_list)
-
 	# 본문 수집
 	@staticmethod
 	def detail(dbconn, cursor) :
 		newsList = TblTotalCarNewsList.objects.all().filter(media_code=1000).filter(news_content='')
+		print('-'*30)
+		print('탑라이더')
+		try :
+			print('ㅡㅡㅡ'*30)
+			for idx in range(len(newsList)) : 
+				full_url = f'http://www.top-rider.com/news/articleView.html?idxno={newsList.values()[idx].get("news_code")}'
+				print(newsList.values()[idx].get('news_code'))
+				try : 
+					soup = get_soup(full_url)
+					d_title = soup.find('h3', attrs={'class': 'heading'}).get_text().strip()
+					d_content = soup.find('article', attrs={'id': 'article-view-content-div'}).get_text().strip()
+					d_title = re.sub('[-=.#/?:$}\"\']', '', d_title)
+					d_content = re.sub('[-=.#/?:$}\"\']', '', d_content)
+
+					cursor.execute(f"""
+						UPDATE TBL_TOTAL_CAR_NEWS_LIST 
+						SET NEWS_TITLE = "{d_title}", NEWS_CONTENT = "{d_content}"
+						WHERE NEWS_CODE = "{newsList.values()[idx].get('news_code')}" AND NEWS_CONTENT = ""
+					""")
+					time.sleep(3)
+					print(f'{newsList.values()[idx].get("news_code")} :: 기사 본문 스크랩 완료! [{idx + 1} / {len(newsList)}]')
+				except Exception as e :
+					print(f'*+++++ + error! >> {e}')	
+				print('ㅡㅡㅡ'*30)
+		except Exception as e :
+			print(f'***** + error! >> {e}')	
+		finally : 
+			pass
+
+# 글로벌 모터즈
+class GetGlobalMotors() :
+	# 신차 (국산)
+	def new_k() :
+		url = 'http://www.globalmotors.co.kr/list.php?ct=g010201&sidx=1'
+		soup = get_soup(url)
+
+		news_list = soup.find('div', attrs={'class': 'list_1d_con'}).findAll('li')
+		
+		data_list = []
+		return_data_dic = {}
+
+		for news in news_list :
+			link = news.find('div', attrs={'class': 'w1'}).select_one('a')['href']
+			img_url = news.find('div', attrs={'class': 'w1'}).select_one('a').find('img')['src']
+			subject = news.find('div', attrs={'class': 'w2'}).select_one('.t1').get_text().strip()
+			summary = news.find('div', attrs={'class': 'w2'}).select_one('.t3').find('a').get_text().strip()
+			date = news.find('div', attrs={'class': 'w2'}).select_one('.t2').get_text().strip()[0:10]
+			data_group = {}
+			data_group['link'] = 'http://www.globalmotors.co.kr' + link
+			data_group['img_url'] = img_url
+			data_group['subject'] = subject
+			data_group['summary'] = summary
+			data_group['date'] = date
+
+			data_list.append(data_group)
+
+		return_data_dic['globalmotors_new_k'] = data_list
+		new_car_list.append(return_data_dic)
+
+	# 신차 (수입)
+	def new_g() :
+		url = 'http://www.globalmotors.co.kr/list.php?ct=g010202&sidx=1'
+		soup = get_soup(url)
+
+		news_list = soup.find('div', attrs={'class': 'list_1d_con'}).findAll('li')
+		
+		data_list = []
+		return_data_dic = {}
+
+		for news in news_list :
+			link = news.find('div', attrs={'class': 'w1'}).select_one('a')['href']
+			img_url = news.find('div', attrs={'class': 'w1'}).select_one('a').find('img')['src']
+			subject = news.find('div', attrs={'class': 'w2'}).select_one('.t1').get_text().strip()
+			summary = news.find('div', attrs={'class': 'w2'}).select_one('.t3').find('a').get_text().strip()
+			date = news.find('div', attrs={'class': 'w2'}).select_one('.t2').get_text().strip()[0:10]
+			data_group = {}
+			data_group['link'] = 'http://www.globalmotors.co.kr' + link
+			data_group['img_url'] = img_url
+			data_group['subject'] = subject
+			data_group['summary'] = summary
+			data_group['date'] = date
+
+			data_list.append(data_group)
+
+		return_data_dic['globalmotors_new_g'] = data_list
+		new_car_list.append(return_data_dic)
+
+	# 본문 수집
+	@staticmethod
+	def detail(dbconn, cursor) :
+		newsList = TblTotalCarNewsList.objects.all().filter(media_code=1200).filter(news_content='')
 		print('-'*30)
 		print('탑라이더')
 		try :
@@ -1492,6 +1579,8 @@ def get_new_car() :
 	# GetAutoDiary.new()
 	GetMotorGraph.new()
 	GetTopRider.new()
+	GetGlobalMotors.new_k()
+	GetGlobalMotors.new_g()
 
 	return new_car_list
 
@@ -1630,6 +1719,14 @@ def insert_new_db(dbconn, cursor) :
 				# 탑라이더
 				media_code = 1000
 				media_name = '탑라이더'
+			elif idx == 6 :
+				# 글로벌모터즈 (국산)
+				media_code = 1200
+				media_name = '글로벌모터즈'
+			elif idx == 7 : 
+				# 글로벌모터즈 (수입)
+				media_code = 1200
+				media_name = '글로벌모터즈'
 
 			for news_dict in news_list.values() :
 				for news in news_dict : 
@@ -1661,6 +1758,14 @@ def insert_new_db(dbconn, cursor) :
 						# 탑라이더
 						news_code = news.get('link')[-5:]
 						url = f'http://www.top-rider.com/news/articleView.html?idxno={news_code}'
+					elif idx == 6 :
+						# 글로벌모터즈 (국산)
+						news_code = news.get('link')[42:70]
+						url = f'http://www.globalmotors.co.kr/view.php?ud={news_code}&ssk=g010201'
+					elif idx == 7 :
+						# 글로벌모터즈 (수입)
+						news_code = news.get('link')[42:70]
+						url = f'http://www.globalmotors.co.kr/view.php?ud={news_code}&ssk=g010202'
 
 					subject = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', news.get('subject')))
 					summary = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', news.get('summary')))
@@ -1956,5 +2061,4 @@ def reload_list_data() :
 if __name__ == '__main__' : 
 	# print(get_new_car())
 	reload_list_data()
-	# GetBobaeDream.recommend()
-	# GetBobaeDream.viewCount()
+	# GetGlobalMotors.new_g()
