@@ -415,6 +415,41 @@ class GetTopRider() :
 		finally : 
 			pass
 
+# 글로벌 모터즈
+class GetGlobalMotors() :
+	# 본문 수집
+	@staticmethod
+	def detail(dbconn, cursor) :
+		newsList = TblTotalCarNewsList.objects.all().filter(media_code=1200).filter(news_content='')
+		print('-'*30)
+		print('글로벌모터즈')
+		try :
+			print('ㅡㅡㅡ'*30)
+			for idx in range(len(newsList)) : 
+				full_url = f'http://www.globalmotors.co.kr/view.php?ud={newsList.values()[idx].get("news_code")}_5&ssk=g010200'
+				print(newsList.values()[idx].get('news_code'))
+				try : 
+					soup = get_soup(full_url)
+					d_title = soup.find('div', attrs={'class': 'vcon_top_tit'}).find('h2').get_text().strip()
+					d_content = soup.find('div', attrs={'class': 'text detailCont'}).get_text().strip()
+					d_title = re.sub('[-=.#/?:$}\"\']', '', d_title)
+					d_content = re.sub('[-=.#/?:$}\"\']', '', d_content)
+
+					cursor.execute(f"""
+						UPDATE TBL_TOTAL_CAR_NEWS_LIST 
+						SET NEWS_TITLE = "{d_title}", NEWS_CONTENT = "{d_content}"
+						WHERE NEWS_CODE = "{newsList.values()[idx].get('news_code')}" AND NEWS_CONTENT = ""
+					""")
+					time.sleep(3)
+					print(f'{newsList.values()[idx].get("news_code")} :: 기사 본문 스크랩 완료! [{idx + 1} / {len(newsList)}]')
+				except Exception as e :
+					print(f'*+++++ + error! >> {e}')	
+				print('ㅡㅡㅡ'*30)
+		except Exception as e :
+			print(f'***** + error! >> {e}')	
+		finally : 
+			pass
+
 
 # 뉴스 본문 수집
 def load_detail_data() :
@@ -437,6 +472,7 @@ def load_detail_data() :
 	GetTheDrive.detail(dbconn, cursor)
 	GetMotorGraph.detail(dbconn, cursor)
 	GetTopRider.detail(dbconn, cursor)
+	GetGlobalMotors.detail(dbconn, cursor)
 	
 	dbconn.commit()
 	dbconn.close()
@@ -466,3 +502,19 @@ def get_conn_cursor() :
 
 if __name__ == '__main__' : 
 	load_detail_data()
+
+
+	# now = time.localtime()
+	# start_time = now
+
+	# dbconn = mysql.connector.connect(host=db_infos.get('host'), user=db_infos.get('user'), password=db_infos.get('password'), database=db_infos.get('database'), port=db_infos.get('port'))
+	# cursor = dbconn.cursor()
+	# GetGlobalMotors.detail(dbconn, cursor)
+	# dbconn.commit()
+	# dbconn.close()
+	# now = time.localtime()
+	# end_time = now
+	# print('ㅡ'*50)
+	# print('뉴스 상세 내용 가져오기 DB Commit/Close 완료!')
+	# print('뉴스 상세 내용 가져오기 작업 시작 시간 > %04d/%02d/%02d %02d:%02d:%02d' % (start_time.tm_year, start_time.tm_mon, start_time.tm_mday, start_time.tm_hour, start_time.tm_min, start_time.tm_sec))
+	# print('뉴스 상세 내용 가져오기 작업 종료 시간 > %04d/%02d/%02d %02d:%02d:%02d' % (end_time.tm_year, end_time.tm_mon, end_time.tm_mday, end_time.tm_hour, end_time.tm_min, end_time.tm_sec))

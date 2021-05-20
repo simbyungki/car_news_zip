@@ -1534,16 +1534,16 @@ class GetGlobalMotors() :
 	def detail(dbconn, cursor) :
 		newsList = TblTotalCarNewsList.objects.all().filter(media_code=1200).filter(news_content='')
 		print('-'*30)
-		print('탑라이더')
+		print('글로벌모터즈')
 		try :
 			print('ㅡㅡㅡ'*30)
 			for idx in range(len(newsList)) : 
-				full_url = f'http://www.top-rider.com/news/articleView.html?idxno={newsList.values()[idx].get("news_code")}'
+				full_url = f'http://www.globalmotors.co.kr/view.php?ud={newsList.values()[idx].get("news_code")}_5&ssk=g010200'
 				print(newsList.values()[idx].get('news_code'))
 				try : 
 					soup = get_soup(full_url)
-					d_title = soup.find('h3', attrs={'class': 'heading'}).get_text().strip()
-					d_content = soup.find('article', attrs={'id': 'article-view-content-div'}).get_text().strip()
+					d_title = soup.find('div', attrs={'class': 'vcon_top_tit'}).find('h2').get_text().strip()
+					d_content = soup.find('div', attrs={'class': 'text detailCont'}).get_text().strip()
 					d_title = re.sub('[-=.#/?:$}\"\']', '', d_title)
 					d_content = re.sub('[-=.#/?:$}\"\']', '', d_content)
 
