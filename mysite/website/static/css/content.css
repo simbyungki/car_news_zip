@@ -501,7 +501,7 @@
 }
 
 @media screen and (max-width: 450px) {
-	#wrap.category .container {padding-top:135px;}
+	#wrap.category .container {padding-top:154px;}
 	#wrap.media .container {padding-top:182px;}
 	.header {height:125px;}
 	.header .service-name {padding-left:18px; letter-spacing:-1px; font-size:32px;}
