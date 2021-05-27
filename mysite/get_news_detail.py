@@ -46,7 +46,7 @@ def get_soup2(url) :
 	options = webdriver.ChromeOptions()
 	options.headless = True
 	options.add_argument('window-size=1920x1080')
-	browser = webdriver.Chrome(r'C:\Users\PC\Documents\simbyungki\git\car_news_zip\chromedriver.exe', options=options)
+	browser = webdriver.Chrome(r'C:\Users\PC\Documents\simbyungki\git\get_instagram\chromedriver.exe', options=options)
 	browser.maximize_window()
 	browser.get(url)
 	time.sleep(2)
@@ -170,6 +170,7 @@ class GetDailyCar() :
 	@staticmethod
 	def detail(dbconn, cursor) :
 		newsList = TblTotalCarNewsList.objects.all().filter(media_code=200).filter(news_content='')
+		print(len(newsList))
 		print('-'*30)
 		print('데일리카')
 		try :
@@ -179,10 +180,13 @@ class GetDailyCar() :
 				print(newsList.values()[idx].get('news_code'))
 				try : 
 					soup = get_soup(full_url)
-					d_title = soup.find('span', attrs={'id': 'content_titleonly'}).get_text().strip()
+					d_title = soup.find('h1', attrs={'id': 'content_titleonly'}).get_text().strip()
+					# print(d_title)
 					d_content = soup.find('span', attrs={'id': 'content_bodyonly'}).get_text().strip()
+					# print(d_content)
 					soup.select_one('span#content_bodyonly').figure.decompose()
 					d_reporter = soup.select_one('span#content_bodyonly').get_text().strip()[6:12]
+					# print(d_reporter)
 					
 					d_title = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', d_title))
 					d_content = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', d_content))
@@ -509,7 +513,9 @@ if __name__ == '__main__' :
 
 	# dbconn = mysql.connector.connect(host=db_infos.get('host'), user=db_infos.get('user'), password=db_infos.get('password'), database=db_infos.get('database'), port=db_infos.get('port'))
 	# cursor = dbconn.cursor()
-	# GetGlobalMotors.detail(dbconn, cursor)
+
+	# GetDailyCar.detail(dbconn, cursor)
+
 	# dbconn.commit()
 	# dbconn.close()
 	# now = time.localtime()
