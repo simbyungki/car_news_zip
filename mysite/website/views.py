@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.contrib import auth
 from django.db.models import Q
-from .models import TblTotalCarNewsList, TblMemberList, TblNewsKeywordList, TblNewsKeywordMap, TblYoutubeCarCommentList, TblCarInfos, TblNewsAllKeywordList
+from .models import TblTotalCarNewsList, TblMemberList, TblNewsKeywordList, TblNewsKeywordMap, TblYoutubeCarCommentList, TblCarInfos, TblNewsAllKeywordList, TblNewsCarModelMap
 from datetime import datetime
 from django.http import HttpResponse
 from django.core import serializers
@@ -11,13 +11,18 @@ import requests
 import pandas as pd
 import time
 import mysql.connector
+import pymssql
 import os, json
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.abspath('./mysite'))
 # SECURITY WARNING: keep the secret key used in production secret!
 db_info_file = os.path.join(BASE_DIR, 'db_conn.json')
+db_info_file2 = os.path.join(BASE_DIR, 'db_conn_apdb.json')
+# db_info_file = os.path.join(BASE_DIR, 'db_conn.json')
 with open(db_info_file) as f :
 	db_infos = json.loads(f.read())
+with open(db_info_file2) as f :
+	db_infos2 = json.loads(f.read())
 
 # 보배드림 수집
 from bs4 import BeautifulSoup
@@ -251,6 +256,127 @@ def news_detail(request) :
 	connect_log_insert(infos)
 
 	return render(request, 'website/news_detail.html', context)
+
+
+
+# 뉴스, 카 매핑 테이블
+def boname_to_car_infos(bonames) : 
+
+	for boname in bonames : 
+		print(type(boname))
+		url = 'http://182.162.143.85/getCarList.php'
+		params = {'searchQuery': boname, 'productType': 9}
+		res = requests.get(url, params)
+		# print(res.status_code)
+		# print(res.headers['content-type'])
+		# print(res.encoding)
+		# print(res.text)
+		# print(res.json())
+		# print(res.json()['resultData'])
+
+		matching_car_list = []
+		lenACar = res.json()['resultData']['ACAR_TOTAL']
+		lenRCar = res.json()['resultData']['RCAR_TOTAL']
+		lenHCar = res.json()['resultData']['HCAR_TOTAL']
+		aCarList = res.json()['resultData']['ACAR']
+		rCarList = res.json()['resultData']['RCAR']
+		hCarList = res.json()['resultData']['HCAR']
+
+		if lenACar > 0 :
+			for carInfos in aCarList :
+				if carInfos.get('hpselSta') == 'HA02' : 
+					inData = {}
+					inData['brand'] = 'acar'
+					inData['prod_id'] = carInfos.get('productId')
+					inData['bm_name'] = carInfos.get('bmName')
+					inData['boi_name'] = carInfos.get('boiName')
+					inData['grade_name'] = carInfos.get('gradeName')
+					inData['car_photo'] = carInfos.get('carPhoto1')
+					# 연료
+					inData['fuel'] = carInfos.get('fuel')
+					# 주행거리
+					inData['car_navi'] = carInfos.get('carNavi')
+					# 판매가
+					inData['amt_sel'] = carInfos.get('amtSel')
+					# 년식
+					inData['regi_date'] = carInfos.get('regiDate')
+					matching_car_list.append(inData)
+		if lenRCar > 0 :
+			for carInfos in rCarList :
+				if carInfos.get('hpselSta') == 'HA02' : 
+					inData = {}
+					inData['brand'] = 'rcar'
+					inData['prod_id'] = carInfos.get('productId')
+					inData['bm_name'] = carInfos.get('bmName')
+					inData['boi_name'] = carInfos.get('boiName')
+					inData['grade_name'] = carInfos.get('gradeName')
+					inData['car_photo'] = carInfos.get('carPhoto1')
+					# 연료
+					inData['fuel'] = carInfos.get('fuel')
+					# 주행거리
+					inData['car_navi'] = carInfos.get('carNavi')
+					# 판매가
+					inData['amt_sel'] = carInfos.get('amtSel')
+					# 년식
+					inData['regi_date'] = carInfos.get('regiDate')
+					matching_car_list.append(inData)
+		if lenHCar > 0 :
+			for carInfos in hCarList :
+				if carInfos.get('hpselSta') == 'HA02' : 
+					inData = {}
+					inData['brand'] = 'hcar'
+					inData['prod_id'] = carInfos.get('productId')
+					inData['bm_name'] = carInfos.get('bmName')
+					inData['boi_name'] = carInfos.get('boiName')
+					inData['grade_name'] = carInfos.get('gradeName')
+					inData['car_photo'] = carInfos.get('carPhoto1')
+					# 연료
+					inData['fuel'] = carInfos.get('fuel')
+					# 주행거리
+					inData['car_navi'] = carInfos.get('carNavi')
+					# 판매가
+					inData['amt_sel'] = carInfos.get('amtSel')
+					# 년식
+					inData['regi_date'] = carInfos.get('regiDate')
+					matching_car_list.append(inData)
+
+	# print(matching_car_list)
+
+	return matching_car_list
+
+# 뉴스 상세 (신규)
+def new_news_detail(request) : 
+	
+
+	news_code = request.GET.get('news_code')
+	keyword = request.GET.get('keyword')
+	news = TblTotalCarNewsList.objects.values().filter(news_code=news_code)
+	news_no = news[0]['news_no']
+	matching_car_list = TblNewsCarModelMap.objects.values().filter(news_no=news_no)
+	
+	bonames = []
+	for matching_car in matching_car_list : 
+		bonames.append(matching_car.get('boname'))
+
+	car_infos = boname_to_car_infos(bonames)
+
+
+	context = {}
+	context['today_date'] = datetime.today().strftime('%Y-%m-%d')
+	context['news'] = news[0]
+	context['keyword'] = keyword
+	context['page_group'] = 'news-detail-p'
+	context['news_no'] = news_no
+	context['matching_bo_names'] = bonames
+	context['matching_car_infos'] = car_infos
+
+	infos = {}
+	infos['referer'] = request.headers.get('referer')
+	infos['page_name'] = '/new_news_detail'
+	infos['user_ip'] = get_ip(request)
+	connect_log_insert(infos)
+
+	return render(request, 'website/new_news_detail.html', context)
 
 # 뉴스 트렌드
 def news_trend(request) : 

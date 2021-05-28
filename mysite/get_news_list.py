@@ -29,8 +29,12 @@ etc_list = []
 BASE_DIR = os.path.dirname(os.path.abspath('./mysite'))
 # SECURITY WARNING: keep the secret key used in production secret!
 db_info_file = os.path.join(BASE_DIR, 'db_conn.json')
+db_info_file2 = os.path.join(BASE_DIR, 'db_conn_apdb.json')
+# db_info_file = os.path.join(BASE_DIR, 'db_conn.json')
 with open(db_info_file) as f :
 	db_infos = json.loads(f.read())
+with open(db_info_file2) as f :
+	db_infos2 = json.loads(f.read())
 
 
 # BeautifulSoup

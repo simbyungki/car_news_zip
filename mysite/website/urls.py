@@ -5,6 +5,7 @@ urlpatterns = [
 	path('', views.news_list, name='news_list'),
 	path('news_list', views.news_list, name='news_list'),
 	path('news_detail', views.news_detail, name='news_detail'),
+	path('new_news_detail', views.new_news_detail, name='new_news_detail'),
 	path('news_trend', views.news_trend, name='news_trend'),
 	path('search_result_list/', views.news_list, name='search_result_list'),
 	path('car_review_list', views.car_review_list, name='car_review_list'),

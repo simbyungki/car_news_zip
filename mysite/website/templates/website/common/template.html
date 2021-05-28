@@ -190,9 +190,9 @@ function keywordSearch(keyword){
 function showNewsDetail(newsCode){
 	var keyword = $('#search_keyword').val();
 	if(keyword.length > 0){
-		url = '/news_detail?news_code='+ newsCode + '&keyword=' + keyword;
+		url = '/new_news_detail?news_code='+ newsCode + '&keyword=' + keyword;
 	}else{
-		url = '/news_detail?news_code='+ newsCode;
+		url = '/new_news_detail?news_code='+ newsCode;
 	}
 	window.open(url, '카라스 뉴스 상세보기', 'width=1040, height=880, toolbar=no, menubar=no, scrollbars=no, resizable=yes')
 }
@@ -267,8 +267,8 @@ function loadNewsList(idx, list_type, start_idx, load_length, load_type, fnc_typ
 					media_name = 'global-motors'
 				}
 				newsItem += '<li data-news-code="' + list.news_code + '">';
-				//newsItem += '<a href="javascript:;" title="' + list.news_title + '" onclick="showNewsDetail(\''+ list.news_code +'\')">';
-				newsItem += '<a href="'+ list.news_url +'" title="' + list.news_title + '" target="_blank">'
+				newsItem += '<a href="javascript:;" title="' + list.news_title + '" onclick="showNewsDetail(\''+ list.news_code +'\')">';
+				//newsItem += '<a href="'+ list.news_url +'" title="' + list.news_title + '" target="_blank">'
 				{% comment %} newsItem += '<a href="' + list.news_url + '" target="_blank" title="' + list.news_title + '" >'; {% endcomment %}
 				if(list.media_code == '200' || /*list.media_code == '500' ||*/ list.news_img_url == 'None' || list.news_img_url == ''){
 					newsItem += '<div class="picture">';

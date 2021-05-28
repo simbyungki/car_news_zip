@@ -1,0 +1,142 @@
+{% extends 'website/common/template.html' %}
+{% load static %}
+{% load custom_tags %}
+{% block content %}
+	<section class="container">
+		<p>{{ matching_car_infos }}</p>
+		<div class="news-detail">
+			<div class="mining-result">
+				<div class="va"></div>
+				<div class="positive"></div>
+				<div class="negative"></div>
+			</div>
+			<p class="n-title"></p>
+			<div class="n-info">
+				<span class="date">{{ news.write_date }}</span>
+				<span class="view-cnt" title="이 기사 조회수">👁 {{ news.view_count }}</span>
+				<span class="repoter">{{ news.media_name }} 
+				{% if news.reporter_name %}
+					{{ news.reporter_name|replace_entity }}
+				{% endif %}
+				</span>
+			</div>
+			<div class="n-content">
+				<div class="picture"><img src="{{news.news_img_url}}" alt=""></div>
+				<p class="details"></p>
+				<div class="page-btns full">
+					<a href="{{ news.news_url }}" class="btn gray">해당 언론사에서 뉴스 상세 보기</a>
+				</div>
+			</div>
+
+			<div class="related-car-list">
+				<strong class="title">&middot;
+					<a href="https://www.autoplus.co.kr" target="_blank">오토플러스</a>에서 판매 중인 관련 차량
+				</strong>
+				<ul>
+					<li>
+						<a href="https://www.autoplus.co.kr/smartbuy/WUSB050001.rb?productId=C21042000005" class="out-link" target="_blank">
+							<div class="thumbnail" style="background:url('https://cdn.autoplus.co.kr/PRODUCT/C21042000005/IMG01.jpg?v=202104231022') no-repeat center; background-size:cover;"></div>
+							<div class="car-info">
+								<p class="model">
+									<span>벤틀리</span>
+									<span>뉴컨티넨탈</span>
+									<span>4.0 GT</span>
+								</p>
+								<div class="row">
+									<span>2016년 04월</span>
+									<span>21,200km</span>
+									<span>가솔린</span>
+								</div>
+								<strong class="price">1억 6,500만원</strong>
+							</div>
+						</a>
+					</li>
+					<li>
+						<a href="https://www.autoplus.co.kr/smartbuy/WUSB050001.rb?productId=C21042000005" class="out-link" target="_blank">
+							<div class="thumbnail" style="background:url('https://cdn.autoplus.co.kr/PRODUCT/C21042000005/IMG06.jpg?v=202104231022') no-repeat center; background-size:cover;"></div>
+							<div class="car-info">
+								<p class="model">
+									<span>벤틀리</span>
+									<span>뉴컨티넨탈</span>
+									<span>4.0 GT</span>
+								</p>
+								<div class="row">
+									<span>2016년 04월</span>
+									<span>21,200km</span>
+									<span>가솔린</span>
+								</div>
+								<strong class="price">1억 6,500만원</strong>
+							</div>
+						</a>
+					</li>
+					<li>
+						<a href="https://www.autoplus.co.kr/smartbuy/WUSB050001.rb?productId=C21042000005" class="out-link" target="_blank">
+							<div class="thumbnail" style="background:url('https://cdn.autoplus.co.kr/PRODUCT/C21042000005/IMG04.jpg?v=202104231022') no-repeat center; background-size:cover;"></div>
+							<div class="car-info">
+								<p class="model">
+									<span>벤틀리</span>
+									<span>뉴컨티넨탈</span>
+									<span>4.0 GT</span>
+								</p>
+								<div class="row">
+									<span>2016년 04월</span>
+									<span>21,200km</span>
+									<span>가솔린</span>
+								</div>
+								<strong class="price">1억 6,500만원</strong>
+							</div>
+						</a>
+					</li>
+					<li>
+						<a href="https://www.autoplus.co.kr/smartbuy/WUSB050001.rb?productId=C21042000005" class="out-link" target="_blank">
+							<div class="thumbnail" style="background:url('https://cdn.autoplus.co.kr/PRODUCT/C21042000005/IMG03.jpg?v=202104231022') no-repeat center; background-size:cover;"></div>
+							<div class="car-info">
+								<p class="model">
+									<span>벤틀리</span>
+									<span>뉴컨티넨탈</span>
+									<span>4.0 GT</span>
+								</p>
+								<div class="row">
+									<span>2016년 04월</span>
+									<span>21,200km</span>
+									<span>가솔린</span>
+								</div>
+								<strong class="price">1억 6,500만원</strong>
+							</div>
+						</a>
+					</li>
+				</ul>
+			</div>
+			
+			<div class="page-btns full">
+				<a href="https://www.autoplus.co.kr/smartbuy/WUSB050001.rb?productId=C21042000005" class="btn darkgray" onclick="window.close()">닫기</a>
+			</div>
+		</div>
+	</section>
+</div>
+<script>
+$(document).ready(function(){
+	title = '{{ news.news_title|replace_entity }}'
+	title =  title.replaceAll({{ keyword|js }}, '<strong class="keyword">'+{{ keyword|js }}+'</strong>'); 
+	detailContent = '{{ news.news_summary|replace_entity|js }}'
+	detailContent = detailContent.replaceAll({{ keyword|js }}, '<strong class="keyword">'+{{ keyword|js }}+'</strong>').replaceAll('\n', '<br>');
+	$('.news-detail .n-title').html(title);
+	$('.news-detail .n-content .details').html(detailContent);
+
+	if({{ news.positive_count|js }} > 0 || {{ news.negative_count|js }} > 0){
+		negaPer = Math.floor(100 * {{ news.negative_count|js }} / ({{ news.negative_count|js }} + {{ news.positive_count|js }}))
+		posiPer = 100 - negaPer
+		if({{ news.va_count|js }} > 0 && {{ news.morpheme_count|js }} > 0){
+			vaPer = ({{ news.va_count|js }} / {{ news.morpheme_count|js }}).toFixed(2);
+			$('.mining-result .va').css('width', vaPer +'%').attr('title', '형용사 노출 수 : {{ news.va_count|js }}개').html('감성지수' + vaPer +'%');
+		}
+		$('.mining-result .positive').css('width', posiPer +'%').attr('title', '긍정단어 노출 수 : {{ news.positive_count|js }}개').html('긍정 '+ posiPer +'%');
+		$('.mining-result .negative').css('width', negaPer +'%').attr('title', '긍정단어 노출 수 : {{ news.negative_count|js }}개').html('부정' + negaPer +'%');
+	}else{
+		$('.mining-result').html('<p class="txt-ing">분석 중인 뉴스기사입니다.</p>');
+	}
+});
+</script>
+</body>
+</html>
+{% endblock %}

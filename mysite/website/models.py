@@ -41,32 +41,32 @@ class LogSearchList(models.Model):
 		db_table = 'LOG_SEARCH_LIST'
 
 class TblCarInfos(models.Model):
-    info_no = models.AutoField(db_column='INFO_NO', primary_key=True)  # Field name made lowercase.
-    bmname = models.CharField(db_column='BMNAME', max_length=100, blank=True, null=True)  # Field name made lowercase.
-    boiname = models.CharField(db_column='BOINAME', max_length=100, blank=True, null=True)  # Field name made lowercase.
-    boname = models.CharField(db_column='BONAME', max_length=100, blank=True, null=True)  # Field name made lowercase.
-    bono = models.IntegerField(db_column='BONO', blank=True, null=True)  # Field name made lowercase.
-    daum_code = models.CharField(db_column='DAUM_CODE', max_length=100, blank=True, null=True)  # Field name made lowercase.
-    car_img_url = models.CharField(db_column='CAR_IMG_URL', max_length=300, blank=True, null=True)  # Field name made lowercase.
-    car_price = models.CharField(db_column='CAR_PRICE', max_length=100, blank=True, null=True)  # Field name made lowercase.
-    fuel_efficiency = models.CharField(db_column='FUEL_EFFICIENCY', max_length=100, blank=True, null=True)  # Field name made lowercase.
-    car_cc = models.CharField(db_column='CAR_CC', max_length=100, blank=True, null=True)  # Field name made lowercase.
+	info_no = models.AutoField(db_column='INFO_NO', primary_key=True)  # Field name made lowercase.
+	bmname = models.CharField(db_column='BMNAME', max_length=100, blank=True, null=True)  # Field name made lowercase.
+	boiname = models.CharField(db_column='BOINAME', max_length=100, blank=True, null=True)  # Field name made lowercase.
+	boname = models.CharField(db_column='BONAME', max_length=100, blank=True, null=True)  # Field name made lowercase.
+	bono = models.IntegerField(db_column='BONO', blank=True, null=True)  # Field name made lowercase.
+	daum_code = models.CharField(db_column='DAUM_CODE', max_length=100, blank=True, null=True)  # Field name made lowercase.
+	car_img_url = models.CharField(db_column='CAR_IMG_URL', max_length=300, blank=True, null=True)  # Field name made lowercase.
+	car_price = models.CharField(db_column='CAR_PRICE', max_length=100, blank=True, null=True)  # Field name made lowercase.
+	fuel_efficiency = models.CharField(db_column='FUEL_EFFICIENCY', max_length=100, blank=True, null=True)  # Field name made lowercase.
+	car_cc = models.CharField(db_column='CAR_CC', max_length=100, blank=True, null=True)  # Field name made lowercase.
 
-    class Meta:
-        managed = False
-        db_table = 'TBL_CAR_INFOS'
+	class Meta:
+		managed = False
+		db_table = 'TBL_CAR_INFOS'
 
 class TblNewsAllKeywordList(models.Model):
-    word_no = models.AutoField(db_column='WORD_NO', primary_key=True)  # Field name made lowercase.
-    word_morpheme = models.CharField(db_column='WORD_MORPHEME', max_length=500, blank=True, null=True)  # Field name made lowercase.
-    word_class = models.CharField(db_column='WORD_CLASS', max_length=100, blank=True, null=True)  # Field name made lowercase.
-    media_code = models.CharField(db_column='MEDIA_CODE', max_length=50, blank=True, null=True)  # Field name made lowercase.
-    news_no = models.IntegerField(db_column='NEWS_NO', blank=True, null=True)  # Field name made lowercase.
-    update_date = models.DateTimeField(db_column='UPDATE_DATE', blank=True, null=True)  # Field name made lowercase.
+	word_no = models.AutoField(db_column='WORD_NO', primary_key=True)  # Field name made lowercase.
+	word_morpheme = models.CharField(db_column='WORD_MORPHEME', max_length=500, blank=True, null=True)  # Field name made lowercase.
+	word_class = models.CharField(db_column='WORD_CLASS', max_length=100, blank=True, null=True)  # Field name made lowercase.
+	media_code = models.CharField(db_column='MEDIA_CODE', max_length=50, blank=True, null=True)  # Field name made lowercase.
+	news_no = models.IntegerField(db_column='NEWS_NO', blank=True, null=True)  # Field name made lowercase.
+	update_date = models.DateTimeField(db_column='UPDATE_DATE', blank=True, null=True)  # Field name made lowercase.
 
-    class Meta:
-        managed = False
-        db_table = 'TBL_NEWS_ALL_KEYWORD_LIST'
+	class Meta:
+		managed = False
+		db_table = 'TBL_NEWS_ALL_KEYWORD_LIST'
 
 class TblNewsKeywordList(models.Model):
 	word_no = models.AutoField(db_column='WORD_NO', primary_key=True)  # Field name made lowercase.
@@ -80,7 +80,6 @@ class TblNewsKeywordList(models.Model):
 		managed = False
 		db_table = 'TBL_NEWS_KEYWORD_LIST'
 
-
 class TblNewsKeywordMap(models.Model):
 	map_no = models.AutoField(db_column='MAP_NO', primary_key=True)  # Field name made lowercase.
 	word_origin = models.CharField(db_column='WORD_ORIGIN', max_length=500, blank=True, null=True)  # Field name made lowercase.
@@ -93,53 +92,63 @@ class TblNewsKeywordMap(models.Model):
 		managed = False
 		db_table = 'TBL_NEWS_KEYWORD_MAP'
 
-
 class TblTotalCarNewsList(models.Model):
-    news_no = models.AutoField(db_column='NEWS_NO', primary_key=True)  # Field name made lowercase.
-    news_category = models.IntegerField(db_column='NEWS_CATEGORY', blank=True, null=True)  # Field name made lowercase.
-    media_code = models.CharField(db_column='MEDIA_CODE', max_length=50, blank=True, null=True)  # Field name made lowercase.
-    media_name = models.CharField(db_column='MEDIA_NAME', max_length=100, blank=True, null=True)  # Field name made lowercase.
-    news_code = models.CharField(db_column='NEWS_CODE', unique=True, max_length=100)  # Field name made lowercase.
-    news_title = models.CharField(db_column='NEWS_TITLE', max_length=1000, blank=True, null=True)  # Field name made lowercase.
-    news_summary = models.TextField(db_column='NEWS_SUMMARY', blank=True, null=True)  # Field name made lowercase.
-    news_content = models.TextField(db_column='NEWS_CONTENT', blank=True, null=True)  # Field name made lowercase.
-    news_img_url = models.CharField(db_column='NEWS_IMG_URL', max_length=1000, blank=True, null=True)  # Field name made lowercase.
-    news_url = models.CharField(db_column='NEWS_URL', max_length=1000, blank=True, null=True)  # Field name made lowercase.
-    write_date = models.CharField(db_column='WRITE_DATE', max_length=30, blank=True, null=True)  # Field name made lowercase.
-    add_date = models.DateTimeField(db_column='ADD_DATE', blank=True, null=True)  # Field name made lowercase.
-    mining_status = models.CharField(db_column='MINING_STATUS', max_length=10, blank=True, null=True)  # Field name made lowercase.
-    view_count = models.IntegerField(db_column='VIEW_COUNT', blank=True, null=True)  # Field name made lowercase.
-    origin_view_count = models.IntegerField(db_column='ORIGIN_VIEW_COUNT', blank=True, null=True)  # Field name made lowercase.
-    reporter_name = models.CharField(db_column='REPORTER_NAME', max_length=100, blank=True, null=True)  # Field name made lowercase.
-    mining_date = models.DateTimeField(db_column='MINING_DATE', blank=True, null=True)  # Field name made lowercase.
-    positive_count = models.IntegerField(db_column='POSITIVE_COUNT', blank=True, null=True)  # Field name made lowercase.
-    negative_count = models.IntegerField(db_column='NEGATIVE_COUNT', blank=True, null=True)  # Field name made lowercase.
-    va_count = models.IntegerField(db_column='VA_COUNT', blank=True, null=True)  # Field name made lowercase.
-    morpheme_count = models.IntegerField(db_column='MORPHEME_COUNT', blank=True, null=True)  # Field name made lowercase.
-    proc_status = models.CharField(db_column='PROC_STATUS', max_length=10, blank=True, null=True)  # Field name made lowercase.
-    writer_name = models.CharField(db_column='WRITER_NAME', max_length=200, blank=True, null=True)  # Field name made lowercase.
+	news_no = models.AutoField(db_column='NEWS_NO', primary_key=True)  # Field name made lowercase.
+	news_category = models.IntegerField(db_column='NEWS_CATEGORY', blank=True, null=True)  # Field name made lowercase.
+	media_code = models.CharField(db_column='MEDIA_CODE', max_length=50, blank=True, null=True)  # Field name made lowercase.
+	media_name = models.CharField(db_column='MEDIA_NAME', max_length=100, blank=True, null=True)  # Field name made lowercase.
+	news_code = models.CharField(db_column='NEWS_CODE', unique=True, max_length=100)  # Field name made lowercase.
+	news_title = models.CharField(db_column='NEWS_TITLE', max_length=1000, blank=True, null=True)  # Field name made lowercase.
+	news_summary = models.TextField(db_column='NEWS_SUMMARY', blank=True, null=True)  # Field name made lowercase.
+	news_content = models.TextField(db_column='NEWS_CONTENT', blank=True, null=True)  # Field name made lowercase.
+	news_img_url = models.CharField(db_column='NEWS_IMG_URL', max_length=1000, blank=True, null=True)  # Field name made lowercase.
+	news_url = models.CharField(db_column='NEWS_URL', max_length=1000, blank=True, null=True)  # Field name made lowercase.
+	write_date = models.CharField(db_column='WRITE_DATE', max_length=30, blank=True, null=True)  # Field name made lowercase.
+	add_date = models.DateTimeField(db_column='ADD_DATE', blank=True, null=True)  # Field name made lowercase.
+	mining_status = models.CharField(db_column='MINING_STATUS', max_length=10, blank=True, null=True)  # Field name made lowercase.
+	view_count = models.IntegerField(db_column='VIEW_COUNT', blank=True, null=True)  # Field name made lowercase.
+	origin_view_count = models.IntegerField(db_column='ORIGIN_VIEW_COUNT', blank=True, null=True)  # Field name made lowercase.
+	reporter_name = models.CharField(db_column='REPORTER_NAME', max_length=100, blank=True, null=True)  # Field name made lowercase.
+	mining_date = models.DateTimeField(db_column='MINING_DATE', blank=True, null=True)  # Field name made lowercase.
+	positive_count = models.IntegerField(db_column='POSITIVE_COUNT', blank=True, null=True)  # Field name made lowercase.
+	negative_count = models.IntegerField(db_column='NEGATIVE_COUNT', blank=True, null=True)  # Field name made lowercase.
+	va_count = models.IntegerField(db_column='VA_COUNT', blank=True, null=True)  # Field name made lowercase.
+	morpheme_count = models.IntegerField(db_column='MORPHEME_COUNT', blank=True, null=True)  # Field name made lowercase.
+	proc_status = models.CharField(db_column='PROC_STATUS', max_length=10, blank=True, null=True)  # Field name made lowercase.
+	writer_name = models.CharField(db_column='WRITER_NAME', max_length=200, blank=True, null=True)  # Field name made lowercase.
+	car_model_bat_status = models.IntegerField(db_column='CAR_MODEL_BAT_STATUS')  # Field name made lowercase.
+
+	class Meta:
+		managed = False
+		db_table = 'TBL_TOTAL_CAR_NEWS_LIST'
+
+class TblNewsCarModelMap(models.Model):
+    map_no = models.AutoField(db_column='MAP_NO', primary_key=True)  # Field name made lowercase.
+    bono = models.IntegerField(db_column='BONO', blank=True, null=True)  # Field name made lowercase.
+    boname = models.CharField(db_column='BONAME', max_length=500, blank=True, null=True)  # Field name made lowercase.
+    news_no = models.IntegerField(db_column='NEWS_NO', blank=True, null=True)  # Field name made lowercase.
+    map_date = models.DateTimeField(db_column='MAP_DATE', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
-        db_table = 'TBL_TOTAL_CAR_NEWS_LIST'
-
+        db_table = 'TBL_NEWS_CAR_MODEL_MAP'
 
 class TblYoutubeCarCommentList(models.Model):
-    comment_no = models.AutoField(db_column='COMMENT_NO', primary_key=True)  # Field name made lowercase.
-    comment_video_id = models.CharField(db_column='COMMENT_VIDEO_ID', max_length=100, blank=True, null=True)  # Field name made lowercase.
-    comment_content = models.TextField(db_column='COMMENT_CONTENT', blank=True, null=True)  # Field name made lowercase.
-    comment_content_length = models.IntegerField(db_column='COMMENT_CONTENT_LENGTH', blank=True, null=True)  # Field name made lowercase.
-    add_date = models.DateTimeField(db_column='ADD_DATE', blank=True, null=True)  # Field name made lowercase.
-    minning_status = models.IntegerField(db_column='MINNING_STATUS', blank=True, null=True)  # Field name made lowercase.
-    mining_date = models.DateTimeField(db_column='MINING_DATE', blank=True, null=True)  # Field name made lowercase.
-    positive_count = models.IntegerField(db_column='POSITIVE_COUNT', blank=True, null=True)  # Field name made lowercase.
-    negative_count = models.IntegerField(db_column='NEGATIVE_COUNT', blank=True, null=True)  # Field name made lowercase.
-    va_count = models.IntegerField(db_column='VA_COUNT', blank=True, null=True)  # Field name made lowercase.
-    morpheme_count = models.IntegerField(db_column='MORPHEME_COUNT', blank=True, null=True)  # Field name made lowercase.
-    proc_status = models.IntegerField(db_column='PROC_STATUS', blank=True, null=True)  # Field name made lowercase.
-    writer_name = models.CharField(db_column='WRITER_NAME', max_length=200, blank=True, null=True)  # Field name made lowercase.
-    info_no = models.IntegerField(db_column='INFO_NO')  # Field name made lowercase.
+	comment_no = models.AutoField(db_column='COMMENT_NO', primary_key=True)  # Field name made lowercase.
+	comment_video_id = models.CharField(db_column='COMMENT_VIDEO_ID', max_length=100, blank=True, null=True)  # Field name made lowercase.
+	comment_content = models.TextField(db_column='COMMENT_CONTENT', blank=True, null=True)  # Field name made lowercase.
+	comment_content_length = models.IntegerField(db_column='COMMENT_CONTENT_LENGTH', blank=True, null=True)  # Field name made lowercase.
+	add_date = models.DateTimeField(db_column='ADD_DATE', blank=True, null=True)  # Field name made lowercase.
+	minning_status = models.IntegerField(db_column='MINNING_STATUS', blank=True, null=True)  # Field name made lowercase.
+	mining_date = models.DateTimeField(db_column='MINING_DATE', blank=True, null=True)  # Field name made lowercase.
+	positive_count = models.IntegerField(db_column='POSITIVE_COUNT', blank=True, null=True)  # Field name made lowercase.
+	negative_count = models.IntegerField(db_column='NEGATIVE_COUNT', blank=True, null=True)  # Field name made lowercase.
+	va_count = models.IntegerField(db_column='VA_COUNT', blank=True, null=True)  # Field name made lowercase.
+	morpheme_count = models.IntegerField(db_column='MORPHEME_COUNT', blank=True, null=True)  # Field name made lowercase.
+	proc_status = models.IntegerField(db_column='PROC_STATUS', blank=True, null=True)  # Field name made lowercase.
+	writer_name = models.CharField(db_column='WRITER_NAME', max_length=200, blank=True, null=True)  # Field name made lowercase.
+	info_no = models.IntegerField(db_column='INFO_NO')  # Field name made lowercase.
 
-    class Meta:
-        managed = False
-        db_table = 'TBL_YOUTUBE_CAR_COMMENT_LIST'
+	class Meta:
+		managed = False
+		db_table = 'TBL_YOUTUBE_CAR_COMMENT_LIST'
