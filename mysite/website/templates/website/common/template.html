@@ -15,15 +15,15 @@
 	<!-- Summary -->
 	<meta name="Keywords" content="자동차, 자동차뉴스, 시승기, 중고차뉴스, 신차뉴스, 자동차업계, 자동차업계뉴스">
 	<meta name="Description" content="차나스 8개 자동차 언론사들의 뉴스를 모아 제공합니다. (신차, 중고차, 시승기, 자동차업계)">
-	{% comment %} <meta http-equiv="Author" content="차나스">
-	<meta http-equiv="Other Agent" content="차나스"> {% endcomment %}
+	<meta http-equiv="Author" content="차나스">
+	<meta http-equiv="Other Agent" content="차나스">
 	<meta http-equiv="Reply-To" content="simbk0120@autoplus.co.kr">
 	<meta http-equiv="Email" content="simbk0120@autoplus.co.kr">
 	<meta http-equiv="Build" content="2020.12" />
 	<meta property="og:url" content="http://chanas.autoplus.co.kr">
 	<meta property="og:title" content="차나스 CHANAS">
 	<meta property="og:type" content="website">
-	<meta property="og:image" content="{% static 'images/common/img_share.png' %}">
+	<meta property="og:image" content="{% static 'images/common/img_share.jpg' %}">
 	<meta property="og:description" content="차나스, 자동차 뉴스, 중고차 뉴스, 신차 뉴스, 자동차 시승기">
 	<meta name="naver-site-verification" content="c7ce06c9ed9736eb46db21ed102e4dea95dfe089" />
 	<meta name="google-site-verification" content="jt2p5-PNGgED4Z5xiMbyiENXRz7QGQtd6HxuQbAHYWw" />
@@ -194,7 +194,7 @@ function showNewsDetail(newsCode){
 	}else{
 		url = '/new_news_detail?news_code='+ newsCode;
 	}
-	window.open(url, '카라스 뉴스 상세보기', 'width=1040, height=880, toolbar=no, menubar=no, scrollbars=no, resizable=yes')
+	window.open(url, '카라스 뉴스 상세보기', 'width=1050, height=880, toolbar=no, menubar=no, scrollbars=no, resizable=yes')
 }
 
 //전체 긍/부정 지수

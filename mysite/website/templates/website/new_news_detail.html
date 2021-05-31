@@ -1,15 +1,23 @@
 {% extends 'website/common/template.html' %}
 {% load static %}
 {% load custom_tags %}
+{% load humanize %}
 {% block content %}
 	<section class="container">
-		<p>{{ matching_car_infos }}</p>
+		<!--<p>{{ matching_car_infos }}</p>-->
 		<div class="news-detail">
 			<div class="mining-result">
 				<div class="va"></div>
 				<div class="positive"></div>
 				<div class="negative"></div>
 			</div>
+			<!-- <div class="dev-infos">
+				<style>
+					.dev-infos strong {line-height:1.5; font-size:16px;}
+				</style>
+				<strong>뉴스넘버 : {{ news_no }}</strong><br>
+				<strong>뉴스기사와 매칭된 BONAME LIST : {{ matching_bo_names }}</strong>
+			</div> -->
 			<p class="n-title"></p>
 			<div class="n-info">
 				<span class="date">{{ news.write_date }}</span>
@@ -24,89 +32,50 @@
 				<div class="picture"><img src="{{news.news_img_url}}" alt=""></div>
 				<p class="details"></p>
 				<div class="page-btns full">
-					<a href="{{ news.news_url }}" class="btn gray">해당 언론사에서 뉴스 상세 보기</a>
+					<a href="{{ news.news_url }}" target="_blank" class="btn gray">해당 언론사에서 뉴스 상세 보기</a>
 				</div>
 			</div>
 
+			{% if matching_car_count > 0 %}
 			<div class="related-car-list">
 				<strong class="title">&middot;
-					<a href="https://www.autoplus.co.kr" target="_blank">오토플러스</a>에서 판매 중인 관련 차량
+					<a href="https://www.autoplus.co.kr" target="_blank">오토플러스</a>에서 판매 중인 관련 차량 {{ matching_car_count }}대
 				</strong>
+				<p></p>
 				<ul>
+					{% for matching_car in matching_car_infos %}
 					<li>
-						<a href="https://www.autoplus.co.kr/smartbuy/WUSB050001.rb?productId=C21042000005" class="out-link" target="_blank">
-							<div class="thumbnail" style="background:url('https://cdn.autoplus.co.kr/PRODUCT/C21042000005/IMG01.jpg?v=202104231022') no-repeat center; background-size:cover;"></div>
+						<!-- <strong>{{ matching_car.brand }} /// {{matching_car.prod_id}}</strong> -->
+						{% if matching_car.brand == 'acar' %}
+						<a href="https://www.autoplus.co.kr/acar/ACVP020001?productId={{matching_car.prod_id}}" class="out-link" target="_blank">
+						{% elif matching_car.brand == 'rcar' %}
+						<a href="https://www.autoplus.co.kr/smartbuy/WUSB050001.rb?productId={{matching_car.prod_id}}" class="out-link" target="_blank">
+						{% endif %}
+							<div class="thumbnail" style="background:url('{{matching_car.car_photo}}') no-repeat center; background-size:cover;"></div>
 							<div class="car-info">
 								<p class="model">
-									<span>벤틀리</span>
-									<span>뉴컨티넨탈</span>
-									<span>4.0 GT</span>
+									<span>{{matching_car.bm_name}}</span>
+									<span>{{matching_car.boi_name}}</span>
+									<span>{{matching_car.grade_name}}</span>
 								</p>
 								<div class="row">
-									<span>2016년 04월</span>
-									<span>21,200km</span>
-									<span>가솔린</span>
+									<span>{{matching_car.regi_date}}</span>
+									<span>{{matching_car.car_navi | intcomma}}km</span>
 								</div>
-								<strong class="price">1억 6,500만원</strong>
+								<div class="row">
+									<span>{{matching_car.fuel}}</span>
+									{% if matching_car.aci_gbn != None %}
+									<span>{{matching_car.aci_gbn}}</span>
+									{% endif %}
+								</div>
+								<strong class="price">{{matching_car.amt_sel | intcomma }}원</strong>
 							</div>
 						</a>
 					</li>
-					<li>
-						<a href="https://www.autoplus.co.kr/smartbuy/WUSB050001.rb?productId=C21042000005" class="out-link" target="_blank">
-							<div class="thumbnail" style="background:url('https://cdn.autoplus.co.kr/PRODUCT/C21042000005/IMG06.jpg?v=202104231022') no-repeat center; background-size:cover;"></div>
-							<div class="car-info">
-								<p class="model">
-									<span>벤틀리</span>
-									<span>뉴컨티넨탈</span>
-									<span>4.0 GT</span>
-								</p>
-								<div class="row">
-									<span>2016년 04월</span>
-									<span>21,200km</span>
-									<span>가솔린</span>
-								</div>
-								<strong class="price">1억 6,500만원</strong>
-							</div>
-						</a>
-					</li>
-					<li>
-						<a href="https://www.autoplus.co.kr/smartbuy/WUSB050001.rb?productId=C21042000005" class="out-link" target="_blank">
-							<div class="thumbnail" style="background:url('https://cdn.autoplus.co.kr/PRODUCT/C21042000005/IMG04.jpg?v=202104231022') no-repeat center; background-size:cover;"></div>
-							<div class="car-info">
-								<p class="model">
-									<span>벤틀리</span>
-									<span>뉴컨티넨탈</span>
-									<span>4.0 GT</span>
-								</p>
-								<div class="row">
-									<span>2016년 04월</span>
-									<span>21,200km</span>
-									<span>가솔린</span>
-								</div>
-								<strong class="price">1억 6,500만원</strong>
-							</div>
-						</a>
-					</li>
-					<li>
-						<a href="https://www.autoplus.co.kr/smartbuy/WUSB050001.rb?productId=C21042000005" class="out-link" target="_blank">
-							<div class="thumbnail" style="background:url('https://cdn.autoplus.co.kr/PRODUCT/C21042000005/IMG03.jpg?v=202104231022') no-repeat center; background-size:cover;"></div>
-							<div class="car-info">
-								<p class="model">
-									<span>벤틀리</span>
-									<span>뉴컨티넨탈</span>
-									<span>4.0 GT</span>
-								</p>
-								<div class="row">
-									<span>2016년 04월</span>
-									<span>21,200km</span>
-									<span>가솔린</span>
-								</div>
-								<strong class="price">1억 6,500만원</strong>
-							</div>
-						</a>
-					</li>
+					{% endfor %}
 				</ul>
 			</div>
+			{% endif %}
 			
 			<div class="page-btns full">
 				<a href="https://www.autoplus.co.kr/smartbuy/WUSB050001.rb?productId=C21042000005" class="btn darkgray" onclick="window.close()">닫기</a>

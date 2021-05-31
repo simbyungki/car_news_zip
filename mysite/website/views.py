@@ -261,10 +261,10 @@ def news_detail(request) :
 
 # 뉴스, 카 매핑 테이블
 def boname_to_car_infos(bonames) : 
-
+	matching_car_list = []
+	#print(bonames)
 	for boname in bonames : 
-		print(type(boname))
-		url = 'http://182.162.143.85/getCarList.php'
+		url = 'http://182.162.143.85/getCarListTotal.php'
 		params = {'searchQuery': boname, 'productType': 9}
 		res = requests.get(url, params)
 		# print(res.status_code)
@@ -274,80 +274,40 @@ def boname_to_car_infos(bonames) :
 		# print(res.json())
 		# print(res.json()['resultData'])
 
-		matching_car_list = []
-		lenACar = res.json()['resultData']['ACAR_TOTAL']
-		lenRCar = res.json()['resultData']['RCAR_TOTAL']
-		lenHCar = res.json()['resultData']['HCAR_TOTAL']
-		aCarList = res.json()['resultData']['ACAR']
-		rCarList = res.json()['resultData']['RCAR']
-		hCarList = res.json()['resultData']['HCAR']
-
-		if lenACar > 0 :
-			for carInfos in aCarList :
-				if carInfos.get('hpselSta') == 'HA02' : 
-					inData = {}
-					inData['brand'] = 'acar'
-					inData['prod_id'] = carInfos.get('productId')
-					inData['bm_name'] = carInfos.get('bmName')
-					inData['boi_name'] = carInfos.get('boiName')
-					inData['grade_name'] = carInfos.get('gradeName')
-					inData['car_photo'] = carInfos.get('carPhoto1')
-					# 연료
-					inData['fuel'] = carInfos.get('fuel')
-					# 주행거리
-					inData['car_navi'] = carInfos.get('carNavi')
-					# 판매가
-					inData['amt_sel'] = carInfos.get('amtSel')
-					# 년식
-					inData['regi_date'] = carInfos.get('regiDate')
-					matching_car_list.append(inData)
-		if lenRCar > 0 :
-			for carInfos in rCarList :
-				if carInfos.get('hpselSta') == 'HA02' : 
-					inData = {}
-					inData['brand'] = 'rcar'
-					inData['prod_id'] = carInfos.get('productId')
-					inData['bm_name'] = carInfos.get('bmName')
-					inData['boi_name'] = carInfos.get('boiName')
-					inData['grade_name'] = carInfos.get('gradeName')
-					inData['car_photo'] = carInfos.get('carPhoto1')
-					# 연료
-					inData['fuel'] = carInfos.get('fuel')
-					# 주행거리
-					inData['car_navi'] = carInfos.get('carNavi')
-					# 판매가
-					inData['amt_sel'] = carInfos.get('amtSel')
-					# 년식
-					inData['regi_date'] = carInfos.get('regiDate')
-					matching_car_list.append(inData)
-		if lenHCar > 0 :
-			for carInfos in hCarList :
-				if carInfos.get('hpselSta') == 'HA02' : 
-					inData = {}
-					inData['brand'] = 'hcar'
-					inData['prod_id'] = carInfos.get('productId')
-					inData['bm_name'] = carInfos.get('bmName')
-					inData['boi_name'] = carInfos.get('boiName')
-					inData['grade_name'] = carInfos.get('gradeName')
-					inData['car_photo'] = carInfos.get('carPhoto1')
-					# 연료
-					inData['fuel'] = carInfos.get('fuel')
-					# 주행거리
-					inData['car_navi'] = carInfos.get('carNavi')
-					# 판매가
-					inData['amt_sel'] = carInfos.get('amtSel')
-					# 년식
-					inData['regi_date'] = carInfos.get('regiDate')
-					matching_car_list.append(inData)
-
-	# print(matching_car_list)
-
+		if isinstance(res.json()['resultData'], dict) :
+			if res.json()['resultData']['ALL_TOTAL'] > 0 : 
+				print(f'boname >> {res.json()["resultData"]["ALL_TOTAL"]}')
+				carList = res.json()['resultData']['ALL']
+				for carInfos in carList :
+					if carInfos.get('hpselSta') == 'HA02' : 
+						inData = {}
+						# 현대캐피탈 상품 제외 (BJ07) >> 링크 연결 불가
+						if carInfos.get('baeSta') != 'BJ07' :
+							if carInfos.get('baeSta') == 'BJ03' : 
+								brand = 'acar'
+							elif carInfos.get('baeSta') == 'BJ12' :
+								brand = 'rcar'
+							inData['brand'] = brand
+							inData['prod_id'] = carInfos.get('productId')
+							inData['bm_name'] = carInfos.get('bmName')
+							inData['boi_name'] = carInfos.get('boiName')
+							inData['grade_name'] = carInfos.get('gradeName')
+							inData['car_photo'] = carInfos.get('carPhoto1')
+							# 연료
+							inData['fuel'] = carInfos.get('fuel')
+							# 사고유무
+							inData['aci_gbn'] = carInfos.get('aciGbn')
+							# 주행거리
+							inData['car_navi'] = carInfos.get('carNavi')
+							# 판매가
+							inData['amt_sel'] = int(carInfos.get('amtSel')) - int(carInfos.get('amtSelDc'))
+							# 년식
+							inData['regi_date'] = carInfos.get('regiDate')[:-3].replace('-', '년 ') + '월'
+							matching_car_list.append(inData)
 	return matching_car_list
 
 # 뉴스 상세 (신규)
 def new_news_detail(request) : 
-	
-
 	news_code = request.GET.get('news_code')
 	keyword = request.GET.get('keyword')
 	news = TblTotalCarNewsList.objects.values().filter(news_code=news_code)
@@ -360,7 +320,6 @@ def new_news_detail(request) :
 
 	car_infos = boname_to_car_infos(bonames)
 
-
 	context = {}
 	context['today_date'] = datetime.today().strftime('%Y-%m-%d')
 	context['news'] = news[0]
@@ -369,12 +328,18 @@ def new_news_detail(request) :
 	context['news_no'] = news_no
 	context['matching_bo_names'] = bonames
 	context['matching_car_infos'] = car_infos
+	context['matching_car_count'] = len(car_infos)
 
 	infos = {}
 	infos['referer'] = request.headers.get('referer')
 	infos['page_name'] = '/new_news_detail'
 	infos['user_ip'] = get_ip(request)
 	connect_log_insert(infos)
+
+	if len(car_infos) > 0 :
+		print(f'car list len = {len(car_infos)}')
+		print(f'boname list = {bonames}')
+		print(f'news no = {news_no}')
 
 	return render(request, 'website/new_news_detail.html', context)
 

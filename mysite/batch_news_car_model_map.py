@@ -70,14 +70,16 @@ def getNewsMatchingList(carModelList) :
 		insert_map_list = []
 		insert_update_news_list = []
 		for idx, carNews in enumerate(carNewsList) :
+			news_title = carNews.get('news_title')
 			news_content = carNews.get('news_content')
 			for carModel in carModelList : 
-				if carModel[1] in news_content : 
-					## carModel[0] = BONO
-					## carModel[1] = 모델명
-					print(f'뉴스와 차량 매칭! >> [{carModel[0]}]{carModel[1]} ///// {carNews.get("news_title")}')
-					insert_map_list.append(TblNewsCarModelMap(bono = carModel[0], boname = carModel[1], news_no = carNews.get('news_no'), map_date = datetime.today().strftime('%Y-%m-%d %H:%M:%S')))
-			# 		insert_map_list.append(TblNewsCarModelMap(bono = carModel[0], boname = carModel[1], news_no = carNews.get('news_no')))
+				if carModel[1] in news_title : 
+					if carModel[1] in news_content : 
+						## carModel[0] = BONO
+						## carModel[1] = 모델명
+						print(f'뉴스와 차량 매칭! >> [{carModel[0]}]{carModel[1]} ///// {carNews.get("news_title")}')
+						insert_map_list.append(TblNewsCarModelMap(bono = carModel[0], boname = carModel[1], news_no = carNews.get('news_no'), map_date = datetime.today().strftime('%Y-%m-%d %H:%M:%S')))
+				# 		insert_map_list.append(TblNewsCarModelMap(bono = carModel[0], boname = carModel[1], news_no = carNews.get('news_no')))
 			thisNews = TblTotalCarNewsList.objects.get(news_no = carNews.get("news_no"))
 			thisNews.car_model_bat_status = 3
 			thisNews.save()
@@ -93,28 +95,29 @@ def getNewsMatchingList(carModelList) :
 
 
 	# for idx, carNews in enumerate(carNewsList) :
-	# 	news_content = carNews.get('news_content')
+	# 	news_title = carNews.get('news_title')
 	# 	for carModel in carModelList : 
-	# 		if carModel[1] in news_content : 
-	# 			## carModel[0] = BONO
-	# 			## carModel[1] = 모델명
-	# 			print(f'result = [{carModel[0]}]{carModel[1]} >> {carNews.get("news_no")}')
-	# 			try :
-	# 				cursor.execute(f"""
-	# 					INSERT IGNORE INTO TBL_NEWS_CAR_MODEL_MAP 
-	# 					(
-	# 						BONO, NEWS_NO, MAP_DATE
-	# 					) 
-	# 					VALUES (
-	# 						{carModel[0]}, {carNews.get("news_no")}, NOW()
-	# 					) 
-	# 				""")
-	# 			except Exception as e :
-	# 				print(f'*+++++ + error! >> {e}')
-	# 				pass
-	# 			finally : 
-	# 				print('**** 차량모델과 뉴스기사 매칭 및 DB저장 완료!')
-	# 				print('ㅡ'*50)
+	# 		if carModel[1] in news_title : 
+	#			if carModel[1] in news_content : 
+					# ## carModel[0] = BONO
+					# ## carModel[1] = 모델명
+					# print(f'result = [{carModel[0]}]{carModel[1]} >> {carNews.get("news_no")}')
+					# try :
+					# 	cursor.execute(f"""
+					# 		INSERT IGNORE INTO TBL_NEWS_CAR_MODEL_MAP 
+					# 		(
+					# 			BONO, NEWS_NO, MAP_DATE
+					# 		) 
+					# 		VALUES (
+					# 			{carModel[0]}, {carNews.get("news_no")}, NOW()
+					# 		) 
+					# 	""")
+					# except Exception as e :
+					# 	print(f'*+++++ + error! >> {e}')
+					# 	pass
+					# finally : 
+					# 	print('**** 차량모델과 뉴스기사 매칭 및 DB저장 완료!')
+					# 	print('ㅡ'*50)
 	# dbconn.commit()
 	# cursor.close()
 	# dbconn.close()
