@@ -137,7 +137,7 @@ dmypy.json
 mysite/secrets.json
 mysite/secrets_ap.json
 mysite/db_conn.json
-# mysite/db_conn_apdb.json
+mysite/db_conn_apdb.json
 mysite/db_conn_ap.json
 mysite/db_conn_ap_test.json
 
