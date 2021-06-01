@@ -84,6 +84,8 @@
 </div>
 <script>
 $(document).ready(function(){
+	console.log('NEWS NO : {{ news_no }}')
+	console.log('BONAME LIST : {{ matching_bo_names }}')
 	title = '{{ news.news_title|replace_entity }}'
 	title =  title.replaceAll({{ keyword|js }}, '<strong class="keyword">'+{{ keyword|js }}+'</strong>'); 
 	detailContent = '{{ news.news_summary|replace_entity|js }}'
