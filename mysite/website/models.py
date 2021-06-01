@@ -61,6 +61,7 @@ class TblNewsAllKeywordList(models.Model):
 	word_morpheme = models.CharField(db_column='WORD_MORPHEME', max_length=500, blank=True, null=True)  # Field name made lowercase.
 	word_class = models.CharField(db_column='WORD_CLASS', max_length=100, blank=True, null=True)  # Field name made lowercase.
 	media_code = models.CharField(db_column='MEDIA_CODE', max_length=50, blank=True, null=True)  # Field name made lowercase.
+	mining_obj = models.CharField(db_column='MINING_OBJ', max_length=10, blank=True, null=True)  # Field name made lowercase.
 	news_no = models.IntegerField(db_column='NEWS_NO', blank=True, null=True)  # Field name made lowercase.
 	update_date = models.DateTimeField(db_column='UPDATE_DATE', blank=True, null=True)  # Field name made lowercase.
 
@@ -106,10 +107,12 @@ class TblTotalCarNewsList(models.Model):
 	write_date = models.CharField(db_column='WRITE_DATE', max_length=30, blank=True, null=True)  # Field name made lowercase.
 	add_date = models.DateTimeField(db_column='ADD_DATE', blank=True, null=True)  # Field name made lowercase.
 	mining_status = models.CharField(db_column='MINING_STATUS', max_length=10, blank=True, null=True)  # Field name made lowercase.
+	title_mining_status = models.CharField(db_column='TITLE_MINING_STATUS', max_length=10, blank=True, null=True)  # Field name made lowercase.
 	view_count = models.IntegerField(db_column='VIEW_COUNT', blank=True, null=True)  # Field name made lowercase.
 	origin_view_count = models.IntegerField(db_column='ORIGIN_VIEW_COUNT', blank=True, null=True)  # Field name made lowercase.
 	reporter_name = models.CharField(db_column='REPORTER_NAME', max_length=100, blank=True, null=True)  # Field name made lowercase.
 	mining_date = models.DateTimeField(db_column='MINING_DATE', blank=True, null=True)  # Field name made lowercase.
+	title_mining_date = models.DateTimeField(db_column='TITLE_MINING_DATE', blank=True, null=True)  # Field name made lowercase.
 	positive_count = models.IntegerField(db_column='POSITIVE_COUNT', blank=True, null=True)  # Field name made lowercase.
 	negative_count = models.IntegerField(db_column='NEGATIVE_COUNT', blank=True, null=True)  # Field name made lowercase.
 	va_count = models.IntegerField(db_column='VA_COUNT', blank=True, null=True)  # Field name made lowercase.

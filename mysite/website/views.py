@@ -281,8 +281,9 @@ def boname_to_car_infos(bonames) :
 				for carInfos in carList :
 					if carInfos.get('hpselSta') == 'HA02' : 
 						inData = {}
-						# 현대캐피탈 상품 제외 (BJ07) >> 링크 연결 불가
-						if carInfos.get('baeSta') != 'BJ02' or carInfos.get('baeSta') != 'BJ07' :
+						# 현대캐피탈 상품 제외 (BJ07, BJ02) >> 링크 연결 불가
+						# if carInfos.get('baeSta') != 'BJ02' or carInfos.get('baeSta') != 'BJ07' :
+						if not (carInfos.get('baeSta') == 'BJ02' or carInfos.get('baeSta') == 'BJ07') :
 							if carInfos.get('baeSta') == 'BJ03' : 
 								brand = 'acar'
 							elif carInfos.get('baeSta') == 'BJ12' :

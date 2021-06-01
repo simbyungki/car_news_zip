@@ -11,7 +11,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite.settings")
 import django
 django.setup()
 
-from website.models import TblTotalCarNewsList, TblMemberList, TblNewsKeywordList, TblNewsKeywordMap, TblNewsCarModelMap
+from website.models import TblTotalCarNewsList, TblMemberList, TblNewsKeywordList, TblNewsKeywordMap, TblNewsCarModelMap, TblNewsAllKeywordList
 from datetime import datetime
 
 
@@ -56,13 +56,43 @@ def getCarModelList() :
 	print(len(carModelList))
 	return carModelList
 	
-
 def getNewsMatchingList(carModelList) :
+	keyword_list = []
+	keyword_table = TblNewsAllKeywordList.objects.all().filter(mining_obj = '3')
+
+	print(f'**** 차량모델과 뉴스기사 매칭 및 DB저장 시작! [모델 : {len(carModelList)}건 // 키워드 : {len(keyword_table)}건]')
+
+	try :
+		insert_map_list = []
+		insert_update_news_list = []
+		for idx, keyword_row in enumerate(keyword_table) : 
+			keyword_list.append([keyword_row.word_morpheme, keyword_row.news_no])
+
+		carList = carModelList
+
+		for car in carList : 
+			for keyword in keyword_list :
+				if car[1] == keyword[0] : 
+					print(f'키워드와 BONAME 일치 : {car[1]} >> BONAME : [{keyword[0]}] // NEWS_NO : [{keyword[1]}]')
+					insert_map_list.append(TblNewsCarModelMap(bono = car[0], boname = car[1], news_no = keyword[1], map_date = datetime.today().strftime('%Y-%m-%d %H:%M:%S')))
+
+		TblNewsCarModelMap.objects.bulk_create(insert_map_list)
+	except Exception as e :
+		print(f'*+++++ + error! >> {e}')
+		pass
+	finally : 
+		print('ㅡ'*50)
+		print('**** 차량모델과 뉴스기사 매칭 및 DB저장 완료!')
+		print('ㅡ'*50)
+
+
+
+# 이전 버전
+def getNewsMatchingList_old(carModelList) :
 	# dbconn = pymssql.connect(host=db_infos.get('host'), user=db_infos.get('user'), password=db_infos.get('password'), database=db_infos.get('database'), port=db_infos.get('port'), charset='EUC-KR')
 	# cursor = dbconn.cursor()
 
 	carNewsList = TblTotalCarNewsList.objects.values().filter(car_model_bat_status=1)
-	newsCarMap = TblNewsCarModelMap()
 
 	print(f'**** 차량모델과 뉴스기사 매칭 및 DB저장 시작! [모델 : {len(carModelList)}건 // 뉴스 : {len(carNewsList)}건]')
 
@@ -76,7 +106,7 @@ def getNewsMatchingList(carModelList) :
 				if carModel[1] in news_title : 
 					if carModel[1] in news_content : 
 						## carModel[0] = BONO
-						## carModel[1] = 모델명
+						## carModel[1] = 모델명 (BONAME)
 						print(f'뉴스와 차량 매칭! >> [{carModel[0]}]{carModel[1]} ///// {carNews.get("news_title")}')
 						insert_map_list.append(TblNewsCarModelMap(bono = carModel[0], boname = carModel[1], news_no = carNews.get('news_no'), map_date = datetime.today().strftime('%Y-%m-%d %H:%M:%S')))
 				# 		insert_map_list.append(TblNewsCarModelMap(bono = carModel[0], boname = carModel[1], news_no = carNews.get('news_no')))

@@ -23,11 +23,14 @@ import pandas as pd
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.abspath('./mysite'))
-DATA_DIR = os.path.dirname(os.path.abspath('./data'))
 # SECURITY WARNING: keep the secret key used in production secret!
 db_info_file = os.path.join(BASE_DIR, 'db_conn.json')
+db_info_file2 = os.path.join(BASE_DIR, 'db_conn_apdb.json')
+# db_info_file = os.path.join(BASE_DIR, 'db_conn.json')
 with open(db_info_file) as f :
 	db_infos = json.loads(f.read())
+with open(db_info_file2) as f :
+	db_infos2 = json.loads(f.read())
 
 # word cloud
 wc = WordCloud(font_path=f'{BASE_DIR}\\website\\static\\font\\NanumSquareB.ttf', \
@@ -162,6 +165,7 @@ def text_mining(cont_type, dbconn, cursor) :
 				for idx, data in enumerate(data_list) :
 					try : 
 						if idx > 1 : 
+							news_no = data_list[1]
 							origin_word = re.sub('[-=.#/?:$}\"\']', '', str(data[0])).replace('[','').replace(']','')
 							print(f'*** : [{out_idx}/{len(mining_result_data) -1}][{news_no}][{idx}/{len(data_list)}][{origin_word}]')
 							# data[1] 형태소 분석 (세트) >> ex) [('신', 'NNG'), ('차', 'NNG')]
@@ -180,10 +184,10 @@ def text_mining(cont_type, dbconn, cursor) :
 								cursor.execute(f"""
 									INSERT INTO TBL_NEWS_ALL_KEYWORD_LIST 
 									(
-										WORD_MORPHEME, WORD_CLASS, MEDIA_CODE, UPDATE_DATE
+										WORD_MORPHEME, WORD_CLASS, MEDIA_CODE, MINING_OBJ, NEWS_NO, UPDATE_DATE
 									) 
 									VALUES (
-										"{word[0]}", "{word[1]}", "{media_code}", NOW()
+										"{word[0]}", "{word[1]}", "{media_code}", "1", "{news_no}", NOW()
 									)
 								""")
 
