@@ -35,11 +35,12 @@ def getCarModelList() :
 	carModelList = []
 
 	cursor2.execute(f"""
-		SELECT
-			DISTINCT BONO,
-			BONAME
+		SELECT 
+			BONO, BONAME
 		FROM 
-			ATB_NCAR_MODEL
+			ATB_NCAR_MODEL 
+		GROUP BY 
+			BONO, BONAME
 	""")
 	rows = cursor2.fetchall()
 	
@@ -64,18 +65,17 @@ def getNewsMatchingList(carModelList) :
 		insert_map_list = []
 		totalCnt = 0
 		for idx, carNews in enumerate(carNewsList) :
-			news_title = regex.findall(r'[\p{Hangul}|\p{Latin}|\p{Han}]+', f'{carNews.get("news_title")}')
+			news_title = regex.findall(r'[\p{Hangul}|\p{Latin}|\p{Han}|\d+]+', f'{carNews.get("news_title")}')
 			for carModel in carModelList : 
 				# carModel[0] = BONO
 				# carModel[1] = 모델명 (BONAME)
 				in_list = []
-				car_boname = regex.findall(r'[\p{Hangul}\p{Latin}|\p{Han}]+', f'{carModel[1]}')
+				car_boname = regex.findall(r'[\p{Hangul}\p{Latin}|\p{Han}|\d+]+', f'{carModel[1]}')
 				if not car_boname :
 					in_list.append(carModel[1])
 					car_boname = in_list
 				if all([x in news_title for x in car_boname]) : 
 					print(f'매칭! [{carNews.get("news_no")}]{news_title} // [{carModel[0]}]{car_boname}')
-					# print(f'매칭! [{carModel[0]}]{carModel[1]} >> [{carNews.get("news_no")}]')
 					insert_map_list.append(TblNewsCarModelMap(bono = carModel[0], boname = carModel[1], news_no = carNews.get('news_no'), map_date = datetime.today().strftime('%Y-%m-%d %H:%M:%S')))
 					totalCnt += 1
 			thisNews = TblTotalCarNewsList.objects.get(news_no = carNews.get("news_no"))

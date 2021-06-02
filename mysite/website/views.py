@@ -317,8 +317,10 @@ def new_news_detail(request) :
 	
 	bonames = []
 	for matching_car in matching_car_list : 
+		print(matching_car.get('boname'))
 		bonames.append(matching_car.get('boname'))
 
+	print(f'bonames >> {bonames}')
 	car_infos = boname_to_car_infos(bonames)
 
 	context = {}
