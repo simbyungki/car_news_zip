@@ -34,20 +34,47 @@ def getCarModelList() :
 
 	carModelList = []
 
+	# cursor2.execute(f"""
+	# 	SELECT 
+	# 		BONO, BONAME
+	# 	FROM 
+	# 		ATB_NCAR_MODEL 
+	# 	GROUP BY 
+	# 		BONO, BONAME
+	# """)
 	cursor2.execute(f"""
 		SELECT 
-			BONO, BONAME
+			BONO
+			,CASE 
+				WHEN CHARINDEX(' ',BONAME) > 0 THEN 
+					CASE 
+						WHEN CHARINDEX(' ',BONAME, CHARINDEX(' ',BONAME)+1 ) > 0 THEN 
+						CASE 
+							WHEN LEN(SUBSTRING(SUBSTRING(BONAME, CHARINDEX(' ',BONAME)+1,LEN(BONAME)), 1, CHARINDEX(' ',SUBSTRING(BONAME, CHARINDEX(' ',BONAME)+1,LEN(BONAME)))-1)) = 1 THEN
+								CONCAT(SUBSTRING(BONAME,1, CHARINDEX(' ',BONAME)-1 ),' ',SUBSTRING(BONAME, CHARINDEX(' ',BONAME)+1,LEN(BONAME)))
+						ELSE
+							CONCAT(SUBSTRING(BONAME,1, CHARINDEX(' ',BONAME)-1 ),' ',SUBSTRING(SUBSTRING(BONAME, CHARINDEX(' ',BONAME)+1,LEN(BONAME)), 1, CHARINDEX(' ',SUBSTRING(BONAME, CHARINDEX(' ',BONAME)+1,LEN(BONAME)))-1))
+						END
+						ELSE 
+						BONAME
+					END
+				ELSE 
+				BONAME
+			END AS RESULT_BONAME
+			,BONAME
 		FROM 
 			ATB_NCAR_MODEL 
 		GROUP BY 
-			BONO, BONAME
+			BONO, BOINAME, BONAME;
 	""")
+	
 	rows = cursor2.fetchall()
 	
 	for idx, row in enumerate(rows) :
 		model = []
 		model.append(row[0])
 		model.append(row[1])
+		model.append(row[2])
 		carModelList.append(model)
 
 
@@ -58,6 +85,41 @@ def getCarModelList() :
 	return carModelList
 	
 def getNewsMatchingList(carModelList) :	
+	carNewsList = TblTotalCarNewsList.objects.values().filter(car_model_bat_status=1)
+	print(f'**** 차량모델과 뉴스기사 매칭 및 DB저장 시작! [모델 : {len(carModelList)}건 // 뉴스 : {len(carNewsList)}건]')
+
+	try :
+		insert_map_list = []
+		totalCnt = 0
+		for idx, carNews in enumerate(carNewsList) :
+			news_title = regex.findall(r'[\p{Hangul}|\p{Latin}|\p{Han}|\d+]+', f'{carNews.get("news_title")}')
+			for carModel in carModelList : 
+				# carModel[0] = BONO
+				# carModel[1] = 모델명 (BONAME)
+				in_list = []
+				car_boname = regex.findall(r'[\p{Hangul}\p{Latin}|\p{Han}|\d+]+', f'{carModel[1]}')
+				if not car_boname :
+					in_list.append(carModel[1])
+					car_boname = in_list
+				if all([x in news_title for x in car_boname]) : 
+					print(f'매칭! [{carNews.get("news_no")}]{news_title} // [{carModel[0]}]{car_boname}')
+					insert_map_list.append(TblNewsCarModelMap(bono = carModel[0], boname = carModel[1], news_no = carNews.get('news_no'), map_date = datetime.today().strftime('%Y-%m-%d %H:%M:%S')))
+					totalCnt += 1
+			thisNews = TblTotalCarNewsList.objects.get(news_no = carNews.get("news_no"))
+			thisNews.car_model_bat_status = 3
+			thisNews.save()
+		TblNewsCarModelMap.objects.bulk_create(insert_map_list)
+		print(f'총 매칭 건수 >> {totalCnt}건')
+	except Exception as e :
+		print(f'*+++++ + error! >> {e}')
+		pass
+	finally : 
+		print('ㅡ'*50)
+		print('**** 차량모델과 뉴스기사 매칭 및 DB저장 완료!')
+		print('ㅡ'*50)
+
+
+def getNewsMatchingList_old3(carModelList) :	
 	carNewsList = TblTotalCarNewsList.objects.values().filter(car_model_bat_status=1)
 	print(f'**** 차량모델과 뉴스기사 매칭 및 DB저장 시작! [모델 : {len(carModelList)}건 // 뉴스 : {len(carNewsList)}건]')
 

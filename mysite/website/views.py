@@ -313,7 +313,7 @@ def new_news_detail(request) :
 	keyword = request.GET.get('keyword')
 	news = TblTotalCarNewsList.objects.values().filter(news_code=news_code)
 	news_no = news[0]['news_no']
-	matching_car_list = TblNewsCarModelMap.objects.values().filter(news_no=news_no)
+	matching_car_list = TblNewsCarModelMap.objects.values().filter(news_no=news_no).exclude(boname='GT')
 	
 	bonames = []
 	for matching_car in matching_car_list : 
