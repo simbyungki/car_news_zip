@@ -473,7 +473,7 @@ class GetMotorMagazine() :
 					d_content = soup.find('div', attrs={'class': 'message'}).get_text().strip()
 					d_title = re.sub('[-=.#/?:$}\"\']', '', d_title)
 					d_content = re.sub('[-=.#/?:$}\"\']', '', d_content)
-					date = soup.find('div', attrs={'class': 'sview'}).find('div', attrs={'class': 'sub'}).find('span').get_text().strip()
+					date = soup.find('div', attrs={'class': 'sview'}).find('div', attrs={'class': 'sub'}).find('span').get_text().strip()[0:10]
 
 					cursor.execute(f"""
 						UPDATE TBL_TOTAL_CAR_NEWS_LIST 
