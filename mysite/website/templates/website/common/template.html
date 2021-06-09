@@ -194,7 +194,7 @@ function showNewsDetail(newsCode){
 	}else{
 		url = '/new_news_detail?news_code='+ newsCode;
 	}
-	window.open(url, '카라스 뉴스 상세보기', 'width=1050, height=880, toolbar=no, menubar=no, scrollbars=no, resizable=yes')
+	window.open(url, '차나스 뉴스 상세보기', 'width=1050, height=880, toolbar=no, menubar=no, scrollbars=no, resizable=yes')
 }
 
 //전체 긍/부정 지수
@@ -265,12 +265,14 @@ function loadNewsList(idx, list_type, start_idx, load_length, load_type, fnc_typ
 					media_name = 'top-rider'
 				}else if(list.media_code == '1200'){
 					media_name = 'global-motors'
+				}else if(list.media_code == '1300'){
+					media_name = 'motor-magazine'
 				}
 				newsItem += '<li data-news-code="' + list.news_code + '">';
 				newsItem += '<a href="javascript:;" title="' + list.news_title + '" onclick="showNewsDetail(\''+ list.news_code +'\')">';
 				//newsItem += '<a href="'+ list.news_url +'" title="' + list.news_title + '" target="_blank">'
 				{% comment %} newsItem += '<a href="' + list.news_url + '" target="_blank" title="' + list.news_title + '" >'; {% endcomment %}
-				if(list.media_code == '200' || /*list.media_code == '500' ||*/ list.news_img_url == 'None' || list.news_img_url == ''){
+				if(list.media_code == '200' || list.media_code == '1300' || list.news_img_url == 'None' || list.news_img_url == ''){
 					newsItem += '<div class="picture">';
 					newsItem += '<p><span class="ico">😰</span><br>해당 언론사에서<br>이미지를 불러올 수 없습니다.</p>';
 					newsItem += '</div>';

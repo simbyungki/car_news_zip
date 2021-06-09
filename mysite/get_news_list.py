@@ -1566,6 +1566,70 @@ class GetGlobalMotors() :
 		finally : 
 			pass
 
+# 모터매거진
+class GetMotorMagazine() : 
+	# 자동차 업계
+	def industry() :
+		url = 'http://www.motormag.co.kr/list/6'
+		soup = get_soup(url)
+
+		news_list = soup.find('div', attrs={'class': 'slist_default'}).findAll('ul')
+
+		data_list = []
+		return_data_dic = {}
+
+		for news in news_list :
+			link = news.find('li', attrs={'class': 'img'}).find('a')['href']
+			img_url = news.find('li', attrs={'class': 'img'}).find('a').find('img')['src']
+			subject = news.find('li', attrs={'class': 'title'}).find('a').get_text().strip()
+			summary = ''
+			reporter = ''
+			date = ''
+			data_group = {}
+			data_group['link'] = link
+			data_group['img_url'] = img_url
+			data_group['subject'] = subject
+			data_group['summary'] = summary
+			data_group['reporter'] = reporter
+			data_group['date'] = date
+
+			data_list.append(data_group)
+			
+		return_data_dic['motormagazine_industry'] = data_list
+		industry_list.append(return_data_dic)
+
+	# 시승기
+	def review() :
+		url = 'http://www.motormag.co.kr/list/4'
+		soup = get_soup(url)
+
+		news_list = soup.find('div', attrs={'class': 'slist_default'}).findAll('ul')
+
+		data_list = []
+		return_data_dic = {}
+
+		for news in news_list :
+			link = news.find('li', attrs={'class': 'img'}).find('a')['href']
+			img_url = news.find('li', attrs={'class': 'img'}).find('a').find('img')['src']
+			subject = news.find('li', attrs={'class': 'title'}).find('a').get_text().strip()
+			summary = ''
+			reporter = ''
+			date = ''
+			data_group = {}
+			data_group['link'] = link
+			data_group['img_url'] = img_url
+			data_group['subject'] = subject
+			data_group['summary'] = summary
+			data_group['reporter'] = reporter
+			data_group['date'] = date
+
+			data_list.append(data_group)
+
+		return_data_dic['motormagazine_review'] = data_list
+		# print(return_data_dic)
+		review_list.append(return_data_dic)
+
+
 # 중고차 뉴스 모음
 def get_used_car() :
 	# GetAutoH.used()
@@ -1601,6 +1665,7 @@ def get_review() :
 	GetMotorGraph.review_k()
 	GetMotorGraph.review_g()
 	GetTopRider.review()
+	GetMotorMagazine.review()
 
 	return review_list
 
@@ -1615,6 +1680,7 @@ def get_industry() :
 	GetTheDrive.industry()
 	GetMotorGraph.industry()
 	GetTopRider.industry()
+	GetMotorMagazine.industry()
 
 	return industry_list
 
@@ -1849,6 +1915,10 @@ def insert_review_db(dbconn, cursor) :
 				# 탑라이더
 				media_code = 1000
 				media_name = '탑라이더'
+			elif idx == 10 : 
+				# 모터매거진
+				media_code = 1300
+				media_name = '모터매거진'
 
 			for news_dict in news_list.values() :
 				for news in news_dict : 
@@ -1890,13 +1960,15 @@ def insert_review_db(dbconn, cursor) :
 					elif idx == 9 :
 						news_code = news.get('link')[-5:]
 						url = f'http://www.top-rider.com/news/articleView.html?idxno={news_code}'
+					elif idx == 10 :
+						news_code = news.get('link')[26:30]
+						url = f'http://www.motormag.co.kr/{news_code}'
 
 					subject = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', news.get('subject')))
 					summary = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', news.get('summary')))
 					reporter = news.get('reporter')
 					img_url = news.get('img_url')
 					date = news.get('date').replace('/', '-').replace('.', '-')
-
 					cursor.execute(f"""
 						INSERT IGNORE INTO TBL_TOTAL_CAR_NEWS_LIST 
 						(
@@ -1965,6 +2037,9 @@ def insert_industry_db(dbconn, cursor) :
 				# 탑라이더
 				media_code = 1000
 				media_name = '탑라이더'
+			elif idx == 8 : 
+				media_code = 1300
+				media_name = '모터매거진'
 
 			for news_dict in news_list.values() :
 				for news in news_dict : 
@@ -2004,6 +2079,9 @@ def insert_industry_db(dbconn, cursor) :
 						# 탑라이더
 						news_code = news.get('link')[-5:]
 						url = f'http://www.top-rider.com/news/articleView.html?idxno={news_code}'
+					elif idx == 8 : 
+						news_code = news.get('link')[26:30]
+						url = f'http://www.motormag.co.kr/{news_code}'
 
 					subject = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', news.get('subject')))
 					summary = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', news.get('summary')))
@@ -2065,4 +2143,4 @@ def reload_list_data() :
 if __name__ == '__main__' : 
 	# print(get_new_car())
 	reload_list_data()
-	# GetGlobalMotors.new_g()
+	# GetMotorMagazine.industry()
