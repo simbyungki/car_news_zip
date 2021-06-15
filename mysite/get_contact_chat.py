@@ -1,3 +1,4 @@
+#-*- coding:utf-8 -*-
 from oauth2client.client import GoogleCredentials
 from googleapiclient import discovery
 from googleapiclient import errors
@@ -28,33 +29,19 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 import pandas as pd
 
-# https://developers.google.com/youtube/v3/docs
-# AUTOPLUS# >> AP ADMIN KEY
-# DEVELOPER_KEY = 'AIzaSyCHnGrLBzQJk3IvA-lhVRgfia5QUAIPb9k'
-# REBORN#
-# DEVELOPER_KEY = 'AIzaSyBdTgUi0BB1A6OYqQBP4jGrUfDkVTk00Dc'
-# BK#
-# DEVELOPER_KEY = 'AIzaSyA2AZ0G5sRKq3uDTa_KzDT2X0oJ9rdcZWk'
-# KING BK#
-DEVELOPER_KEY = 'AIzaSyB08WDZOdnWGqfcDKl4FB30LIRJzQS7JCQ'
-# MIN
-# DEVELOPER_KEY = 'AIzaSyBH8G4-tsgT4ooV3uKUQqOUTbSu3HckrEU'
-# YOON IRENE#
-# DEVELOPER_KEY = 'AIzaSyDGotx2KiS3f-nmLgoq2h_ok_xYaZN-BHs'
-YOUTUBE_API_SERVICE_NAME = 'youtube'
-YOUTUBE_API_VERSION = 'v3'
-youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION, developerKey = DEVELOPER_KEY)
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.abspath('./mysite'))
 # SECURITY WARNING: keep the secret key used in production secret!
 db_info_file = os.path.join(BASE_DIR, 'db_conn.json')
+db_info_file2 = os.path.join(BASE_DIR, 'db_conn_apdb.json')
+# db_info_file = os.path.join(BASE_DIR, 'db_conn.json')
 with open(db_info_file) as f :
 	db_infos = json.loads(f.read())
-
+with open(db_info_file2) as f :
+	db_infos2 = json.loads(f.read())
 
 def get_chat_message_list() : 
-	excel_path = '../data/youtube_live_chats/check_20210112_live_chat.xlsx'
+	excel_path = '../data/youtube_live_chats/check_20210126_live_chat.xlsx'
 	df = pd.read_excel(excel_path, usecols='A:C')
 
 	chat_list = []
@@ -67,7 +54,6 @@ def get_chat_message_list() :
 		chat_list.append(temp_dict)
 
 	return chat_list
-
 
 def get_keywords(chat_list) :
 	kkma = Kkma()
@@ -96,6 +82,8 @@ def get_keywords(chat_list) :
 				group.append(in_result_word)
 				in_result_data.append(group)
 		# print(f'[{idx} // {len(chat_list)}] 데이터 가공 완료')
+
+
 	return in_result_data
 
 def export_xlsx(result_data) : 
@@ -111,10 +99,66 @@ def export_xlsx(result_data) :
 				elif word[1] == 'VA' : 
 					tag = '형용사'
 				data2 = {'형태소 단어' : [word[0]], '품사 태그': tag}
-				# print(data2)		
 				result = pd.DataFrame(data2)
-				result.to_csv(f'C:/Users/PC/Documents/simbyungki/git/car_news_zip/data/youtube_live_chats/after_check_20210112_live_chat.csv', mode='a', header=False, encoding='utf-8-sig')
+				result.to_csv(f'C:/Users/PC/Documents/simbyungki/git/car_news_zip/data/contact/total_list.csv', mode='a', header=False, encoding='utf-8-sig')
 	print(f'형태소 분석 후, 파일 저장 완료!')
+
+def db_to_csv() : 
+	dbconn2 = pymssql.connect(host=db_infos2.get('host'), user=db_infos2.get('user'), password=db_infos2.get('password'), database=db_infos2.get('database'), port=db_infos2.get('port'), charset='utf8')
+	cursor2 = dbconn2.cursor()
+
+	qna_list = []
+
+	cursor2.execute(f"""
+		SELECT 
+			QNA_NO, QUEST_TITLE, QUEST_CONTENTS, ANSWER_CONTENTS, ADD_DATE, ANSWER_ID, ANSWER_DATE
+		FROM 
+			TBL_QNA_LIST
+		WHERE 
+			STATUS = 1 AND IS_ANSWER = 3
+		ORDER BY 
+			ADD_DATE DESC;
+	""")
+	rows = cursor2.fetchall()
+
+
+	for idx, row in enumerate(rows) :
+		group = []
+		row01 = ''
+		row02 = ''
+		row03 = ''
+		row05 = ''
+		if row[1] is not None :
+			row01 = row[1].encode('ISO-8859-1').decode('euc-kr', 'ignore').strip()
+		if row[2] is not None :
+			row02 = row[2].encode('ISO-8859-1').decode('euc-kr', 'ignore').strip()
+		if row[3] is not None :
+			row03 = row[3].encode('ISO-8859-1').decode('euc-kr', 'ignore').strip()
+		if row[5] is not None :
+			row05 = row[5].encode('ISO-8859-1').decode('euc-kr', 'ignore')
+
+		group.append(row[0])
+		group.append(row01)
+		group.append(row02)
+		group.append(row03)
+		group.append(row[4])
+		group.append(row05)
+		group.append(row[6])
+
+		qna_list.append(group)
+
+
+	cursor2.close()
+	dbconn2.close()
+
+	for qna in qna_list :
+		# QNA_NO, QUEST_TITLE, QUEST_CONTENTS, ANSWER_CONTENTS, ADD_DATE, ANSWER_ID, ANSWER_DATE
+		data2 = {'QNA_NO' : qna[0], '질문 제목': qna[1], '질문 내용': qna[2], '답변 내용': qna[3], '등록일시': qna[4], '답변자': qna[5], '답변일시': qna[6]}
+		result = pd.DataFrame(data2, index = [0])
+		result.to_csv(f'C:/Users/PC/Documents/simbyungki/git/car_news_zip/data/contact/total_list.csv', mode='a', header=False, encoding='utf-8-sig')
+	print(f'파일 저장 완료!')
+
+	return qna_list
 
 def isNaN(num):
     return num != num
@@ -301,9 +345,10 @@ def sentence_test_old(sentence) :
 		print(f' ★  위 문장은 {result_per}% 확률로 긍정적인 문장입니다.') 
 
 if __name__ == '__main__' : 
-	export_xlsx(get_keywords(get_chat_message_list()))
+	db_to_csv()
+	# export_xlsx(get_keywords(get_chat_message_list()))
 
-	# sentence_test('기아의 스테디셀러 자동차, 더 뉴 모하비 지난해 준준형 스포티지 보다 더 팔렸다고 하지요~ 캠핑, 레저족의 드림카 더 뉴 모하비도 집중해주세요~')
+	# sentence_test('오늘은 수원 SKV1모터스에서 진행되는 "세계 명차 특집" 으로 진행되는 리본쇼 입니다~')
 
 	# kkma = Kkma()
 	# print(kkma.pos('아버지가방에들어가시다'))
