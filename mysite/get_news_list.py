@@ -1629,6 +1629,39 @@ class GetMotorMagazine() :
 		# print(return_data_dic)
 		review_list.append(return_data_dic)
 
+# 카이즈유
+class GetCarIsYou() :
+	def new() : 
+		url = 'https://www.carisyou.com/magazine/NEWCARINTRO'
+		soup = get_soup(url)
+
+		news_list = soup.find('div', attrs={'class': 'magazine_article_list'}).findAll('dl')
+
+		data_list = []
+		return_data_dic = {}
+
+		for news in news_list :
+			print(news)
+			print('ㅡ'* 50)
+			link = news.find('p', attrs={'class': 'title'}).find('a')['href']
+			img_url = news.find('dt').find('a').find('img')['src']
+			subject = news.find('p', attrs={'class': 'title'}).find('a').get_text().strip()
+			summary = news.find('p', attrs={'class': 'is-truncated'}).find('a').get_text().strip()
+			reporter = ''
+			date = news.find('p', attrs={'class': 'date'}).get_text().strip()
+			data_group = {}
+			data_group['link'] = 'https://www.carisyou.com/magazine/NEWCARINTRO/' + link
+			data_group['img_url'] = img_url
+			data_group['subject'] = subject
+			data_group['summary'] = summary
+			data_group['reporter'] = reporter
+			data_group['date'] = date
+
+			data_list.append(data_group)
+
+		return_data_dic['carisnew_new'] = data_list
+		new_car_list.append(return_data_dic)
+
 
 # 중고차 뉴스 모음
 def get_used_car() :
@@ -2142,5 +2175,5 @@ def reload_list_data() :
 	
 if __name__ == '__main__' : 
 	# print(get_new_car())
-	reload_list_data()
-	# GetMotorMagazine.industry()
+	# reload_list_data()
+	GetCarIsYou.new()

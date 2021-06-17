@@ -46,24 +46,32 @@ def remove_html(sentence) :
 	sentence = re.sub('(<([^>]+)>)', '', sentence)
 	return sentence
 
-
-def get_question_list(dbconn, cursor) : 
+def get_question_list(cursor) : 
 	qna_list = []
+
 	cursor.execute(f"""
 		SELECT 
 			QNA_NO, QUEST_TITLE, QUEST_CONTENTS
 		FROM 
 			TBL_QNA_LIST
 		WHERE 
-			STATUS = 1 AND IS_ANSWER = 3
+			MINING_STATUS = 1 AND STATUS = 1 AND IS_ANSWER = 3
 		ORDER BY 
 			ADD_DATE DESC
 	""")
+	# cursor.execute(f"""
+	# 	SELECT 
+	# 		QNA_NO, QUEST_TITLE, QUEST_CONTENTS
+	# 	FROM 
+	# 		TBL_QNA_LIST
+	# 	WHERE 
+	# 		QNA_NO = 4110
+	# """)
 	rows = cursor.fetchall()
 
 	for idx, row in enumerate(rows) :
 		group = []
-		if idx > 3 :
+		if idx > 100 :
 			break
 		else :
 			row01 = ''
@@ -74,24 +82,26 @@ def get_question_list(dbconn, cursor) :
 				row02 = row[2].encode('ISO-8859-1').decode('euc-kr', 'ignore').strip()
 
 			group.append(row[0])
-			group.append(remove_html(row01 + ' ' + row02))
+			# group.append(remove_html(row01 + ' ' + row02))
+			group.append(remove_html(row02))
 
 		qna_list.append(group)
 
 	return qna_list
 
-def text_mining(qna_list, dbconn, cursor) :
+def text_mining(qna_list, dbconn, cursor, dbconn2, cursor2) :
 	kkma = Kkma()
 	# 제외할 단어 목록
 	except_word_list = []
 	out_result = []
-	
+
 	for idx, qna in enumerate(qna_list) : 
 		sentence = re.sub('[-=.#/?:$}\"\']', '', str(qna[1])).replace('[','').replace(']','')
-		origin_word_list = regex.findall(r'[\p{Hangul}|\p{Han}]+', f'{sentence}')
-
+		# 중복제거 set > list
+		origin_word_list = list(set(regex.findall(r'[\p{Hangul}|\p{Latin}|\p{Han}|\d+]+', f'{sentence}')))
 		# print(origin_word_list)
-
+		# print('ㅡ'*50)
+		
 		results = []
 		for origin_word in origin_word_list :
 			if (origin_word not in except_word_list) : 
@@ -105,30 +115,153 @@ def text_mining(qna_list, dbconn, cursor) :
 		# print(qna[0])
 		# print(out_result[idx])
 
-		for result in out_result[idx] :
-			print(result)
-			try : 
-				pass
-				# print(result)
-				# cursor.execute(f"""
-				# 	INSERT INTO TBL_CCQ_KEYWORD_LIST 
-				# 	(
-				# 		QNA_NO, WORD_ORIGIN, WORD_MORPHEME, WORD_CLASS, UPDATE_DATE
-				# 	) 
-				# 	VALUES (
-				# 		"{qna[0]}", "{result[0]}", "{result[1][0]}", "{result[1][1]}", NOW()
-				# 	)
-				# """)
-			
+		try : 
+			cursor2.execute(f"""
+				UPDATE 
+					TBL_QNA_LIST 
+				SET 
+					MINING_STATUS = 3,
+					MINING_DATE = getdate()
+				WHERE
+					QNA_NO = {qna[0]}
+			""")		
+			dbconn2.commit()
+		except Exception as e :
+			print(f'****** + error! >> {e} >>>>> [{qna[0]} >> TBL_QNA_LIST > MINING_STATUS UPDATE 오류!]')
+			continue
+		finally : 
+			pass
+		
+		print('*' * 80)
+		print(f'Depth_idx1 >> [{qna[0]}] >> {sentence}')
+
+		for depth_idx1, result in enumerate(out_result[idx]) :
+			print('ㅡ' * 50)
+			print(f'Depth_for1 >> [{qna[0]}][{idx}][{depth_idx1}] >> {result}')
+# 1. TBL_CCQ_KEYWORD_LIST 테이블에 형태소 분석 단어 인서트 (단어사전)
+	# 1-1. TBL_ANAL_WORD_CLASS에서 품사 코드 SELECT
+			try :
+				cursor.execute(f"""
+					SELECT 
+						WORD_CLASS_CODE
+					FROM 
+						TBL_ANAL_WORD_CLASS 
+					WHERE 
+						CLASS_NAME = "{result[1][1]}"
+				""")
+				result_word_class_code = cursor.fetchall()[0][0]
+				cursor.execute(f"""
+					INSERT INTO TBL_CCQ_KEYWORD_LIST 
+					(
+						QNA_NO, WORD_ORIGIN, WORD_MORPHEME, WORD_CLASS_CODE, WORD_CLASS, UPDATE_DATE
+					) 
+					VALUES (
+						"{qna[0]}", "{result[0]}", "{result[1][0]}", "{result_word_class_code}", "{result[1][1]}", NOW()
+					)
+				""")
 			except Exception as e :
-				print(f'****** + error! >> {e} >>>>> [{qna[0]} >> 오류!]')
+				print(f'****** + error! >> {e} >>>>> [{qna[0]} >> TBL_CCQ_KEYWORD_LIST > KEYWORD INSERT 오류!]')
 				continue
 			finally : 
-				print('-'*50)
-				print(f'***** : [{qna[0]} >> 분석 / INSERT 완료')
+				pass
 
-			
+			for depth_idx2, result2 in enumerate(out_result[idx]) :
+				if depth_idx1 != depth_idx2 :
+# 2. TBL_CCQ_KEYWORD_MAP 테이블에서 4가지 조건 동일한 데이터 SELECT
+# 2-1. 명사 조건 1,2,3,4,6  8(형용사 추가 시) = or result[1][1] == 'VA'
+					if (result[1][1] == 'NNG' or result[1][1] == 'NNP' or result[1][1] == 'NNB' or result[1][1] == 'NNM') and (result2[1][1] == 'NNG' or result2[1][1] == 'NNP' or result2[1][1] == 'NNB' or result2[1][1] == 'NNM') and (len(result[1][0]) > 1 and len(result2[1][0]) > 1): 
+						print(f'Depth_for2 >> [{qna[0]}][{idx}][{depth_idx1}][{depth_idx2}] >> [{result[0]}/{result[1][0]}][{result2[0]}/{result2[1][0]}]')
+						# print(f'2번 조건 통과 >> [{result[1][1]}][{result2[1][1]}]')
+						# print(f'Depth_for2 >> [{result[1][1]}][{result2[1][1]}]')
+						try : 
+							rows = []
+							if result[0] != result2[0] and result[1][0] != result2[1][0] :
+								
+								cursor.execute(f"""
+									SELECT 
+										MAP_NO, DISTANCE_WEIGHT
+									FROM 
+										TBL_CCQ_KEYWORD_MAP
+									WHERE 
+										(
+											SOURCE_WORD = "{result[0]}" AND 
+											SOURCE_MORPHEME_WORD = "{result[1][0]}" AND 
+											TARGET_WORD = "{result2[0]}" AND 
+											TARGET_MORPHEME_WORD = "{result2[1][0]}"
+										)
+										OR
+										(
+											SOURCE_WORD = "{result2[0]}" AND 
+											SOURCE_MORPHEME_WORD = "{result2[1][0]}" AND 
+											TARGET_WORD = "{result[0]}" AND 
+											TARGET_MORPHEME_WORD = "{result[1][0]}"
+										)
+								""")
+								rows = cursor.fetchall()
+						except Exception as e :
+							print(f'****** + error! >> {e} >>>>> [{qna[0]} >> TBL_CCQ_KEYWORD_MAP > SELECT 오류!]')
+							continue
+						finally : 
+							pass
 
+# 3. TBL_CCQ_KEYWORD_MAP 테이블에서 4가지 조건 동일한 데이터가 있으면 DISTANCE_WEIGHT 1더해서 업데이트 
+							if len(rows) > 0 : 
+								# print('@@ 3번 프로세스 @@ TBL_CCQ_KEYWORD_MAP 중복되는 것 있다 > 업데이트')
+								return_datas = {}
+								for row_idx, row in enumerate(rows) :
+									return_datas['map_no'] = int(row[0])
+									return_datas['distance'] = int(row[1])
+								print(f'@@ 3번 프로세스 @@ 업데이트 전 데이터 확인! {return_datas}')
+								try : 
+									cursor.execute(f"""
+										UPDATE
+											TBL_CCQ_KEYWORD_MAP 
+										SET
+											DISTANCE_WEIGHT = {return_datas.get('distance') + 1}
+										WHERE 
+											MAP_NO = {return_datas.get('map_no')}
+									""")
+								except Exception as e :
+									print(f'****** + error! >> {e} >>>>> [{qna[0]} >> TBL_CCQ_KEYWORD_MAP > UPDATE 오류!]')
+									continue
+								finally : 
+									pass
+	# 4. TBL_CCQ_KEYWORD_MAP 테이블에서 4가지 조건 동일한 데이터가 없으면 4가지 조건값 그대로 인서트						
+							else : 
+								print('@@ 4번 프로세스 @@ TBL_CCQ_KEYWORD_MAP 중복되는 것 없다 > 인서트')
+								try : 
+									cursor.execute(f"""
+										SELECT 
+											WORD_CLASS_CODE 
+										FROM 
+											TBL_ANAL_WORD_CLASS 
+										WHERE 
+											CLASS_NAME = "{result[1][1]}"
+									""")
+									result_word_class_code1 = cursor.fetchall()[0][0]
+									cursor.execute(f"""
+										SELECT 
+											WORD_CLASS_CODE 
+										FROM 
+											TBL_ANAL_WORD_CLASS 
+										WHERE 
+											CLASS_NAME = "{result2[1][1]}"
+									""")
+									result_word_class_code2 = cursor.fetchall()[0][0]
+
+									cursor.execute(f"""
+										INSERT INTO 
+											TBL_CCQ_KEYWORD_MAP 
+											(SOURCE_WORD, SOURCE_CLASS_CODE, SOURCE_MORPHEME_WORD, TARGET_WORD, TARGET_CLASS_CODE, TARGET_MORPHEME_WORD, DISTANCE_WEIGHT, UPDATE_DATE)
+										VALUES
+											("{result[0]}", "{result_word_class_code1}", "{result[1][0]}", "{result2[0]}", "{result_word_class_code2}", "{result2[1][0]}", 1, NOW())
+									""")
+								except Exception as e :
+									print(f'****** + error! >> {e} >>>>> [{qna[0]} >> TBL_CCQ_KEYWORD_MAP > INSERT 오류!]')
+									continue
+								finally : 
+									pass
+							
 	
 def run_text_mining() :
 	now = time.localtime()
@@ -140,10 +273,13 @@ def run_text_mining() :
 	dbconn2 = pymssql.connect(host=db_infos2.get('host'), user=db_infos2.get('user'), password=db_infos2.get('password'), database=db_infos2.get('database'), port=db_infos2.get('port'))
 	cursor2 = dbconn2.cursor()
 
-	text_mining(get_question_list(dbconn2, cursor2), dbconn, cursor)
+	text_mining(get_question_list(cursor2), dbconn, cursor, dbconn2, cursor2)
 
 	dbconn.commit()
 	dbconn.close()
+
+	dbconn2.commit()
+	cursor2.close()
 
 	now = time.localtime()
 	end_time = now
