@@ -267,6 +267,8 @@ function loadNewsList(idx, list_type, start_idx, load_length, load_type, fnc_typ
 					media_name = 'global-motors'
 				}else if(list.media_code == '1300'){
 					media_name = 'motor-magazine'
+				}else if(list.media_code == '1400'){
+					media_name = 'car-is-you'
 				}
 				newsItem += '<li data-news-code="' + list.news_code + '">';
 				newsItem += '<a href="javascript:;" title="' + list.news_title + '" onclick="showNewsDetail(\''+ list.news_code +'\')">';

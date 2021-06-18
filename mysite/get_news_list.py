@@ -1641,12 +1641,10 @@ class GetCarIsYou() :
 		return_data_dic = {}
 
 		for news in news_list :
-			print(news)
-			print('ㅡ'* 50)
 			link = news.find('p', attrs={'class': 'title'}).find('a')['href']
 			img_url = news.find('dt').find('a').find('img')['src']
 			subject = news.find('p', attrs={'class': 'title'}).find('a').get_text().strip()
-			summary = news.find('p', attrs={'class': 'is-truncated'}).find('a').get_text().strip()
+			summary = news.find('p', attrs={'class': 'text'}).find('a').get_text().strip()
 			reporter = ''
 			date = news.find('p', attrs={'class': 'date'}).get_text().strip()
 			data_group = {}
@@ -1682,6 +1680,7 @@ def get_new_car() :
 	GetTopRider.new()
 	GetGlobalMotors.new_k()
 	GetGlobalMotors.new_g()
+	GetCarIsYou.new()
 
 	return new_car_list
 
@@ -1830,6 +1829,10 @@ def insert_new_db(dbconn, cursor) :
 				# 글로벌모터즈 (수입)
 				media_code = 1200
 				media_name = '글로벌모터즈'
+			elif idx == 8 : 
+				# 카이즈유
+				media_code = 1400
+				media_name = '카이즈유'
 
 			for news_dict in news_list.values() :
 				for news in news_dict : 
@@ -1869,6 +1872,11 @@ def insert_new_db(dbconn, cursor) :
 						# 글로벌모터즈 (수입)
 						news_code = news.get('link')[42:70]
 						url = f'http://www.globalmotors.co.kr/view.php?ud={news_code}&ssk=g010202'
+					elif idx == 8 :
+						# 카이즈유
+						news_code = news.get('link')[-5:]
+						# https://www.carisyou.com/magazine/NEWCARINTRO/76712
+						url = f'https://www.carisyou.com/magazine/NEWCARINTRO/{news_code}'
 
 					subject = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', news.get('subject')))
 					summary = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', news.get('summary')))
@@ -2175,5 +2183,4 @@ def reload_list_data() :
 	
 if __name__ == '__main__' : 
 	# print(get_new_car())
-	# reload_list_data()
-	GetCarIsYou.new()
+	reload_list_data()

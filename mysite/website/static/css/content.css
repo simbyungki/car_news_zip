@@ -182,6 +182,7 @@
 .item-list ul li .tags span.drive {background:#00adee;}
 .item-list ul li .tags span.global-motors {background:#e3155d;}
 .item-list ul li .tags span.motor-magazine {background:#a71416;}
+.item-list ul li .tags span.car-is-you {background:#a91d22;}
 .item-list ul li .subject {margin:20px 0 10px; line-height:26px; letter-spacing:-1px; font-size:20px; font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
 .item-list ul li .summary {display:-webkit-box; word-wrap:break-word; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; text-overflow:ellipsis; height:60px; line-height:20px; color:#444; font-size:15px;}
 .item-list ul li .summary .keyword {color:#fff; font-size:16px; font-weight:600; text-decoration:underline; background:#2944cc;}
@@ -245,17 +246,17 @@
 .list-top .list-type .btn:nth-child(2):after {bottom:8px;}
 
 .category-list {position:fixed; top:150px; left:0; z-index:150; width:100%; height:60px; background:#444; box-sizing:border-box;}
-.category-list ul {display:none; flex-wrap:wrap; margin-top:7px;}
+.category-list ul {display:none; flex-wrap:wrap; margin-top:9px;}
 .category-list ul.show {display:flex;}
 .category-list ul li {position:relative;}
-.category-list ul li a {color:#999; font-size:26px; font-weight:600;}
+.category-list ul li a {color:#999; font-size:22px; font-weight:600;}
 .category-list ul li.active {border-bottom:1px solid #fff; background:#666;}
 .category-list ul li.active a {color:#fff;}
 .category-list ul li:hover {text-decoration:underline;}
 .category-list ul li {margin-right:25px;}
 .category-list ul li:last-child {margin-right:0;}
 .category-list ul li:first-child {color:#d00;}
-.category-list ul li.new:after {display:block; content:"N"; position:absolute; right:-20px; top:-10px; width:22px; height:20px; line-height:22px; color:#fff; font-size:15px; font-weight:600; text-align:center; background:#d00; border-radius:50em;}
+.category-list ul li.new:after {display:block; content:"N"; position:absolute; right:-14px; top:-10px; width:20px; height:18px; line-height:20px; color:#fff; font-size:13px; font-weight:600; text-align:center; background:#d00; border-radius:50em;}
 .category-list .result-info {display:none; line-height:40px;}
 .category-list .result-info.show {display:flex;}
 .category-list .result-info p,

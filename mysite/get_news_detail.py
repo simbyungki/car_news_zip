@@ -490,6 +490,43 @@ class GetMotorMagazine() :
 		finally : 
 			pass
 
+# 카이즈유
+class GetCarIsYou() :
+	# 본문 수집
+	@staticmethod
+	def detail(dbconn, cursor) :
+		newsList = TblTotalCarNewsList.objects.all().filter(media_code=1400).filter(news_content='')
+		print('-'*30)
+		print('모터매거진')
+		try :
+			print('ㅡㅡㅡ'*30)
+			for idx in range(len(newsList)) : 
+				full_url = f'https://www.carisyou.com/magazine/NEWCARINTRO/{newsList.values()[idx].get("news_code")}'
+				print(newsList.values()[idx].get('news_code'))
+				try : 
+					soup = get_soup(full_url)
+					d_title = soup.find('p', attrs={'class': 'article_title'}).get_text().strip()
+					d_content = soup.find('div', attrs={'class': 'tx-content-container'}).get_text().strip()
+					d_title = re.sub('[-=.#/?:$}\"\']', '', d_title)
+					d_content = re.sub('[-=.#/?:$}\"\']', '', d_content)
+					d_reporter = soup.find('div', attrs={'class': 'article_writer'}).find('p', attrs={'class': 'name'}).find('strong').get_text().strip()
+
+					cursor.execute(f"""
+						UPDATE TBL_TOTAL_CAR_NEWS_LIST 
+						SET NEWS_TITLE = "{d_title}", NEWS_CONTENT = "{d_content}", REPORTER_NAME = "{d_reporter}" 
+						WHERE NEWS_CODE = "{newsList.values()[idx].get('news_code')}" AND NEWS_CONTENT = ""
+					""")
+					time.sleep(3)
+					print(f'{newsList.values()[idx].get("news_code")} :: 기사 본문 스크랩 완료! [{idx + 1} / {len(newsList)}]')
+				except Exception as e :
+					print(f'*+++++ + error! >> {e}')	
+				print('ㅡㅡㅡ'*30)
+		except Exception as e :
+			print(f'***** + error! >> {e}')	
+		finally : 
+			pass
+
+
 
 # 뉴스 본문 수집
 def load_detail_data() :
@@ -514,6 +551,7 @@ def load_detail_data() :
 	GetTopRider.detail(dbconn, cursor)
 	GetGlobalMotors.detail(dbconn, cursor)
 	GetMotorMagazine.detail(dbconn, cursor)
+	GetCarIsYou.detail(dbconn, cursor)
 	
 	dbconn.commit()
 	dbconn.close()

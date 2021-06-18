@@ -472,6 +472,8 @@ def news_list_data(request) :
 				category_num = 1200
 			elif idx == 11 :
 				category_num = 1300
+			elif idx == 12 :
+				category_num = 1400
 			news = news_list.filter(media_code=category_num).order_by('-write_date')
 
 			today_uploads['auto_h'] = len(news_list.filter(add_date__contains = today_date).filter(media_code = 100))
@@ -486,6 +488,7 @@ def news_list_data(request) :
 			today_uploads['toprider'] = len(news_list.filter(add_date__contains = today_date).filter(media_code = 1000))
 			today_uploads['global_motors'] = len(news_list.filter(add_date__contains = today_date).filter(media_code = 1200))
 			today_uploads['motor_magazine'] = len(news_list.filter(add_date__contains = today_date).filter(media_code = 1300))
+			today_uploads['car_is_you'] = len(news_list.filter(add_date__contains = today_date).filter(media_code = 1400))
 		elif list_type == 'category' :
 			if idx == 0 :
 				category_num = 7
