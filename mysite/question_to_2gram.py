@@ -239,7 +239,8 @@ def compare_sentence(q_list, cursor) :
 		elif score[0] == 27 :
 			q_type = '결제관련 문의'
 
-		print(f'[{q_type} ({round((score[1]/len_q_list_gram)* 100, 2)}% 확률), ({score[1]}/{len_q_list_gram})] \n\n일치하는 gram 목록 : {score[2]}')
+		# print(f'\n[{q_type} ({round((score[1]/len_q_list_gram)* 100, 2)}% 확률), ({score[1]}/{len_q_list_gram})] \n')
+		print(f'\n\n[{q_type} ({round((score[1]/len_q_list_gram)* 100, 2)}% 확률), ({score[1]}/{len_q_list_gram})] \n\n일치하는 gram 목록 : {score[2]}')
 	
 	print('ㅡ'* 70)
 
@@ -259,7 +260,7 @@ if __name__ == '__main__' :
 	dbconn2 = pymssql.connect(host=db_infos2.get('host'), user=db_infos2.get('user'), password=db_infos2.get('password'), database=db_infos2.get('database'), port=db_infos2.get('port'))
 	cursor2 = dbconn2.cursor()
 
-	compare_sentence([[0, '현 K5 DL3 시그니처등급 타고 있습니다. 20.07월 등록 키로수 9000km. 대차로 진행할려고 합니다']], cursor)
+	compare_sentence([[0, 'K5차량 상담 신청합니다. 연락주세요~']], cursor)
 	# print(sentence_to_2gram(get_question_list(cursor2)))
 	# insert_db_2gram(sentence_to_2gram(get_question_list(cursor2)))
 
@@ -277,5 +278,3 @@ if __name__ == '__main__' :
 	# print('상담 내용 분석 작업 종료 시간 > %04d/%02d/%02d %02d:%02d:%02d' % (end_time.tm_year, end_time.tm_mon, end_time.tm_mday, end_time.tm_hour, end_time.tm_min, end_time.tm_sec))
 
 
-# 가중치에 대한 문제
-# bigram에서 동사, 형용사, 조사를 어떻게?
