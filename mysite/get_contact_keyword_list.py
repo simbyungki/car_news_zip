@@ -258,7 +258,7 @@ def text_mining(qna_list, dbconn, cursor, dbconn2, cursor2) :
 							print(f'****** + error! >> {e} >>>>> [{qna[0]} >> TBL_CCQ_KEYWORD_MAP > SELECT 오류!]')
 							continue
 						finally : 
-							pass
+							pass 
 
 # 3. TBL_CCQ_KEYWORD_MAP 테이블에서 4가지 조건 동일한 데이터가 있으면 WORD_DISTANCE 1더해서 업데이트 
 							if len(rows) > 0 : 
