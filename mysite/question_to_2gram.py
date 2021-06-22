@@ -132,7 +132,7 @@ def sentence_to_2gram(q_list) :
 	return result
 
 	# bigram된 데이터 불러온 후 list로 변경
-	# print(result[1][1].split('/'))
+	# print(morpheme[1].split('/'))
 
 def compare_sentence(q_list, cursor) : 
 	cursor.execute(f"""
@@ -255,20 +255,75 @@ def mining_sentence(q_list, cursor) :
 		question = [q[0], remove_html(q[1])]
 		sentence = re.sub('[-=.#/?:$}\"\']', '', str(question[1])).replace('[','').replace(']','')
 		origin_word_list = list(dict.fromkeys(regex.findall(r'[\p{Hangul}|\p{Latin}|\p{Han}|\d+]+', f'{sentence}')))
+		# 형태소 분석
 		out_result = []
 		out_result.append(question[0])
 		result = []
 		for origin_word in origin_word_list :
 			if (origin_word not in except_word_list) : 
 				for morpheme in kkma.pos(origin_word) :	
-					in_result = []	
-					in_result.append(origin_word)
-					in_result.append(morpheme[0])
-					result.append(in_result)
+					if (len(morpheme[0]) > 1) and (morpheme[1] == 'NNG' or morpheme[1] == 'NNP' or morpheme[1] == 'NNB' or morpheme[1] == 'NNM'):
+						in_result = []	
+						in_result.append(origin_word)
+						in_result.append(morpheme[0])
+					
+						result.append(in_result)
 		out_result.append(result)
 		fin_result.append(out_result)
 
-	print(fin_result)
+	# print(fin_result)
+	target_morpheme_list = []
+	for idx, result in enumerate(fin_result) :
+		# result : [[4311, [['제네시스', '제네시스'], ['매물', '매물'], ['차량번호', '차량'], ['차량번호', '번호'], ['대한', '대한'], ['상담', '상담'], ['문의', '문의']]], [4299, ...]
+		for words in result[1] : 
+			source_word = words[1]
+			in_target_morpheme_words = []
+			in_target_morpheme_words.append(source_word)
+			in_target_morpheme_words.append(result[0])
+			try : 
+				cursor.execute(f"""
+					SELECT 
+						TARGET_MORPHEME_WORD 
+					FROM 
+						TBL_CCQ_KEYWORD_MAP
+					WHERE
+						SOURCE_MORPHEME_WORD = "{source_word}" 
+					ORDER BY
+						DISTANCE_WEIGHT DESC,
+						WORD_DISTANCE DESC
+					LIMIT 5 	
+				""")
+				rows = cursor.fetchall()
+				for in_idx, row in enumerate(rows) :
+					in_group = []
+					in_group.append(row[0])
+					in_target_morpheme_words.append(in_group)
+				target_morpheme_list.append(in_target_morpheme_words)
+			except Exception as e :
+				print(f'****** + error! >> {e} >>>>> SELECT 오류!')
+				continue
+			finally : 
+				pass
+	
+	print(target_morpheme_list)
+	# [
+	# 	['제네시스', 4311, ['차량'], ['관심'], ['구매'], ['부탁'], ['가능']], 
+	# 	['매물', 4311, ['가요'], ['번호'], ['상담'], ['문의'], ['확인']], 
+	# 	['차량', 4311, ['문의'], ['구매'], ['부탁'], ['부탁'], ['상담']], 
+	# 	['번호', 4311, ['완료'], ['상품'], ['며칠'], ['회신'], ['부 탁']], 
+	# 	['대한', 4311], ['상담', 4311, ['부탁'], ['신청'], ['문의'], ['한번'], ['희망']], 
+	# 	['문의', 4311, ['구매'], ['확인'], ['확인'], ['문자'], ['문자']], 
+	# 	['장기', 4299, ['문의'], ['이용'], ['개월'], ['정도'], ['타이어']], 
+	# 	['렌트', 4299, ['이용'], ['개월'], ['정 도'], ['타이어'], ['앞쪽']], 
+	# 	['이용', 4299, ['문의'], ['방법'], ['타이어'], ['앞쪽'], ['마모']], 
+	# 	['한지', 4299, ['포기']], 
+	# 	['정도', 4299, ['이전비'], ['앞쪽'], ['마모'], ['교체'], ['렌트']], 
+	# 	['타이어', 4299, ['앞쪽'], ['마모'], ['교체'], ['할부'], ['문의']], 
+	# 	['앞쪽', 4299, ['마모'], ['교체']], 
+	# 	['마모', 4299, ['교체']], 
+	# 	['교체', 4299, ['잔여'], ['횟수'], ['부탁'], ['내역'], ['문의']], 
+	# 	['주시', 4299, ['진영'], ['논의'], ['감사'], ['감사'], ['안내']]
+	# ]
 
 
 
