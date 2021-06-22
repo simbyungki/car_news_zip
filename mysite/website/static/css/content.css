@@ -201,12 +201,12 @@
 .item-list ul li .mining-result > div {position:absolute; bottom:0; height:22px; line-height:22px; color:#fff; font-size:14px; text-align:center; overflow:hidden; opacity:.9;} 
 .item-list ul li .mining-result .positive {left:0; background:#2944cc;}
 .item-list ul li .mining-result .negative {right:0; background:#ce2c2c;}
-.item-list ul li .mining-view {position:absolute; left:2%; bottom:10px; z-index:100; padding:15px; width:96%; border:1px solid #999; background:#fff; opacity:0; transition:all .3s ease-in-out; box-sizing:border-box;}
+.item-list ul li .mining-view {position:absolute; left:2%; top:-20px; z-index:100; padding:15px; width:96%; border:1px solid #999; background:#fff; opacity:0; transition:all .2s ease-in-out; box-sizing:border-box;}
 .item-list ul li .mining-view p {line-height:20px; font-size:15px;}
 .item-list ul li .mining-view p .posi {color:#2944cc;}
 .item-list ul li .mining-view p .nega {color:#ce2c2c;}
 .item-list ul li .txt-ing {line-height:22px; color:#888; font-size:14px; text-align:center;}
-.item-list ul li:hover .mining-view {bottom:-10px; opacity:1;}
+.item-list ul li:hover .mining-view {top:5px; opacity:1;}
 .item-list ul.type02 {padding-top:20px;}
 .item-list ul.type02 li {margin:34px 0 0 1%; padding-bottom:25px; width:49.5%;}
 .item-list ul.type02 li:nth-child(4n+1),
