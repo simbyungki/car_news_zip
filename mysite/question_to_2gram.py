@@ -20,6 +20,7 @@ django.setup()
 
 import time
 from datetime import datetime
+from konlpy.tag import Kkma
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.abspath('./mysite'))
@@ -71,7 +72,7 @@ def get_question_list(cursor) :
 	rows = cursor.fetchall()
 
 	for idx, row in enumerate(rows) :
-		if idx > 0 : 
+		if idx > 1 : 
 			break
 		else : 
 			group = []
@@ -114,7 +115,6 @@ def insert_db_2gram(result) :
 			print('-'*50)
 	
 	print(f'***** : QNA LIST > BIGRAM > DB INSERT 완료')
-
 
 def sentence_to_2gram(q_list) : 
 	result = []
@@ -245,6 +245,30 @@ def compare_sentence(q_list, cursor) :
 	print('ㅡ'* 70)
 
 
+def mining_sentence(q_list, cursor) :
+	kkma = Kkma()
+	# 제외할 단어 목록
+	except_word_list = []
+	fin_result = []
+	
+	for idx, q in enumerate(q_list) : 
+		question = [q[0], remove_html(q[1])]
+		sentence = re.sub('[-=.#/?:$}\"\']', '', str(question[1])).replace('[','').replace(']','')
+		origin_word_list = list(dict.fromkeys(regex.findall(r'[\p{Hangul}|\p{Latin}|\p{Han}|\d+]+', f'{sentence}')))
+		out_result = []
+		out_result.append(question[0])
+		result = []
+		for origin_word in origin_word_list :
+			if (origin_word not in except_word_list) : 
+				for morpheme in kkma.pos(origin_word) :	
+					in_result = []	
+					in_result.append(origin_word)
+					in_result.append(morpheme[0])
+					result.append(in_result)
+		out_result.append(result)
+		fin_result.append(out_result)
+
+	print(fin_result)
 
 
 
@@ -260,7 +284,8 @@ if __name__ == '__main__' :
 	dbconn2 = pymssql.connect(host=db_infos2.get('host'), user=db_infos2.get('user'), password=db_infos2.get('password'), database=db_infos2.get('database'), port=db_infos2.get('port'))
 	cursor2 = dbconn2.cursor()
 
-	compare_sentence([[0, 'K5차량 상담 신청합니다. 연락주세요~']], cursor)
+	# compare_sentence([[0, 'K5차량 상담 신청합니다. 연락주세요~']], cursor)
+	mining_sentence(get_question_list(cursor2), cursor)
 	# print(sentence_to_2gram(get_question_list(cursor2)))
 	# insert_db_2gram(sentence_to_2gram(get_question_list(cursor2)))
 
