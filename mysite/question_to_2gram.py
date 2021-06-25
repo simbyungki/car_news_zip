@@ -134,6 +134,58 @@ def sentence_to_2gram(q_list) :
 	# bigram된 데이터 불러온 후 list로 변경
 	# print(morpheme[1].split('/'))
 
+def get_question_type(q_type) : 
+	if q_type == 1 : 
+		q_type = '일반, 차량 구매 관련 문의'
+	elif q_type == 2 :
+		q_type = '출고 옵션 관련 문의'
+	elif q_type == 3 :
+		q_type = '차량 직접 볼 수 있는지? 시승 가능 여부 문의'
+	elif q_type == 4 :
+		q_type = '오프라인 구입 후 온라인 구매 이력 등록 요청'
+	elif q_type == 5 :
+		q_type = '탁송비, 배송비 문의'
+	elif q_type == 6 :
+		q_type = '서비스 문의 (찾케서, 포인트 등)'
+	elif q_type == 7 :
+		q_type = '네고 가능 여부 문의'
+	elif q_type == 8 :
+		q_type = '차량 추천 문의'
+	elif q_type == 9 :
+		q_type = '차량업체 제휴 문의'
+	elif q_type == 10 :
+		q_type = '기존 이력 문의'
+	elif q_type == 11 :
+		q_type = '지점 위치 문의'
+	elif q_type == 12 :
+		q_type = '현금영수증 관련 문의'
+	elif q_type == 13 :
+		q_type = '리스 문의'
+	elif q_type == 14 :
+		q_type = '환불 문의'
+	elif q_type == 15 :
+		q_type = '렌트 문의'
+	elif q_type == 16 :
+		q_type = '홈페이지 기능 문의 (회원정보 등)'
+	elif q_type == 17 :
+		q_type = '계약중인 차량 문의'
+	elif q_type == 18 :
+		q_type = '복합 문의'
+	elif q_type == 19 :
+		q_type = '회원 탈퇴 문의'
+	elif q_type == 20 :
+		q_type = '사고 이력 관련 문의'
+	elif q_type == 21 :
+		q_type = '차량 매입, 대차 문의'
+	elif q_type == 23 :
+		q_type = '준비중인 차량 문의'
+	elif q_type == 25 :
+		q_type = '할부 문의'
+	elif q_type == 27 :
+		q_type = '결제관련 문의'
+
+	return q_type
+
 def compare_sentence(q_list, cursor) : 
 	cursor.execute(f"""
 		SELECT 
@@ -144,105 +196,117 @@ def compare_sentence(q_list, cursor) :
 	rows = cursor.fetchall()
 	source_bigram_list = []
 	for idx, row in enumerate(rows) :
-		in_group = []
-		in_group.append(row[0])
-		in_group.append(list(dict.fromkeys(row[1].split('/'))))
-		source_bigram_list.append(in_group)
-	# print(source_bigram_list)
+		if idx < 1000 : 
+			in_group = []
+			in_group.append(row[0])
+			# in_group.append(row[1].split('/'))
+			in_group.append(list(dict.fromkeys(row[1].split('/'))))
+			source_bigram_list.append(in_group)
+	# print(len(source_bigram_list))
 	
 	q_list = sentence_to_2gram(q_list)
 	len_q_list_gram = len(q_list[0][1].split('/'))
 	fin_result = []
+	# print(len_q_list_gram)
+	# print(q_list[0][1].split('/'))
 	for target_question in q_list : 
 		target_bigrams = target_question[1].split('/')
-		# print(target_bigrams)
+		same_list = []
 		for source_bigrams in source_bigram_list : 
-			same_count = 0
-			# print(source_bigrams)
-			# print('ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ'*5)
-			grams = []
-			for target_bigram in target_bigrams : 
-				for source_bigram in source_bigrams[1] : 
-					group = []
-					if target_bigram == source_bigram :
-						grams.append(target_bigram)
-						# q category = source_bigrams[0]
-						group.append(source_bigrams[0])
-						same_count += 1
-						group.append(same_count)
-						group.append(grams)
-						# print(group)
-						fin_result.append(group)
-						# print(f'[일치] {source_bigrams[0]} // {source_bigram}')
+			# source_bigrams [1, ['안녕', '차량', '량구', '구매', '매관', '관련', '련상', '상담', '담희', '희망', '망합', '합니', '니다']], 
+			
+					
+			same_list = list(set(source_bigrams[1]) & set(target_bigrams))
+			if same_list : 
+				fin_result.append([source_bigrams[0], len(same_list), same_list])
 
-	max = 0
+					# if target_bigram == source_bigram :
+					# 	# print(target_bigram)
+					# 	same_grams.append(target_bigram)
+					# 	group.append(source_bigrams[0])
+					# 	# source_bigrams[0] : 5 (Q CATEGORY)
+					# 	same_count += 1
+					# 	group.append(same_count)
+					# 	group.append(same_grams)
+					# 	# print(group)
+					# 	# print(f'[일치] {source_bigrams[0]} // {source_bigram}')
+					# 	# print(fin_result)
+					# 	in_fin_result.append(group)
+
+		# print(fin_result)
+
+
+		# for source_bigrams in source_bigram_list : 
+		# 	# source_bigrams [1, ['안녕', '차량', '량구', '구매', '매관', '관련', '련상', '상담', '담희', '희망', '망합', '합니', '니다']], 
+		# 	same_count = 0
+		# 	in_fin_result = []
+		# 	for in_idx, source_bigram in enumerate(source_bigrams[1]) : 
+		# 		same_grams = []
+		# 		group = []	
+		# 		# source_bigrams[1] : ['안녕', '녕하', '하세', '세요', '차량', '량구', '구매', '매관', '관련', '련상', '상담', '담희', '희망', '망합', '합니', '니다']
+		# 		for target_bigram in target_bigrams : 
+		# 			# target_bigrams : ['안녕', '녕하', '하세', '세요']
+		# 	# 		# print(source_bigram)
+		# 			if target_bigram == source_bigram :
+		# 				# print(target_bigram)
+		# 				same_grams.append(target_bigram)
+		# 				group.append(source_bigrams[0])
+		# 				# source_bigrams[0] : 5 (Q CATEGORY)
+		# 				same_count += 1
+		# 				group.append(same_count)
+		# 				group.append(same_grams)
+		# 				# print(group)
+		# 				# print(f'[일치] {source_bigrams[0]} // {source_bigram}')
+		# 				# print(fin_result)
+		# 				in_fin_result.append(group)
+
+	# print(len(fin_result))
+	# print(fin_result)
+
 	score_list = []
+	# print(fin_result)
 	for result in fin_result :
+		max = 0
+		# print(result)
+		# [27, 3, ['능한', '리스', '가능']]
 		group = []
 		if max < result[1] :
 			max = result[1]
+			# print('max보다 result[1]이 커서 ', max)
 			group.append(result[0])
 			group.append(max)
 			group.append(result[2])
 			score_list.append(group)
 
-
-	for score in score_list : 
-		print('ㅡ'* 70)
+	# print(score_list)
+	rank_box = []
+	for idx, score in enumerate(score_list) : 
+		# print('ㅡ'* 70)
+		# print(score[0])
+		# score : [6, 2, ['가능', '능한']], 
 		q_type = ''
-		if score[0] == 1 : 
-			q_type = '일반, 차량 구매 관련 문의'
-		elif score[0] == 2 :
-			q_type = '출고 옵션 관련 문의'
-		elif score[0] == 3 :
-			q_type = '차량 직접 볼 수 있는지? 시승 가능 여부 문의'
-		elif score[0] == 4 :
-			q_type = '오프라인 구입 후 온라인 구매 이력 등록 요청'
-		elif score[0] == 5 :
-			q_type = '탁송비, 배송비 문의'
-		elif score[0] == 6 :
-			q_type = '서비스 문의 (찾케서, 포인트 등)'
-		elif score[0] == 7 :
-			q_type = '네고 가능 여부 문의'
-		elif score[0] == 8 :
-			q_type = '차량 추천 문의'
-		elif score[0] == 9 :
-			q_type = '차량업체 제휴 문의'
-		elif score[0] == 10 :
-			q_type = '기존 이력 문의'
-		elif score[0] == 11 :
-			q_type = '지점 위치 문의'
-		elif score[0] == 12 :
-			q_type = '현금영수증 관련 문의'
-		elif score[0] == 13 :
-			q_type = '리스 문의'
-		elif score[0] == 14 :
-			q_type = '환불 문의'
-		elif score[0] == 15 :
-			q_type = '렌트 문의'
-		elif score[0] == 16 :
-			q_type = '홈페이지 기능 문의 (회원정보 등)'
-		elif score[0] == 17 :
-			q_type = '계약중인 차량 문의'
-		elif score[0] == 18 :
-			q_type = '복합 문의'
-		elif score[0] == 19 :
-			q_type = '회원 탈퇴 문의'
-		elif score[0] == 20 :
-			q_type = '사고 이력 관련 문의'
-		elif score[0] == 21 :
-			q_type = '차량 매입, 대차 문의'
-		elif score[0] == 23 :
-			q_type = '준비중인 차량 문의'
-		elif score[0] == 25 :
-			q_type = '할부 문의'
-		elif score[0] == 27 :
-			q_type = '결제관련 문의'
-
+		q_type = get_question_type(score[0])
+		rank_box.append(score[0])
 		# print(f'\n[{q_type} ({round((score[1]/len_q_list_gram)* 100, 2)}% 확률), ({score[1]}/{len_q_list_gram})] \n')
-		print(f'\n\n[{q_type} ({round((score[1]/len_q_list_gram)* 100, 2)}% 확률), ({score[1]}/{len_q_list_gram})] \n\n일치하는 gram 목록 : {score[2]}')
+		# print(f'\n\n[{q_type}, ({score[1]}/{len_q_list_gram})] \n\n일치하는 gram 목록 : {score[2]}\n')
 	
-	print('ㅡ'* 70)
+	# print(rank_box)
+	
+	count = {}
+	for rank in rank_box : 
+		# print(rank)
+		try :
+			count[rank] += 1
+		except : 
+			count[rank] = 1
+	
+	rank_list = sorted(count.items())
+	print(rank_list)
+
+	for idx, rank in enumerate(rank_list) : 
+		q_type = get_question_type(rank_list[idx][0])
+		
+		print(f'이 문의 타입은 {q_type} 확률이 {idx + 1}번째로 높다.')
 
 
 def mining_sentence(q_list, cursor) :
@@ -339,8 +403,9 @@ if __name__ == '__main__' :
 	dbconn2 = pymssql.connect(host=db_infos2.get('host'), user=db_infos2.get('user'), password=db_infos2.get('password'), database=db_infos2.get('database'), port=db_infos2.get('port'))
 	cursor2 = dbconn2.cursor()
 
-	# compare_sentence([[0, 'K5차량 상담 신청합니다. 연락주세요~']], cursor)
-	mining_sentence(get_question_list(cursor2), cursor)
+	compare_sentence([[0, '신용등급이 좀 낮은편인데 리스 가능한가요?']], cursor)
+	# mining_sentence(get_question_list(cursor2), cursor)
+
 	# print(sentence_to_2gram(get_question_list(cursor2)))
 	# insert_db_2gram(sentence_to_2gram(get_question_list(cursor2)))
 
