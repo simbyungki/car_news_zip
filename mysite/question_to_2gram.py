@@ -216,6 +216,7 @@ def compare_sentence(q_list, cursor) :
 			# source_bigrams [1, ['안녕', '차량', '량구', '구매', '매관', '관련', '련상', '상담', '담희', '희망', '망합', '합니', '니다']], 
 			
 					
+			# same_list = list(set(source_bigrams[1]) & set(target_bigrams))
 			same_list = list(set(source_bigrams[1]) & set(target_bigrams))
 			if same_list : 
 				fin_result.append([source_bigrams[0], len(same_list), same_list])
@@ -235,7 +236,7 @@ def compare_sentence(q_list, cursor) :
 
 		# print(fin_result)
 
-
+		# 옛날
 		# for source_bigrams in source_bigram_list : 
 		# 	# source_bigrams [1, ['안녕', '차량', '량구', '구매', '매관', '관련', '련상', '상담', '담희', '희망', '망합', '합니', '니다']], 
 		# 	same_count = 0
@@ -264,7 +265,7 @@ def compare_sentence(q_list, cursor) :
 	# print(fin_result)
 
 	score_list = []
-	# print(fin_result)
+	print(fin_result)
 	for result in fin_result :
 		max = 0
 		# print(result)
@@ -300,12 +301,12 @@ def compare_sentence(q_list, cursor) :
 		except : 
 			count[rank] = 1
 	
-	rank_list = sorted(count.items())
+	rank_list = sorted(count.items(), key=(lambda x: x[1]), reverse=True)
 	print(rank_list)
 
 	for idx, rank in enumerate(rank_list) : 
 		q_type = get_question_type(rank_list[idx][0])
-		
+		print(rank)
 		print(f'이 문의 타입은 {q_type} 확률이 {idx + 1}번째로 높다.')
 
 
@@ -389,6 +390,60 @@ def mining_sentence(q_list, cursor) :
 	# 	['주시', 4299, ['진영'], ['논의'], ['감사'], ['감사'], ['안내']]
 	# ]
 
+def get_near_keyword(q_list, cursor) : 
+	kkma = Kkma()
+	# 제외할 단어 목록
+	except_word_list = []
+	fin_result = []
+
+	for idx, q in enumerate(q_list) : 
+		question = [q[0], remove_html(q[1])]
+		sentence = re.sub('[-=.#/?:$}\"\']', '', str(question[1])).replace('[','').replace(']','')
+		origin_word_list = list(dict.fromkeys(regex.findall(r'[\p{Hangul}|\p{Latin}|\p{Han}|\d+]+', f'{sentence}')))
+		# 형태소 분석
+		out_result = []
+		out_result.append(question[0])
+		result = []
+		for origin_word in origin_word_list :
+			if (origin_word not in except_word_list) : 
+				for morpheme in kkma.pos(origin_word) :	
+					if (len(morpheme[0]) > 1) and (morpheme[1] == 'NNG' or morpheme[1] == 'NNP' or morpheme[1] == 'NNB' or morpheme[1] == 'NNM'):
+						in_result = []	
+						in_result.append(morpheme[0])
+					
+						result.append(in_result)
+		out_result.append(result)
+		fin_result.append(out_result)
+
+
+	for result in fin_result : 
+		qna_no = result[0]
+		print(result)
+		for morpheme in result[1] : 
+			morpheme_keyword = morpheme[0]
+			# print(type(morpheme_keyword), morpheme_keyword)
+			
+			try : 
+				cursor.execute(f"""
+					SELECT 
+						TARGET_MORPHEME_WORD 
+					FROM 
+						TBL_CCQ_KEYWORD_MAP 
+					WHERE 
+						SOURCE_WORD = "{morpheme_keyword}"
+					ORDER BY 
+						WORD_DISTANCE DESC 
+					LIMIT 1
+				""")
+				keyword = cursor.fetchall()
+				if len(keyword) > 0 :
+					print(f'"{morpheme_keyword}"과(와) 연관단어 > "{keyword[0][0]}"')
+			except Exception as e :
+				print(f'****** + error! >> {e} >>>>> SELECT 오류!')
+				continue
+			finally : 
+				pass
+
 
 
 if __name__ == '__main__' : 
@@ -403,7 +458,8 @@ if __name__ == '__main__' :
 	dbconn2 = pymssql.connect(host=db_infos2.get('host'), user=db_infos2.get('user'), password=db_infos2.get('password'), database=db_infos2.get('database'), port=db_infos2.get('port'))
 	cursor2 = dbconn2.cursor()
 
-	compare_sentence([[0, '신용등급이 좀 낮은편인데 리스 가능한가요?']], cursor)
+	compare_sentence([[0, '22호1029 차량 36개월 할부 문의 남겨요~']], cursor)
+	# get_near_keyword([[0, '22호1029 차량 36개월 할부 문의 남겨요~']], cursor)
 	# mining_sentence(get_question_list(cursor2), cursor)
 
 	# print(sentence_to_2gram(get_question_list(cursor2)))
