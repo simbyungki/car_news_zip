@@ -35,10 +35,6 @@ with open(db_info_file2) as f :
 
 
 
-
-
-
-
 # 1. QNA LIST 질문 내용 load ( 문장 띄어쓰기 제거 후 붙이기)
 # 2. bi그램 (2gram)
 # 3. DB저장 (QNA LIST > 2그램 테이블)
@@ -57,7 +53,7 @@ def get_question_list(cursor) :
 		FROM 
 			TBL_QNA_LIST
 		WHERE 
-			MINING_STATUS = 3 AND STATUS = 1 AND IS_ANSWER = 3
+			MINING_STATUS = 1 AND STATUS = 1 AND IS_ANSWER = 3
 		ORDER BY 
 			ADD_DATE DESC
 	""")
@@ -72,7 +68,7 @@ def get_question_list(cursor) :
 	rows = cursor.fetchall()
 
 	for idx, row in enumerate(rows) :
-		if idx > 1 : 
+		if idx > 2 : 
 			break
 		else : 
 			group = []
@@ -90,8 +86,8 @@ def get_question_list(cursor) :
 
 			q_list.append(group)
 
-	return q_list
 
+	return q_list
 
 def insert_db_2gram(result) : 
 	# DB MAP INSERT
@@ -117,6 +113,7 @@ def insert_db_2gram(result) :
 	print(f'***** : QNA LIST > BIGRAM > DB INSERT 완료')
 
 def sentence_to_2gram(q_list) : 
+	# print(q_list)
 	result = []
 	for idx, question in enumerate(q_list) :
 		result_item = []
@@ -187,6 +184,8 @@ def get_question_type(q_type) :
 	return q_type
 
 def compare_sentence(q_list, cursor) : 
+
+	print(q_list)
 	cursor.execute(f"""
 		SELECT 
 			Q_CATEGORY, BIGRAMS 
@@ -196,6 +195,7 @@ def compare_sentence(q_list, cursor) :
 	rows = cursor.fetchall()
 	source_bigram_list = []
 	for idx, row in enumerate(rows) :
+		weight_keywords = ''
 		if idx < 1000 : 
 			in_group = []
 			in_group.append(row[0])
@@ -206,109 +206,150 @@ def compare_sentence(q_list, cursor) :
 	
 	q_list = sentence_to_2gram(q_list)
 	len_q_list_gram = len(q_list[0][1].split('/'))
+
 	fin_result = []
-	# print(len_q_list_gram)
-	# print(q_list[0][1].split('/'))
 	for target_question in q_list : 
 		target_bigrams = target_question[1].split('/')
-		same_list = []
-		for source_bigrams in source_bigram_list : 
-			# source_bigrams [1, ['안녕', '차량', '량구', '구매', '매관', '관련', '련상', '상담', '담희', '희망', '망합', '합니', '니다']], 
-			
-					
-			# same_list = list(set(source_bigrams[1]) & set(target_bigrams))
-			same_list = list(set(source_bigrams[1]) & set(target_bigrams))
-			if same_list : 
-				fin_result.append([source_bigrams[0], len(same_list), same_list])
 
-					# if target_bigram == source_bigram :
-					# 	# print(target_bigram)
-					# 	same_grams.append(target_bigram)
-					# 	group.append(source_bigrams[0])
-					# 	# source_bigrams[0] : 5 (Q CATEGORY)
-					# 	same_count += 1
-					# 	group.append(same_count)
-					# 	group.append(same_grams)
-					# 	# print(group)
-					# 	# print(f'[일치] {source_bigrams[0]} // {source_bigram}')
-					# 	# print(fin_result)
-					# 	in_fin_result.append(group)
+		weight_keywords = ''
+		if target_question[0] == 2 : 
+			weight_keywords = '/옵션/션문/문의/옵션/션추/추가/출고/고옵/옵션/션유/유무'
+		elif target_question[0] == 3 : 
+			weight_keywords = '/차를/를직/직접/보고/볼수/예약/약가/가능/지점/점방/방문'
+		elif target_question[0] == 4 : 
+			weight_keywords = '/오프/프라/라인/구매/매이/이력/력등/등록/업뎃/업데/데이/이트'
+		elif target_question[0] == 5 : 
+			weight_keywords = '/배송/송비/탁송/송비/비얼/얼마'
+		elif target_question[0] == 6 : 
+			weight_keywords = '/포인/인트/트내/내역/찾아/아가/가는/는케/케어/어서/서비/비스/방문/문점/점검/냄새/새케/케어/신청/무상/상보/보증'
+		elif target_question[0] == 7 : 
+			weight_keywords = '/현금/금완/완납/네고/고가/가능/일시/시불/할인/디씨/추가/가할/할인/가격/격인/인하'
+		elif target_question[0] == 8 : 
+			weight_keywords = '/좋은/은차/차량/추천/천해/추천'
+		elif target_question[0] == 9 : 
+			weight_keywords = '/광고/고제/제휴/마케/케팅/휴업/협업/제안/채널/귀사/당사'
+		elif target_question[0] == 10 : 
+			weight_keywords = '/용도/도이/이력/업체/과거/거렌/렌트/트이/이력/렌터/터카/카이/이력'
+		elif target_question[0] == 11 : 
+			weight_keywords = '/지점/점위/위치/지점/점주/주소/구경/찾아'
+		elif target_question[0] == 12 : 
+			weight_keywords = '/현금/금영/영수/수증/증요/요청/증가'
+		elif target_question[0] == 13 : 
+			weight_keywords = '/리스/스상/상담/신용/용등/등급/리스/스가/리스/스신/신청/리스/스자/자격/리스/리스/리스'
+		elif target_question[0] == 14 : 
+			weight_keywords = '/환불/불절/절차/취소/환급'
+		elif target_question[0] == 15 : 
+			weight_keywords = '/장기/기렌/렌트/트계/계약/렌터/터카/렌트/렌터/트카/터카'
+		elif target_question[0] == 16 : 
+			weight_keywords = '/활용/용동/동의/비밀/밀번/번호/수신/신동/동의/이메/메일/회원/원정/정보/보수/수정'
+		elif target_question[0] == 17 : 
+			weight_keywords = '/계약/약중/중인/불발/발시/안팔/팔리/리면/계약/약취/취소/소되/되면'
+		elif target_question[0] == 19 : 
+			weight_keywords = '회원/원탈/탈퇴/퇴어/어떻/탈퇴'
+		elif target_question[0] == 20 : 
+			weight_keywords = '/사고/고이/이력/자세/세한/사고/고내/내역'
+		elif target_question[0] == 21 : 
+			weight_keywords = '/대차/차가/교체/체차/매입/입도/매입/대차/차도/교체/체도'
+		elif target_question[0] == 23 : 
+			weight_keywords = '/준비/비중/중인/판매/매시/시작/알람/알림/준비/비중'
+		elif target_question[0] == 25 : 
+			weight_keywords = '/할부/부기/기간/무이/이자/이율/금리/할부/부문/할부/부상/신용/용등/등급/금융'
+		elif target_question[0] == 27 : 
+			weight_keywords = '/결제/구입/카드/드한/한도/전액/결제/제관'
 
-		# print(fin_result)
+		target_question[1] += weight_keywords
 
-		# 옛날
+		
+		# # 최근
+		# same_list = []
 		# for source_bigrams in source_bigram_list : 
 		# 	# source_bigrams [1, ['안녕', '차량', '량구', '구매', '매관', '관련', '련상', '상담', '담희', '희망', '망합', '합니', '니다']], 
-		# 	same_count = 0
-		# 	in_fin_result = []
-		# 	for in_idx, source_bigram in enumerate(source_bigrams[1]) : 
-		# 		same_grams = []
-		# 		group = []	
-		# 		# source_bigrams[1] : ['안녕', '녕하', '하세', '세요', '차량', '량구', '구매', '매관', '관련', '련상', '상담', '담희', '희망', '망합', '합니', '니다']
-		# 		for target_bigram in target_bigrams : 
-		# 			# target_bigrams : ['안녕', '녕하', '하세', '세요']
-		# 	# 		# print(source_bigram)
-		# 			if target_bigram == source_bigram :
-		# 				# print(target_bigram)
-		# 				same_grams.append(target_bigram)
-		# 				group.append(source_bigrams[0])
-		# 				# source_bigrams[0] : 5 (Q CATEGORY)
-		# 				same_count += 1
-		# 				group.append(same_count)
-		# 				group.append(same_grams)
-		# 				# print(group)
-		# 				# print(f'[일치] {source_bigrams[0]} // {source_bigram}')
-		# 				# print(fin_result)
-		# 				in_fin_result.append(group)
 
-	# print(len(fin_result))
+		# 	# same_list = list(set(source_bigrams[1]) & set(target_bigrams))
+		# 	same_list = list(set(source_bigrams[1]) & set(target_bigrams))
+		# 	if same_list : 
+		# 		fin_result.append([source_bigrams[0], len(same_list), same_list])
+
+		# 			# if target_bigram == source_bigram :
+		# 			# 	# print(target_bigram)
+		# 			# 	same_grams.append(target_bigram)
+		# 			# 	group.append(source_bigrams[0])
+		# 			# 	# source_bigrams[0] : 5 (Q CATEGORY)
+		# 			# 	same_count += 1
+		# 			# 	group.append(same_count)
+		# 			# 	group.append(same_grams)
+		# 			# 	# print(group)
+		# 			# 	# print(f'[일치] {source_bigrams[0]} // {source_bigram}')
+		# 			# 	# print(fin_result)
+		# 			# 	in_fin_result.append(group)
+		# # print(fin_result)
+		# # 최근 끝
+
+		# 옛날
+		
+		for source_bigrams in source_bigram_list : 
+			# source_bigrams [1, ['안녕', '차량', '량구', '구매', '매관', '관련', '련상', '상담', '담희', '희망', '망합', '합니', '니다']], 
+			same_count = 0
+			same_grams = []
+			for in_idx, source_bigram in enumerate(source_bigrams[1]) : 
+				# source_bigrams ['안녕', '차량', '량구', '구매', '매관', '관련', '련상', '상담', '담희', '희망', '망합', '합니', '니다']
+				for target_bigram in target_bigrams : 
+					# target_bigrams : ['안녕', '녕하', '하세', '세요']
+					# 숫자 두자리는 제거
+					if not isinstance(target_bigram, int ) :
+						if target_bigram == source_bigram : 
+							same_count += 1
+							same_grams.append(target_bigram)
+			
+			if len(same_grams) :
+				fin_result.append([source_bigrams[0], same_count, same_grams]) 
+
 	# print(fin_result)
+	# score_list = []
+	# for result in fin_result :
+	# 	# result [27, 3, ['능한', '리스', '가능']]
+	# 	max = 0
+	# 	group = []
+	# 	if max < result[1] :
+	# 		max = result[1]
+	# 		# print('max보다 result[1]이 커서 ', max)
+	# 		group.append(result[0])
+	# 		group.append(max)
+	# 		group.append(result[2])
+	# 		score_list.append(group)
 
-	score_list = []
-	print(fin_result)
-	for result in fin_result :
-		max = 0
-		# print(result)
-		# [27, 3, ['능한', '리스', '가능']]
-		group = []
-		if max < result[1] :
-			max = result[1]
-			# print('max보다 result[1]이 커서 ', max)
-			group.append(result[0])
-			group.append(max)
-			group.append(result[2])
-			score_list.append(group)
+	score_list = sorted(fin_result, key=lambda x: x[1], reverse=True)
 
-	# print(score_list)
-	rank_box = []
-	for idx, score in enumerate(score_list) : 
-		# print('ㅡ'* 70)
-		# print(score[0])
-		# score : [6, 2, ['가능', '능한']], 
-		q_type = ''
-		q_type = get_question_type(score[0])
-		rank_box.append(score[0])
-		# print(f'\n[{q_type} ({round((score[1]/len_q_list_gram)* 100, 2)}% 확률), ({score[1]}/{len_q_list_gram})] \n')
-		# print(f'\n\n[{q_type}, ({score[1]}/{len_q_list_gram})] \n\n일치하는 gram 목록 : {score[2]}\n')
+	# rank_box = []
+	# for idx, score in enumerate(score_list) : 
+	# 	# print('ㅡ'* 70)
+	# 	# print(score[0])
+	# 	# score : [6, 2, ['가능', '능한']], 
+	# 	q_type = ''
+	# 	q_type = get_question_type(score[0])
+	# 	rank_box.append(score[0])
+	# 	# print(f'\n[{q_type} ({round((score[1]/len_q_list_gram)* 100, 2)}% 확률), ({score[1]}/{len_q_list_gram})] \n')
+	# 	# print(f'\n\n[{q_type}, ({score[1]}/{len_q_list_gram})] \n\n일치하는 gram 목록 : {score[2]}\n')
 	
 	# print(rank_box)
 	
-	count = {}
-	for rank in rank_box : 
-		# print(rank)
-		try :
-			count[rank] += 1
-		except : 
-			count[rank] = 1
+	# count = {}
+	# for rank in rank_box : 
+	# 	# print(rank)
+	# 	try :
+	# 		count[rank] += 1
+	# 	except : 
+	# 		count[rank] = 1
 	
-	rank_list = sorted(count.items(), key=(lambda x: x[1]), reverse=True)
-	print(rank_list)
+	# rank_list = sorted(count.items(), key=(lambda x: x[1]), reverse=True)
+	# # print(rank_list)
 
-	for idx, rank in enumerate(rank_list) : 
-		q_type = get_question_type(rank_list[idx][0])
-		print(rank)
-		print(f'이 문의 타입은 {q_type} 확률이 {idx + 1}번째로 높다.')
-
+	for idx, rank in enumerate(score_list) : 
+		if idx > 2 : 
+			break
+		else :
+			q_type = get_question_type(rank[0])
+			print(f'이 문의 타입은 {q_type} 확률이 {idx + 1}번째로 높다. \n {rank[2]}')
 
 def mining_sentence(q_list, cursor) :
 	kkma = Kkma()
@@ -458,8 +499,7 @@ if __name__ == '__main__' :
 	dbconn2 = pymssql.connect(host=db_infos2.get('host'), user=db_infos2.get('user'), password=db_infos2.get('password'), database=db_infos2.get('database'), port=db_infos2.get('port'))
 	cursor2 = dbconn2.cursor()
 
-	compare_sentence([[0, '22호1029 차량 36개월 할부 문의 남겨요~']], cursor)
-	# get_near_keyword([[0, '22호1029 차량 36개월 할부 문의 남겨요~']], cursor)
+	compare_sentence([[0, '리스 관련 문의 드립니다.']], cursor)
 	# mining_sentence(get_question_list(cursor2), cursor)
 
 	# print(sentence_to_2gram(get_question_list(cursor2)))

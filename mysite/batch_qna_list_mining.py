@@ -260,7 +260,7 @@ def text_mining(qna_list, dbconn, cursor, dbconn2, cursor2) :
 						finally : 
 							pass
 
-# 3. TBL_CCQ_KEYWORD_MAP 테이블에서 4가지 조건 동일한 데이터가 있으면 DISTANCE_WEIGHT 1더해서 업데이트 
+# 3. TBL_CCQ_KEYWORD_MAP 테이블에서 4가지 조건 동일한 데이터가 있으면 WORD_DISTANCE 1더해서 업데이트 
 							if len(rows) > 0 : 
 								# print('@@ 3번 프로세스 @@ TBL_CCQ_KEYWORD_MAP 중복되는 것 있다 > 업데이트')
 								return_datas = {}
@@ -273,7 +273,7 @@ def text_mining(qna_list, dbconn, cursor, dbconn2, cursor2) :
 										UPDATE
 											TBL_CCQ_KEYWORD_MAP 
 										SET
-											DISTANCE_WEIGHT = {return_datas.get('distance') + 1}
+											WORD_DISTANCE = {return_datas.get('distance') + 1}
 										WHERE 
 											MAP_NO = {return_datas.get('map_no')}
 									""")
