@@ -117,7 +117,7 @@ def db_to_csv() :
 		WHERE 
 			STATUS = 1 AND IS_ANSWER = 3
 		ORDER BY 
-			ADD_DATE DESC;
+			ADD_DATE DESC
 	""")
 	rows = cursor2.fetchall()
 
@@ -147,15 +147,16 @@ def db_to_csv() :
 
 		qna_list.append(group)
 
-
 	cursor2.close()
 	dbconn2.close()
 
+	print(len(qna_list))
+
 	for qna in qna_list :
 		# QNA_NO, QUEST_TITLE, QUEST_CONTENTS, ANSWER_CONTENTS, ADD_DATE, ANSWER_ID, ANSWER_DATE
-		data2 = {'QNA_NO' : qna[0], '질문 제목': qna[1], '질문 내용': qna[2], '답변 내용': qna[3], '등록일시': qna[4], '답변자': qna[5], '답변일시': qna[6]}
+		data2 = {'QNA_NO' : qna[0], 'q_title': qna[1], 'q_content': qna[2], 'a_content': qna[3], 'q_date': qna[4], 'manager': qna[5], 'a_date': qna[6]}
 		result = pd.DataFrame(data2, index = [0])
-		result.to_csv(f'C:/Users/PC/Documents/simbyungki/git/car_news_zip/data/contact/total_list.csv', mode='a', header=False, encoding='utf-8-sig')
+		result.to_csv(f'C:/Users/PC/Documents/simbyungki/git/car_news_zip/data/contact/qna_total_list_210702.csv', mode='a', header=False, encoding='utf-8-sig')
 	print(f'파일 저장 완료!')
 
 	return qna_list
@@ -163,149 +164,6 @@ def db_to_csv() :
 def isNaN(num):
     return num != num
 
-def sentence_test(sentence) : 
-	excel_path = '../data/youtube_live_chats/live_chat_keyword_list.xlsx'
-	# sheetname='live_chat_keyword_list'
-	df = pd.read_excel(excel_path, usecols='A:C', header=1)
-
-	chat_list = []
-
-	for idx, row in enumerate(df.values) : 
-		if idx != 0 :
-			# if not (isNaN(row[0])) : 
-			# if row[2] == 5 : 
-			temp_dict = {}
-			temp_dict['word_morpheme'] = row[0]
-			tag = ''
-			if row[1] == '명사, 대명사' : 
-				tag = 'NN'
-			elif row[1] == '동사' : 
-				tag = 'VV'
-			elif row[1] == '형용사' : 
-				tag = 'VA'
-			temp_dict['word_class'] = tag
-			temp_dict['word_category'] = row[2]
-			chat_list.append(temp_dict)
-
-	# print(chat_list)
-
-	match_list = []
-	replace_sentence = re.sub('\,', '&#44;', re.sub('[\"\'‘“”″′]', '&#8220;', str(sentence)))
-	result = regex.findall(r'[\p{Hangul}|\p{Latin}|\p{Han}|\d+]+', f'{replace_sentence}')
-
-	print(result)
-
-	fin_result_data = {
-		'len_nn' : 0,
-		'len_vv' : 0,
-		'len_va' : 0,
-		'category01' : [],
-		'category02' : [],
-		'category03' : [],
-		'category04' : [],
-		'category05' : [],
-		'category06' : [],
-		'category07' : []
-	}
-
-	for idx, chat in enumerate(chat_list) : 
-		for word in result : 
-			if chat.get('word_morpheme') in word : 
-				if chat.get('word_class') == 'NN' : 
-					fin_result_data['len_nn'] += 1
-					print(chat.get('word_morpheme'))
-				elif chat.get('word_class') == 'VV' : 
-					fin_result_data['len_vv'] += 1
-				elif chat.get('word_class') == 'VA' : 
-					fin_result_data['len_va'] += 1
-			if (chat.get('word_morpheme') in word) and (chat.get('word_category') != 1) : 
-				# print(f'[{type(chat.get("word_morpheme"))}]{chat.get("word_morpheme")} ///// [{type(chat.get("word_category"))}]{chat.get("word_category")}')
-				match_list.append(chat)
-
-	# if class_type == 3 :
-	# 	category = '긍정'
-	# elif class_type == 5 : 
-	# 	category = '부정'
-	# elif class_type == 6 : 
-	# 	category = '지역, 지명'
-	# elif class_type == 7 or class_type == 9 or class_type == 11 or class_type == 13 or class_type == 15 or class_type == 17 or class_type == 19 or class_type == 20 or class_type == 21 or class_type == 23 or class_type == 25 or class_type == 27 : 
-	# 	category = '차량 관련'
-	# elif class_type == 29 : 
-	# 	category = '오플 관련'
-	# elif class_type == 31 : 
-	# 	category = '상담, 문의'
-
-	for match_item in match_list :
-		word_morpheme = match_item.get('word_morpheme')
-		category = ''
-		# if match_item.get('word_category') == 3 :
-		# 	category = '긍정'
-		# elif match_item.get('word_category') == 5 : 
-		# 	category = '부정'
-		# elif match_item.get('word_category') == 6 : 
-		# 	category = '지명, 지역'
-		# elif match_item.get('word_category') == 7 : 
-		# 	category = '차량타입'
-		# elif match_item.get('word_category') == 9 : 
-		# 	category = '브랜드'
-		# elif match_item.get('word_category') == 11 : 
-		# 	category = '모델'
-		# elif match_item.get('word_category') == 13 : 
-		# 	category = '가격'
-		# elif match_item.get('word_category') == 15 : 
-		# 	category = '결제'
-		# elif match_item.get('word_category') == 17 : 
-		# 	category = '계약'
-		# elif match_item.get('word_category') == 19 : 
-		# 	category = '등급,옵션,연료
-		# elif match_item.get('word_category') == 20 : 
-		# 	category = '디자인'
-		# elif match_item.get('word_category') == 21 : 
-		# 	category = '외장'
-		# elif match_item.get('word_category') == 23 : 
-		# 	category = '내장
-		# elif match_item.get('word_category') == 25 : 
-		# 	category = '부품 / 차량 전문지식'
-		# elif match_item.get('word_category') == 27 : 
-		# 	category = '차량 기타'
-		# elif match_item.get('word_category') == 29 : 
-		# 	category = '오플 관련'
-		# elif match_item.get('word_category') == 31 : 
-		# 	category = '상담, 문의'		
-		if match_item.get('word_category') == 3 :
-			category = '긍정'
-			fin_result_data['category01'].append(word_morpheme)
-		elif match_item.get('word_category') == 5 : 
-			category = '부정'
-			fin_result_data['category02'].append(word_morpheme)
-		elif match_item.get('word_category') == 6 : 
-			category = '지역, 지명'
-			fin_result_data['category03'].append(word_morpheme)
-		elif match_item.get('word_category') == 7 or match_item.get('word_category') == 9 or match_item.get('word_category') == 11 or match_item.get('word_category') == 13 or match_item.get('word_category') == 19 or match_item.get('word_category') == 20 or match_item.get('word_category') == 21 or match_item.get('word_category') == 23 or match_item.get('word_category') == 25 or match_item.get('word_category') == 27 : 
-			category = '차량 관련'
-			fin_result_data['category04'].append(word_morpheme)
-		elif match_item.get('word_category') == 15 or match_item.get('word_category') == 17 : 
-			category = '결제, 계약'
-			fin_result_data['category05'].append(word_morpheme)
-		elif match_item.get('word_category') == 29 : 
-			category = '오토플러스'
-			fin_result_data['category06'].append(word_morpheme)
-		elif match_item.get('word_category') == 31 : 
-			category = '상담, 문의'
-			fin_result_data['category07'].append(word_morpheme)
-
-	print(f'위 문장은 명사 {fin_result_data["len_nn"]}개, 동사 {fin_result_data["len_vv"]}개, 형용사 {fin_result_data["len_va"]}개로 구성 되어있습니다.')
-	print(f"""속해있는 단어별 구분은,
--> 긍정 {len(fin_result_data['category01'])}개 {fin_result_data['category01']}, 
--> 부정 {len(fin_result_data['category02'])}개 {fin_result_data['category02']}, 
--> 지역, 지명 관련 {len(fin_result_data['category03'])}개 {fin_result_data['category03']}, 
--> 차량 관련 {len(fin_result_data['category04'])}개 {fin_result_data['category04']}, 
--> 결제, 계약 관련 {len(fin_result_data['category05'])}개 {fin_result_data['category05']}, 
--> 오토플러스 관련 {len(fin_result_data['category06'])}개 {fin_result_data['category06']}, 
--> 상담, 문의 관련 {len(fin_result_data['category07'])}개 {fin_result_data['category07']} 입니다.""")
-	
-	# return chat_list
-	
 
 
 

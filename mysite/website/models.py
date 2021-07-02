@@ -73,8 +73,10 @@ class TblNewsKeywordList(models.Model):
 	word_no = models.AutoField(db_column='WORD_NO', primary_key=True)  # Field name made lowercase.
 	word_morpheme = models.CharField(db_column='WORD_MORPHEME', unique=True, max_length=500)  # Field name made lowercase.
 	word_class = models.CharField(db_column='WORD_CLASS', max_length=100, blank=True, null=True)  # Field name made lowercase.
+	mining_yn = models.CharField(db_column='MINING_YN', max_length=1, blank=True, null=True)  # Field name made lowercase.
 	positive_yn = models.CharField(db_column='POSITIVE_YN', max_length=1, blank=True, null=True)  # Field name made lowercase.
 	negative_yn = models.CharField(db_column='NEGATIVE_YN', max_length=1, blank=True, null=True)  # Field name made lowercase.
+	natural_yn = models.CharField(db_column='NATURAL_YN', max_length=1, blank=True, null=True)  # Field name made lowercase.
 	update_date = models.DateTimeField(db_column='UPDATE_DATE', blank=True, null=True)  # Field name made lowercase.
 
 	class Meta:
@@ -126,15 +128,15 @@ class TblTotalCarNewsList(models.Model):
 		db_table = 'TBL_TOTAL_CAR_NEWS_LIST'
 
 class TblNewsCarModelMap(models.Model):
-    map_no = models.AutoField(db_column='MAP_NO', primary_key=True)  # Field name made lowercase.
-    bono = models.IntegerField(db_column='BONO', blank=True, null=True)  # Field name made lowercase.
-    boname = models.CharField(db_column='BONAME', max_length=500, blank=True, null=True)  # Field name made lowercase.
-    news_no = models.IntegerField(db_column='NEWS_NO', blank=True, null=True)  # Field name made lowercase.
-    map_date = models.DateTimeField(db_column='MAP_DATE', blank=True, null=True)  # Field name made lowercase.
+	map_no = models.AutoField(db_column='MAP_NO', primary_key=True)  # Field name made lowercase.
+	bono = models.IntegerField(db_column='BONO', blank=True, null=True)  # Field name made lowercase.
+	boname = models.CharField(db_column='BONAME', max_length=500, blank=True, null=True)  # Field name made lowercase.
+	news_no = models.IntegerField(db_column='NEWS_NO', blank=True, null=True)  # Field name made lowercase.
+	map_date = models.DateTimeField(db_column='MAP_DATE', blank=True, null=True)  # Field name made lowercase.
 
-    class Meta:
-        managed = False
-        db_table = 'TBL_NEWS_CAR_MODEL_MAP'
+	class Meta:
+		managed = False
+		db_table = 'TBL_NEWS_CAR_MODEL_MAP'
 
 class TblYoutubeCarCommentList(models.Model):
 	comment_no = models.AutoField(db_column='COMMENT_NO', primary_key=True)  # Field name made lowercase.
