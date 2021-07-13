@@ -32,8 +32,8 @@ def remove_html(sentence) :
 
 def get_soup(url) :
 	headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36'}
-	# res = requests.get(url, headers = headers, verify=False)
-	res = requests.get(url, headers = headers)
+	res = requests.get(url, headers = headers, verify=False)
+	# res = requests.get(url, headers = headers)
 	# res.raise_for_status()
 	print(res.raise_for_status())
 	res.encoding = None
@@ -56,14 +56,21 @@ def get_post_list(dbconn, cursor) :
 			tr_list = soup.select('#boardlist tbody tr["itemtype"]')
 			# print(len(board_list))
 			for idx, tr in enumerate(tr_list) :
-				tr_no = tr.select_one('.num01').get_text().strip()
-				# link_url = tr.select_one('.bsubject')['href']
-				post_code = tr.select_one('.bsubject')['href'][-12:-5]
-				title = tr.select_one('.bsubject').get_text().strip()
-				writer = tr.select_one('.author').get_text().strip()
-				recommend_cnt = tr.select_one('.recomm').get_text().strip()
-				view_cnt = tr.select_one('.count').get_text().strip()
-				date = tr.select_one('.date').get_text().strip()
+				tr_no, post_code, title, writer, recommend_cnt, view_cnt, date = ''
+				if tr.select_one('.num01') is not None :
+					tr_no = tr.select_one('.num01').get_text().strip()
+					# link_url = tr.select_one('.bsubject')['href']
+				if tr.select_one('.bsubject') is not None :
+					post_code = tr.select_one('.bsubject')['href'][-12:-5]
+					title = tr.select_one('.bsubject').get_text().strip()
+				if tr.select_one('.author') is not None :
+					writer = tr.select_one('.author').get_text().strip()
+				if tr.select_one('.recomm') is not None :
+					recommend_cnt = tr.select_one('.recomm').get_text().strip()
+				if tr.select_one('.count') is not None :
+					view_cnt = tr.select_one('.count').get_text().strip()
+				if tr.select_one('.date') is not None :
+					date = tr.select_one('.date').get_text().strip()
 				full_url = f'https://www.bobaedream.co.kr/view?code=national&No={post_code}&bm=1'
 				# print(tr_no, link_url, title, writer, date)
 				in_obj = {}
@@ -381,9 +388,12 @@ def get_post_detail(post_code) :
 	# print(f'>> 글 상세 내용 수집 시작합니다.')
 	url = f'https://www.bobaedream.co.kr/view?code=national&No={post_code}&bm=1'
 	soup = get_soup(url)
-	detail = soup.select_one('#print_area')
-	title = detail.select_one('.writerProfile dl dt').attrs['title'].strip()
-	content = detail.select_one('.bodyCont').get_text().strip().replace('\n', '').replace('\xa0', '').replace('\r', '')
+	title = ''
+	content = ''
+	if soup.select_one('#print_area') is not None : 
+		detail = soup.select_one('#print_area')
+		title = detail.select_one('.writerProfile dl dt').attrs['title'].strip()
+		content = detail.select_one('.bodyCont').get_text().strip().replace('\n', '').replace('\xa0', '').replace('\r', '')
 	return title + ' ' + content
 
 
