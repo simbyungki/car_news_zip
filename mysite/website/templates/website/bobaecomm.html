@@ -1,0 +1,71 @@
+{% extends 'website/common/template.html' %}
+{% load static %}
+{% load custom_tags %}
+{% block content %}
+<style>
+.bobaedream-comm .input-box {margin:0 auto; max-width:700px;}
+.bobaedream-comm .input-box textarea {padding:10px; width:100%; line-height:1.3; font-size:18px; border:1px solid #999; box-sizing:border-box;}
+.bobaedream-comm .input-box .btn-default {margin:0; height:55px; line-height:55px;}
+</style>
+	<section class="container bobaedream-comm">
+		<div class="inner">
+			<h2 class="page-title">보배드림 커뮤니티 유사글 조회</h2>
+			<p class="comment-info">
+				보배드림 커뮤니티 국산자동차 게시판에서 유사한 글을 찾습니다.<br>
+				먼저 문장을 입력해주세요.
+			</p>		
+			<div class="input-box">
+				{% csrf_token %}
+				<textarea name="sentence" id="sentence" cols="30" rows="6"></textarea>
+				<button type="button" onclick="findSentence($('#sentence').val());" class="btn-default btn-blue">유사글 조회</button>
+			</div>
+			<div class="result">
+
+			</div>
+		</div>
+	</section>
+	<div class="loading">
+		<div class="dim"></div>
+		<div class="loading-box">
+			<div class="out-box">
+				<i class="in-box"></i>
+			</div>
+			<p>
+				데이터를 불러오는 중입니다.<br>
+				(잠시만 기다려주세요.)
+			</p>
+		</div>
+	</div>
+</div>
+<script>
+$(function(){
+	
+});
+
+function findSentence(sentence){
+	connFlag = true;
+	$.ajax({
+		url: '{% url "bobaecomm_data" %}',
+		type: 'GET',
+		data: {
+			'sentence': sentence
+		},
+		dataType: 'json',
+		success: function(data){
+			//json_data = JSON.parse(data.morphemes)
+			for(i = 0; i < data.data.length; i++){
+				console.log(data.data[i])
+			}
+		},
+		beforeSend:function(){
+			$('.loading').show();
+		},
+		complete:function(){
+			$('.loading').hide();
+		}
+	})
+}
+</script>
+</body>
+</html>
+{% endblock %}

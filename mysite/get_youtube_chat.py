@@ -54,7 +54,7 @@ with open(db_info_file) as f :
 
 
 def get_chat_message_list() : 
-	excel_path = '../data/youtube_live_chats/check_20210706_live_chat.xlsx'
+	excel_path = '../data/youtube_live_chats/check_20210713_live_chat.xlsx'
 	df = pd.read_excel(excel_path, usecols='A:C')
 
 	chat_list = []
@@ -113,7 +113,7 @@ def export_xlsx(result_data) :
 				data2 = {'형태소 단어' : [word[0]], '품사 태그': tag}
 				# print(data2)		
 				result = pd.DataFrame(data2)
-				result.to_csv(f'C:/Users/PC/Documents/simbyungki/git/car_news_zip/data/youtube_live_chats/after_check_20210706_live_chat.csv', mode='a', header=False, encoding='utf-8-sig')
+				result.to_csv(f'C:/Users/PC/Documents/simbyungki/git/car_news_zip/data/youtube_live_chats/after_check_20210713_live_chat.csv', mode='a', header=False, encoding='utf-8-sig')
 	print(f'형태소 분석 후, 파일 저장 완료!')
 
 def isNaN(num):

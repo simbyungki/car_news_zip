@@ -12,9 +12,11 @@ urlpatterns = [
 	path('car_review_detail', views.car_review_detail, name='car_review_detail'),
 	path('news_list_data', views.news_list_data, name='news_list_data'),
 	path('car_review_list_data', views.car_review_list_data, name='car_review_list_data'),
+	path('bobaecomm_data', views.bobaecomm_data, name='bobaecomm_data'),
 	path('view_count', views.view_count, name='view_count'),
 	path('login/', views.login, name='login'),
 	path('logout/', views.logout, name='logout'),
 	path('join/', views.join, name='join'),
-	path('bobaenews/', views.bobaenews, name='bobarnews')
+	path('bobaenews/', views.bobaenews, name='bobarnews'),
+	path('bobaecomm/', views.bobaecomm, name='bobaecomm')
 ]

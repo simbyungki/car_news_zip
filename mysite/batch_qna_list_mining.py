@@ -235,7 +235,7 @@ def text_mining(qna_list, dbconn, cursor, dbconn2, cursor2) :
 							if result[0] != result2[0] and result[1][0] != result2[1][0] :
 								cursor.execute(f"""
 									SELECT 
-										MAP_NO, DISTANCE_WEIGHT
+										MAP_NO, WORD_DISTANCE
 									FROM 
 										TBL_CCQ_KEYWORD_MAP
 									WHERE 
@@ -324,7 +324,7 @@ def text_mining(qna_list, dbconn, cursor, dbconn2, cursor2) :
 									cursor.execute(f"""
 										INSERT INTO 
 											TBL_CCQ_KEYWORD_MAP 
-											(QNA_NO, SOURCE_WORD_NO, SOURCE_WORD, SOURCE_CLASS_CODE, SOURCE_MORPHEME_WORD, TARGET_WORD_NO, TARGET_WORD, TARGET_CLASS_CODE, TARGET_MORPHEME_WORD, DISTANCE_WEIGHT, UPDATE_DATE)
+											(QNA_NO, SOURCE_WORD_NO, SOURCE_WORD, SOURCE_CLASS_CODE, SOURCE_MORPHEME_WORD, TARGET_WORD_NO, TARGET_WORD, TARGET_CLASS_CODE, TARGET_MORPHEME_WORD, WORD_DISTANCE, UPDATE_DATE)
 										VALUES
 											("{qna[0]}", "{result_word_no1}", "{result[0]}", "{result_word_class_code1}", "{result[1][0]}", "{result_word_no2}", "{result2[0]}", "{result_word_class_code2}", "{result2[1][0]}", 1, NOW())
 									""")

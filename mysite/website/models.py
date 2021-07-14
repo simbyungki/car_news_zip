@@ -157,3 +157,143 @@ class TblYoutubeCarCommentList(models.Model):
 	class Meta:
 		managed = False
 		db_table = 'TBL_YOUTUBE_CAR_COMMENT_LIST'
+
+class TblCcqBigramMap(models.Model):
+	map_no = models.AutoField(db_column='MAP_NO', primary_key=True)  # Field name made lowercase.
+	qna_no = models.IntegerField(db_column='QNA_NO', unique=True)  # Field name made lowercase.
+	q_category = models.IntegerField(db_column='Q_CATEGORY', blank=True, null=True)  # Field name made lowercase.
+	bigrams = models.TextField(db_column='BIGRAMS', blank=True, null=True)  # Field name made lowercase.
+	update_date = models.DateTimeField(db_column='UPDATE_DATE', blank=True, null=True)  # Field name made lowercase.
+
+	class Meta:
+		managed = False
+		db_table = 'TBL_CCQ_BIGRAM_MAP'
+
+
+class TblCcqKeywordBigramMap(models.Model):
+	map_no = models.AutoField(db_column='MAP_NO', primary_key=True)  # Field name made lowercase.
+	qna_no = models.IntegerField(db_column='QNA_NO', unique=True)  # Field name made lowercase.
+	q_category = models.IntegerField(db_column='Q_CATEGORY', blank=True, null=True)  # Field name made lowercase.
+	bigrams = models.TextField(db_column='BIGRAMS', blank=True, null=True)  # Field name made lowercase.
+	update_date = models.DateTimeField(db_column='UPDATE_DATE', blank=True, null=True)  # Field name made lowercase.
+
+	class Meta:
+		managed = False
+		db_table = 'TBL_CCQ_KEYWORD_BIGRAM_MAP'
+
+
+class TblCcqKeywordList(models.Model):
+	word_no = models.AutoField(db_column='WORD_NO', primary_key=True)  # Field name made lowercase.
+	qna_no = models.CharField(db_column='QNA_NO', max_length=30, blank=True, null=True)  # Field name made lowercase.
+	word_origin = models.CharField(db_column='WORD_ORIGIN', max_length=50, blank=True, null=True)  # Field name made lowercase.
+	word_morpheme = models.CharField(db_column='WORD_MORPHEME', max_length=50, blank=True, null=True)  # Field name made lowercase.
+	word_class_code = models.IntegerField(db_column='WORD_CLASS_CODE', blank=True, null=True)  # Field name made lowercase.
+	word_class = models.CharField(db_column='WORD_CLASS', max_length=50, blank=True, null=True)  # Field name made lowercase.
+	update_date = models.DateTimeField(db_column='UPDATE_DATE', blank=True, null=True)  # Field name made lowercase.
+
+	class Meta:
+		managed = False
+		db_table = 'TBL_CCQ_KEYWORD_LIST'
+
+
+class TblCcqKeywordMap(models.Model):
+	map_no = models.AutoField(db_column='MAP_NO', primary_key=True)  # Field name made lowercase.
+	qna_no = models.IntegerField(db_column='QNA_NO', blank=True, null=True)  # Field name made lowercase.
+	source_word_no = models.IntegerField(db_column='SOURCE_WORD_NO', blank=True, null=True)  # Field name made lowercase.
+	source_word = models.CharField(db_column='SOURCE_WORD', max_length=50, blank=True, null=True)  # Field name made lowercase.
+	source_class_code = models.CharField(db_column='SOURCE_CLASS_CODE', max_length=30, blank=True, null=True)  # Field name made lowercase.
+	source_morpheme_word = models.CharField(db_column='SOURCE_MORPHEME_WORD', max_length=50, blank=True, null=True)  # Field name made lowercase.
+	target_word_no = models.IntegerField(db_column='TARGET_WORD_NO', blank=True, null=True)  # Field name made lowercase.
+	target_word = models.CharField(db_column='TARGET_WORD', max_length=50, blank=True, null=True)  # Field name made lowercase.
+	target_class_code = models.CharField(db_column='TARGET_CLASS_CODE', max_length=30, blank=True, null=True)  # Field name made lowercase.
+	target_morpheme_word = models.CharField(db_column='TARGET_MORPHEME_WORD', max_length=50, blank=True, null=True)  # Field name made lowercase.
+	word_distance = models.IntegerField(db_column='WORD_DISTANCE', blank=True, null=True)  # Field name made lowercase.
+	update_date = models.DateTimeField(db_column='UPDATE_DATE', blank=True, null=True)  # Field name made lowercase.
+	distance_weight = models.FloatField(db_column='DISTANCE_WEIGHT', blank=True, null=True)  # Field name made lowercase.
+
+	class Meta:
+		managed = False
+		db_table = 'TBL_CCQ_KEYWORD_MAP'
+
+
+class TblCcqQTypeInfo(models.Model):
+	type_no = models.AutoField(db_column='TYPE_NO', primary_key=True)  # Field name made lowercase.
+	q_type_code = models.IntegerField(db_column='Q_TYPE_CODE', unique=True)  # Field name made lowercase.
+	q_type_name = models.CharField(db_column='Q_TYPE_NAME', max_length=30, blank=True, null=True)  # Field name made lowercase.
+	update_date = models.DateTimeField(db_column='UPDATE_DATE', blank=True, null=True)  # Field name made lowercase.
+
+	class Meta:
+		managed = False
+		db_table = 'TBL_CCQ_Q_TYPE_INFO'
+
+class TblAnalWordClass(models.Model):
+	word_class_code = models.IntegerField(db_column='WORD_CLASS_CODE', primary_key=True)  # Field name made lowercase.
+	class_name = models.CharField(db_column='CLASS_NAME', unique=True, max_length=30)  # Field name made lowercase.
+	kor_class_name = models.CharField(db_column='KOR_CLASS_NAME', max_length=30, blank=True, null=True)  # Field name made lowercase.
+	status = models.IntegerField(db_column='STATUS', blank=True, null=True)  # Field name made lowercase.
+	update_date = models.DateTimeField(db_column='UPDATE_DATE', blank=True, null=True)  # Field name made lowercase.
+
+	class Meta:
+		managed = False
+		db_table = 'TBL_ANAL_WORD_CLASS'
+
+
+class TblBobaeKeywordDistanceMap(models.Model):
+	map_no = models.AutoField(db_column='MAP_NO', primary_key=True)  # Field name made lowercase.
+	source_word = models.CharField(db_column='SOURCE_WORD', max_length=50, blank=True, null=True)  # Field name made lowercase.
+	target_word = models.CharField(db_column='TARGET_WORD', max_length=50, blank=True, null=True)  # Field name made lowercase.
+	word_distance = models.IntegerField(db_column='WORD_DISTANCE', blank=True, null=True)  # Field name made lowercase.
+	distance_weight = models.DecimalField(db_column='DISTANCE_WEIGHT', max_digits=10, decimal_places=0, blank=True, null=True)  # Field name made lowercase.
+	update_date = models.DateTimeField(db_column='UPDATE_DATE', blank=True, null=True)  # Field name made lowercase.
+
+	class Meta:
+		managed = False
+		db_table = 'TBL_BOBAE_KEYWORD_DISTANCE_MAP'
+
+
+class TblBobaeKeywordList(models.Model):
+	word_no = models.AutoField(db_column='WORD_NO', primary_key=True)  # Field name made lowercase.
+	post_code = models.CharField(db_column='POST_CODE', max_length=30)  # Field name made lowercase.
+	word_origin = models.CharField(db_column='WORD_ORIGIN', max_length=50, blank=True, null=True)  # Field name made lowercase.
+	word_morpheme = models.CharField(db_column='WORD_MORPHEME', max_length=50, blank=True, null=True)  # Field name made lowercase.
+	word_class_code = models.CharField(db_column='WORD_CLASS_CODE', max_length=50, blank=True, null=True)  # Field name made lowercase.
+	word_class = models.CharField(db_column='WORD_CLASS', max_length=50, blank=True, null=True)  # Field name made lowercase.
+	update_date = models.DateTimeField(db_column='UPDATE_DATE', blank=True, null=True)  # Field name made lowercase.
+
+	class Meta:
+		managed = False
+		db_table = 'TBL_BOBAE_KEYWORD_LIST'
+
+
+class TblBobaeKeywordMap(models.Model):
+	map_no = models.AutoField(db_column='MAP_NO', primary_key=True)  # Field name made lowercase.
+	source_word_no = models.IntegerField(db_column='SOURCE_WORD_NO', blank=True, null=True)  # Field name made lowercase.
+	source_word = models.CharField(db_column='SOURCE_WORD', max_length=50, blank=True, null=True)  # Field name made lowercase.
+	source_class_code = models.CharField(db_column='SOURCE_CLASS_CODE', max_length=50, blank=True, null=True)  # Field name made lowercase.
+	source_morpheme_word = models.CharField(db_column='SOURCE_MORPHEME_WORD', max_length=50, blank=True, null=True)  # Field name made lowercase.
+	target_word_no = models.IntegerField(db_column='TARGET_WORD_NO', blank=True, null=True)  # Field name made lowercase.
+	target_word = models.CharField(db_column='TARGET_WORD', max_length=50, blank=True, null=True)  # Field name made lowercase.
+	target_class_code = models.CharField(db_column='TARGET_CLASS_CODE', max_length=50, blank=True, null=True)  # Field name made lowercase.
+	target_morpheme_word = models.CharField(db_column='TARGET_MORPHEME_WORD', max_length=50, blank=True, null=True)  # Field name made lowercase.
+	word_distance = models.IntegerField(db_column='WORD_DISTANCE', blank=True, null=True)  # Field name made lowercase.
+	distance_weight = models.IntegerField(db_column='DISTANCE_WEIGHT', blank=True, null=True)  # Field name made lowercase.
+	update_date = models.DateTimeField(db_column='UPDATE_DATE', blank=True, null=True)  # Field name made lowercase.
+
+	class Meta:
+		managed = False
+		db_table = 'TBL_BOBAE_KEYWORD_MAP'
+
+
+class TblBobaePostCodeList(models.Model):
+	post_no = models.AutoField(db_column='POST_NO', primary_key=True)  # Field name made lowercase.
+	post_code = models.CharField(db_column='POST_CODE', unique=True, max_length=30)  # Field name made lowercase.
+	url = models.CharField(db_column='URL', max_length=100, blank=True, null=True)  # Field name made lowercase.
+	view_cnt = models.IntegerField(db_column='VIEW_CNT', blank=True, null=True)  # Field name made lowercase.
+	recommend_cnt = models.IntegerField(db_column='RECOMMEND_CNT', blank=True, null=True)  # Field name made lowercase.
+	mining_status = models.IntegerField(db_column='MINING_STATUS', blank=True, null=True)  # Field name made lowercase.
+	mining_date = models.DateTimeField(db_column='MINING_DATE', blank=True, null=True)  # Field name made lowercase.
+	update_date = models.DateTimeField(db_column='UPDATE_DATE', blank=True, null=True)  # Field name made lowercase.
+
+	class Meta:
+		managed = False
+		db_table = 'TBL_BOBAE_POST_CODE_LIST'

@@ -407,8 +407,71 @@ def get_post_detail(post_code) :
 		pass
 
 
+def input_to_morphemes(sentence) :
+	kkma = Kkma()
+	# 불용어
+	except_word_list = []
+	# 허용 형태소 타입 >> VA 형용사 /  VV 동사 / OL 외국어 / OH 한자 / 명사 추정 범주
+	types = ['NNG', 'NNP', 'NNB', 'NNM', 'NP', 'VA', 'UN']
+	# 특수문자 제거
+	sentence = re.sub('[-=.#/?:$}\"\']', '', str(sentence)).replace('[','').replace(']','')
+	# 어절 분리 > list
+	origin_word_list = list(dict.fromkeys(regex.findall(r'[\p{Hangul}|\p{Latin}|\p{Han}|\d+]+', f'{sentence}')))
+	print(origin_word_list)
+	results = []
+	morphemes = []
+	# 형태소 분석 단어 추출
+	for origin_word in origin_word_list :
+		if (origin_word not in except_word_list) : 
+			for morpheme in kkma.pos(origin_word) :
+				in_result = []	
+				in_result.append(origin_word)
+				in_result.append(morpheme)
+				results.append(in_result)
+				# 허용된 타입 & 2글자 이상의 단어만 추출
+				if (morpheme[1] in types) and (len(morpheme[0]) > 1): 
+					morphemes.append(morpheme)
+	print(morphemes)
+	return morphemes
 
+def compare_morphemes(new_morphemes, dbconn, cursor) :
+	# 기존 문장의 형태소 단어 SELECT
+	cursor.execute(f"""
+		SELECT 
+			POST_CODE, WORD_MORPHEME
+		FROM 
+			TBL_BOBAE_KEYWORD_LIST
+		WHERE
+			LENGTH(WORD_MORPHEME) > 1 AND
+			(WORD_CLASS = 'NNG' OR WORD_CLASS = 'NNP' OR WORD_CLASS = 'NNB' OR WORD_CLASS = 'NNM' OR WORD_CLASS = 'NP' OR WORD_CLASS = 'VA' OR WORD_CLASS = 'OL' OR WORD_CLASS = 'OH' OR WORD_CLASS = 'UN')
+	""")
+	old_morphemes = cursor.fetchall()
+	# 신규 문장과 형태소 단어 비교
+	results = []
+	for idx, old_morpheme in enumerate(old_morphemes) : 
+		for new_morpheme in new_morphemes : 	
+			if old_morpheme[1] == new_morpheme[0] : 
+				results.append([old_morpheme[0], old_morpheme[1]])
 
+	count = {}
+	# 중복 취합
+	for idx, result in enumerate(results) : 
+		try : 
+			count[result[0]] += 1
+		except : 
+			count[result[0]] = 1
+	# sorting
+	fin_result = sorted(count.items(), key=(lambda v: v[1]), reverse = True)
+	print('*'* 60)
+	print(fin_result)
+	# get detail URL
+	print('*'* 60)
+	for idx, result in enumerate(fin_result) : 
+		if idx < 3 : 
+			post_code = result[0]
+			url = f'https://www.bobaedream.co.kr/view?code=national&No={post_code}&bm=1'
+			print(f'{idx + 1}번째 추천(유사) 글 : {url}')
+			print('*'* 60)
 
 
 if __name__ == '__main__' : 
@@ -418,17 +481,21 @@ if __name__ == '__main__' :
 	dbconn = mysql.connector.connect(host=db_infos.get('host'), user=db_infos.get('user'), password=db_infos.get('password'), database=db_infos.get('database'), port=db_infos.get('port'))
 	cursor = dbconn.cursor()
 
-	# 글 목록 가져오기 (DB Insert)
-	get_post_list(dbconn, cursor)
-	# 문장 분석
-	sentence_mining(dbconn, cursor)
+	# print(input_to_morphemes('제네시스 G80 전동화모델 이름 깨네 ㅋㅋㅋ Q30 G70'))
+	compare_morphemes(input_to_morphemes('솔직히 국산 SUV 중 투싼이 갑 아니냐'), dbconn, cursor)
 
-	# for idx, post in enumerate(get_post_list()) :
-	# 	if idx < 10 :
-	# 		get_post_detail(post['post_code'])
-	# 		time.sleep(2)
-	
-	dbconn.close()
+
+
+
+	# dbconn = mysql.connector.connect(host=db_infos.get('host'), user=db_infos.get('user'), password=db_infos.get('password'), database=db_infos.get('database'), port=db_infos.get('port'))
+	# cursor = dbconn.cursor()
+
+	# # 글 목록 가져오기 (DB Insert)
+	# get_post_list(dbconn, cursor)
+	# # 문장 분석
+	# sentence_mining(dbconn, cursor)
+
+	# dbconn.close()
 
 	now = time.localtime()
 	end_time = now

@@ -2,12 +2,14 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.contrib import auth
 from django.db.models import Q
-from .models import TblTotalCarNewsList, TblMemberList, TblNewsKeywordList, TblNewsKeywordMap, TblYoutubeCarCommentList, TblCarInfos, TblNewsAllKeywordList, TblNewsCarModelMap
+from .models import TblTotalCarNewsList, TblMemberList, TblNewsKeywordList, TblNewsKeywordMap, TblYoutubeCarCommentList, TblCarInfos, TblNewsAllKeywordList, TblNewsCarModelMap, TblBobaeKeywordDistanceMap, TblBobaeKeywordList, TblBobaePostCodeList
 from datetime import datetime
 from django.http import HttpResponse
 from django.core import serializers
-
+from konlpy.tag import Kkma
 import requests
+import re
+import regex
 import pandas as pd
 import time
 import mysql.connector
@@ -546,6 +548,83 @@ def view_count(request) :
 
 		return HttpResponse(after_count, content_type="text/json-comment-filtered")
 
+# 보배드림 커뮤니티 유사글 조회 ajax
+def bobaecomm_data(request) : 
+	if request.method == 'GET' :
+		sentence = request.GET.get('sentence')
+		print(sentence)
+		kkma = Kkma()
+		# 불용어
+		except_word_list = []
+		types = ['NNG', 'NNP', 'NNB', 'NNM', 'NP', 'VA', 'UN']
+		# 특수문자 제거
+		sentence = re.sub('[-=.#/?:$}\"\']', '', str(sentence)).replace('[','').replace(']','')
+		# 어절 분리 > list
+		origin_word_list = list(dict.fromkeys(regex.findall(r'[\p{Hangul}|\p{Latin}|\p{Han}|\d+]+', f'{sentence}')))
+		# print(origin_word_list)
+		results = []
+		new_morphemes = []
+		# 형태소 분석 단어 추출
+		for origin_word in origin_word_list :
+			if (origin_word not in except_word_list) : 
+				for morpheme in kkma.pos(origin_word) :
+					in_result = []	
+					in_result.append(origin_word)
+					in_result.append(morpheme)
+					results.append(in_result)
+					# 허용된 타입 & 2글자 이상의 단어만 추출
+					if (morpheme[1] in types) and (len(morpheme[0]) > 1): 
+						new_morphemes.append(morpheme)
+
+		dbconn = mysql.connector.connect(host=db_infos.get('host'), user=db_infos.get('user'), password=db_infos.get('password'), database=db_infos.get('database'), port=db_infos.get('port'))
+		cursor = dbconn.cursor()
+		
+		# 기존 문장의 형태소 단어 SELECT
+		cursor.execute(f"""
+			SELECT 
+				POST_CODE, WORD_MORPHEME
+			FROM 
+				TBL_BOBAE_KEYWORD_LIST
+			WHERE
+				LENGTH(WORD_MORPHEME) > 1 AND
+				(WORD_CLASS = 'NNG' OR WORD_CLASS = 'NNP' OR WORD_CLASS = 'NNB' OR WORD_CLASS = 'NNM' OR WORD_CLASS = 'NP' OR WORD_CLASS = 'VA' OR WORD_CLASS = 'UN')
+		""")	
+		old_morphemes = cursor.fetchall()
+		# 신규 문장과 형태소 단어 비교
+		results = []
+		for idx, old_morpheme in enumerate(old_morphemes) : 
+			for new_morpheme in new_morphemes : 	
+				if old_morpheme[1] == new_morpheme[0] : 
+					results.append([old_morpheme[0], old_morpheme[1]])
+		count = {}
+		# 중복 취합
+		for idx, result in enumerate(results) : 
+			try : 
+				count[result[0]] += 1
+			except : 
+				count[result[0]] = 1
+
+		# sorting
+		fin_result = sorted(count.items(), key=(lambda v: v[1]), reverse = True)
+		fin_data = []
+		for idx, result in enumerate(fin_result) : 
+			if idx < 3 : 
+				post_code = result[0]
+				url = f'https://www.bobaedream.co.kr/view?code=national&No={post_code}&bm=1'
+				fin_data.append(url)
+
+		print(fin_data)
+		context = {}
+		context['data'] = fin_data
+		
+
+
+		print(context)
+		return JsonResponse(context, status=200)
+
+
+
+
 
 def car_review_list(request) : 
 	infos = {}
@@ -636,3 +715,7 @@ def bobaenews(request) :
 
 	return render(request, 'website/bobaenews.html', context)
 
+def bobaecomm(request) : 
+	context = {}
+
+	return render(request, 'website/bobaecomm.html', context)
