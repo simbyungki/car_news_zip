@@ -31,14 +31,17 @@ def remove_html(sentence) :
 	return sentence
 
 def get_soup(url) :
-	headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36'}
-	res = requests.get(url, headers = headers, verify=False)
-	# res = requests.get(url, headers = headers)
-	# res.raise_for_status()
-	print(res.raise_for_status())
-	res.encoding = None
-	soup = BeautifulSoup(res.text, 'lxml')
-	return soup
+	try : 
+		headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36'}
+		res = requests.get(url, headers = headers, verify=False)
+		# res = requests.get(url, headers = headers)
+		res.raise_for_status()
+		res.encoding = None
+		soup = BeautifulSoup(res.text, 'lxml')
+		return soup
+	except Exception as e :
+		print(f'requests error! >> {e}')
+		pass	
 
 ###
 # 글 목록 가져오기
@@ -53,10 +56,16 @@ def get_post_list(dbconn, cursor) :
 		url = f'http://www.bobaedream.co.kr/list?code=national&s_cate=&maker_no=&model_no=&or_gu=10&or_se=desc&s_selday=&pagescale={page_scale}&info3=&noticeShow=&s_select=Subject&s_key=&level_no=&vdate=&type=list&page={page_number}'
 		try : 
 			soup = get_soup(url)
+		except : 
+			print("Connection refused by the server..")
+			print("Let me sleep for 5 seconds")
+			time.sleep(5)
+			continue
+		finally : 
 			tr_list = soup.select('#boardlist tbody tr["itemtype"]')
 			# print(len(board_list))
 			for idx, tr in enumerate(tr_list) :
-				tr_no, post_code, title, writer, recommend_cnt, view_cnt, date = ''
+				tr_no= post_code= title= writer= recommend_cnt= view_cnt= date = ''
 				if tr.select_one('.num01') is not None :
 					tr_no = tr.select_one('.num01').get_text().strip()
 					# link_url = tr.select_one('.bsubject')['href']
@@ -101,11 +110,7 @@ def get_post_list(dbconn, cursor) :
 				finally : 
 					print(f'[{post_code}][DB Insert 완료!] {title}')
 					dbconn.commit()
-		except : 
-			print("Connection refused by the server..")
-			print("Let me sleep for 5 seconds")
-			time.sleep(5)
-			continue
+		
 	print(f'>>>> 총 {len(total_post)}개의 글 수집 완료!')
 
 def sentence_mining(dbconn, cursor) : 
@@ -136,215 +141,217 @@ def sentence_mining(dbconn, cursor) :
 				results = []
 				post_code = row[0]
 				# 형태소 분석 > KEYWORD LIST DB INSERT
-				# 특수문자 제거
-				detail = re.sub('[-=.#/?:$}\"\']', '', str(get_post_detail(post_code))).replace('[','').replace(']','')
-				# 어절 분리 > list
-				origin_word_list = list(dict.fromkeys(regex.findall(r'[\p{Hangul}|\p{Latin}|\p{Han}|\d+]+', f'{detail}')))
+				if (get_post_detail(post_code) is not None) and (get_post_detail(post_code) != '') : 
+					# 특수문자 제거
+					detail = re.sub('[-=.#/?:$}\"\']', '', str(get_post_detail(post_code))).replace('[','').replace(']','')
+					# 어절 분리 > list
+					origin_word_list = list(dict.fromkeys(regex.findall(r'[\p{Hangul}|\p{Latin}|\p{Han}|\d+]+', f'{detail}')))
 
-				for origin_word in origin_word_list :
-					if (origin_word not in except_word_list) : 
-						for morpheme in kkma.pos(origin_word) :
-							in_result = []	
-							in_result.append(origin_word)
-							in_result.append(morpheme)
-							results.append(in_result)
+					for origin_word in origin_word_list :
+						if (origin_word not in except_word_list) : 
+							for morpheme in kkma.pos(origin_word) :
+								in_result = []	
+								in_result.append(origin_word)
+								in_result.append(morpheme)
+								results.append(in_result)
 
-				print('*' * 80)
-				print(f'Depth_idx1 >> [{post_code}] >> {detail}')
-				# DB KEYWORD LIST TABLE INSERT
-				for idx, result in enumerate(results) :
-					print('ㅡ' * 50)
-					#[QNA_NO][바깥쪽 idx][어절 idx][형태소 idx]
-					print(f'Depth_for1 >> [{post_code}][{idx}] >> {result}')	
-					if idx == 0 :
-						try : 
-							word_no_item = []
-							cursor.execute(f"""
-								SELECT 
-									WORD_CLASS_CODE
-								FROM 
-									TBL_ANAL_WORD_CLASS 
-								WHERE 
-									CLASS_NAME = "{result[1][1]}"
-							""")
-							result_word_class_code = cursor.fetchall()[0][0]
-							cursor.execute(f"""
-								INSERT INTO TBL_BOBAE_KEYWORD_LIST 
-								(
-									POST_CODE, WORD_ORIGIN, WORD_MORPHEME, WORD_CLASS_CODE, WORD_CLASS, UPDATE_DATE
-								) 
-								VALUES (
-									"{post_code}", "{result[0]}", "{result[1][0]}", "{result_word_class_code}", "{result[1][1]}", NOW()
-								)
-							""")
-							cursor.execute(f"""
-								SELECT AUTO_INCREMENT
-								FROM information_schema.tables 
-								WHERE TABLE_NAME = 'TBL_BOBAE_KEYWORD_LIST' AND TABLE_SCHEMA = DATABASE();
-							""")
-							result_word_no = cursor.fetchone()[0]
-							word_no_item.append(result[1][0])
-							word_no_item.append(result_word_no)
-							word_no_list.append(word_no_item)
-						except Exception as e :
-							print(f'****** {post_code} >> TBL_BOBAE_KEYWORD_LIST > KEYWORD INSERT error! >> {e}')
-							continue
-						finally : 
-							pass	
-				# 단어 거리 계산
-					for depth_idx, depth_result in enumerate(results) :
-						if idx != depth_idx :
-							if idx == 0 :	
+					print('*' * 80)
+					print(f'Depth_idx1 >> [{post_code}] >> {detail}')
+					# DB KEYWORD LIST TABLE INSERT
+					for idx, result in enumerate(results) :
+						print('ㅡ' * 50)
+						#[QNA_NO][바깥쪽 idx][어절 idx][형태소 idx]
+						print(f'Depth_for1 >> [{post_code}][{idx}] >> {result}')	
+						if idx == 0 :
+							try : 
 								word_no_item = []
-								try :
-									# 타겟
-									cursor.execute(f"""
-										SELECT 
-											WORD_CLASS_CODE
-										FROM 
-											TBL_ANAL_WORD_CLASS 
-										WHERE 
-											CLASS_NAME = "{depth_result[1][1]}"
-									""")
-									result_word_class_code2 = cursor.fetchall()[0][0]
-									cursor.execute(f"""
-										INSERT INTO TBL_BOBAE_KEYWORD_LIST 
-										(
-											POST_CODE, WORD_ORIGIN, WORD_MORPHEME, WORD_CLASS_CODE, WORD_CLASS, UPDATE_DATE
-										) 
-										VALUES (
-											"{post_code}", "{depth_result[0]}", "{depth_result[1][0]}", "{result_word_class_code}", "{depth_result[1][1]}", NOW()
-										)
-									""")
-									cursor.execute(f"""
-										SELECT AUTO_INCREMENT
-										FROM information_schema.tables 
-										WHERE TABLE_NAME = 'TBL_BOBAE_KEYWORD_LIST' AND TABLE_SCHEMA = DATABASE();
-									""")
-									result_word_no2 = cursor.fetchone()[0]
-									# print(f'###### 타겟 [{depth_result[1][0]}][{result_word_class_code2}][{result_word_no2}]')
+								cursor.execute(f"""
+									SELECT 
+										WORD_CLASS_CODE
+									FROM 
+										TBL_ANAL_WORD_CLASS 
+									WHERE 
+										CLASS_NAME = "{result[1][1]}"
+								""")
+								result_word_class_code = cursor.fetchall()[0][0]
+								cursor.execute(f"""
+									INSERT INTO TBL_BOBAE_KEYWORD_LIST 
+									(
+										POST_CODE, WORD_ORIGIN, WORD_MORPHEME, WORD_CLASS_CODE, WORD_CLASS, UPDATE_DATE
+									) 
+									VALUES (
+										"{post_code}", "{result[0]}", "{result[1][0]}", "{result_word_class_code}", "{result[1][1]}", NOW()
+									)
+								""")
+								cursor.execute(f"""
+									SELECT AUTO_INCREMENT
+									FROM information_schema.tables 
+									WHERE TABLE_NAME = 'TBL_BOBAE_KEYWORD_LIST' AND TABLE_SCHEMA = DATABASE();
+								""")
+								result_word_no = cursor.fetchone()[0]
+								word_no_item.append(result[1][0])
+								word_no_item.append(result_word_no)
+								word_no_list.append(word_no_item)
+							except Exception as e :
+								print(f'****** {post_code} >> TBL_BOBAE_KEYWORD_LIST > KEYWORD INSERT error! >> {e}')
+								continue
+							finally : 
+								pass	
+						# 단어 거리 계산
+						for depth_idx, depth_result in enumerate(results) :
+							if idx != depth_idx :
+								if idx == 0 :	
+									word_no_item = []
+									try :
+										# 타겟
+										cursor.execute(f"""
+											SELECT 
+												WORD_CLASS_CODE
+											FROM 
+												TBL_ANAL_WORD_CLASS 
+											WHERE 
+												CLASS_NAME = "{depth_result[1][1]}"
+										""")
+										result_word_class_code2 = cursor.fetchall()[0][0]
+										cursor.execute(f"""
+											INSERT INTO TBL_BOBAE_KEYWORD_LIST 
+											(
+												POST_CODE, WORD_ORIGIN, WORD_MORPHEME, WORD_CLASS_CODE, WORD_CLASS, UPDATE_DATE
+											) 
+											VALUES (
+												"{post_code}", "{depth_result[0]}", "{depth_result[1][0]}", "{result_word_class_code}", "{depth_result[1][1]}", NOW()
+											)
+										""")
+										cursor.execute(f"""
+											SELECT AUTO_INCREMENT
+											FROM information_schema.tables 
+											WHERE TABLE_NAME = 'TBL_BOBAE_KEYWORD_LIST' AND TABLE_SCHEMA = DATABASE();
+										""")
+										result_word_no2 = cursor.fetchone()[0]
+										# print(f'###### 타겟 [{depth_result[1][0]}][{result_word_class_code2}][{result_word_no2}]')
 
-									word_no_item.append(depth_result[1][0])
-									word_no_item.append(result_word_no2)
-									word_no_list.append(word_no_item)
-									
-								except Exception as e :
-									print(f'****** + error! >> {e} >>>>> [{post_code} >> TBL_BOBAE_KEYWORD_LIST > KEYWORD INSERT 오류!]')
-									continue
-								finally : 
-									pass
-
-								if (result[1][1] == 'NNG' or result[1][1] == 'NNP' or result[1][1] == 'NNB' or result[1][1] == 'NNM') and (depth_result[1][1] == 'NNG' or depth_result[1][1] == 'NNP' or depth_result[1][1] == 'NNB' or depth_result[1][1] == 'NNM') and (len(result[1][0]) > 1 and len(depth_result[1][0]) > 1) : 
-									#[post_code][바깥쪽 idx][어절 idx][형태소 idx]
-									print(f'Depth_for2 >> [{post_code}][{idx}][{depth_idx}] >> [{result[0]}/{result[1][0]}][{depth_result[0]}/{depth_result[1][0]}]')
-									# print(f'2번 조건 통과 >> [{result[1][1]}][{depth_result[1][1]}]')
-									# print(f'Depth_for2 >> [{result[1][1]}][{depth_result[1][1]}]')
-									try : 
-										rows = []
-										if result[0] != depth_result[0] and result[1][0] != depth_result[1][0] :
-											cursor.execute(f"""
-												SELECT 
-													MAP_NO, WORD_DISTANCE
-												FROM 
-													TBL_BOBAE_KEYWORD_MAP
-												WHERE 
-													(
-														SOURCE_WORD = "{result[0]}" AND 
-														SOURCE_MORPHEME_WORD = "{result[1][0]}" AND 
-														TARGET_WORD = "{depth_result[0]}" AND 
-														TARGET_MORPHEME_WORD = "{depth_result[1][0]}"
-													)
-													OR
-													(
-														SOURCE_WORD = "{depth_result[0]}" AND 
-														SOURCE_MORPHEME_WORD = "{depth_result[1][0]}" AND 
-														TARGET_WORD = "{result[0]}" AND 
-														TARGET_MORPHEME_WORD = "{result[1][0]}"
-													)
-											""")
-											rows = cursor.fetchall()
+										word_no_item.append(depth_result[1][0])
+										word_no_item.append(result_word_no2)
+										word_no_list.append(word_no_item)
+										
 									except Exception as e :
-										print(f'****** + error! >> {e} >>>>> [{post_code} >> TBL_BOBAE_KEYWORD_MAP > SELECT 오류!]')
+										print(f'****** + error! >> {e} >>>>> [{post_code} >> TBL_BOBAE_KEYWORD_LIST > KEYWORD INSERT 오류!]')
 										continue
 									finally : 
 										pass
 
-										# 3. TBL_BOBAE_KEYWORD_MAP 테이블에서 4가지 조건 동일한 데이터가 있으면 WORD_DISTANCE 1더해서 업데이트 
-										if len(rows) > 0 : 
-											# print('@@ 3번 프로세스 @@ TBL_BOBAE_KEYWORD_MAP 중복되는 것 있다 > 업데이트')
-											return_datas = {}
-											for row_idx, row in enumerate(rows) :
-												return_datas['map_no'] = int(row[0])
-												return_datas['distance'] = int(row[1])
-											# print(f'@@ 3번 프로세스 @@ 업데이트 전 데이터 확인! {return_datas}')
-											try : 
-												cursor.execute(f"""
-													UPDATE
-														TBL_BOBAE_KEYWORD_MAP 
-													SET
-														WORD_DISTANCE = {return_datas.get('distance') + 1}
-													WHERE 
-														MAP_NO = {return_datas.get('map_no')}
-												""")
-											except Exception as e :
-												print(f'****** + error! >> {e} >>>>> [{post_code} >> TBL_BOBAE_KEYWORD_MAP > UPDATE 오류!]')
-												continue
-											finally : 
-												pass
-										# 4. TBL_BOBAE_KEYWORD_MAP 테이블에서 4가지 조건 동일한 데이터가 없으면 4가지 조건값 그대로 인서트						
-										else : 
-											# print('@@ 4번 프로세스 @@ TBL_BOBAE_KEYWORD_MAP 중복되는 것 없다 > 인서트')
-											try : 
+									if (result[1][1] == 'NNG' or result[1][1] == 'NNP' or result[1][1] == 'NNB' or result[1][1] == 'NNM') and (depth_result[1][1] == 'NNG' or depth_result[1][1] == 'NNP' or depth_result[1][1] == 'NNB' or depth_result[1][1] == 'NNM') and (len(result[1][0]) > 1 and len(depth_result[1][0]) > 1) : 
+										#[post_code][바깥쪽 idx][어절 idx][형태소 idx]
+										print(f'Depth_for2 >> [{post_code}][{idx}][{depth_idx}] >> [{result[0]}/{result[1][0]}][{depth_result[0]}/{depth_result[1][0]}]')
+										# print(f'2번 조건 통과 >> [{result[1][1]}][{depth_result[1][1]}]')
+										# print(f'Depth_for2 >> [{result[1][1]}][{depth_result[1][1]}]')
+										try : 
+											rows = []
+											if result[0] != depth_result[0] and result[1][0] != depth_result[1][0] :
 												cursor.execute(f"""
 													SELECT 
-														WORD_CLASS_CODE 
+														MAP_NO, WORD_DISTANCE
 													FROM 
-														TBL_ANAL_WORD_CLASS 
+														TBL_BOBAE_KEYWORD_MAP
 													WHERE 
-														CLASS_NAME = "{result[1][1]}"
+														(
+															SOURCE_WORD = "{result[0]}" AND 
+															SOURCE_MORPHEME_WORD = "{result[1][0]}" AND 
+															TARGET_WORD = "{depth_result[0]}" AND 
+															TARGET_MORPHEME_WORD = "{depth_result[1][0]}"
+														)
+														OR
+														(
+															SOURCE_WORD = "{depth_result[0]}" AND 
+															SOURCE_MORPHEME_WORD = "{depth_result[1][0]}" AND 
+															TARGET_WORD = "{result[0]}" AND 
+															TARGET_MORPHEME_WORD = "{result[1][0]}"
+														)
 												""")
-												result_word_class_code1 = cursor.fetchall()[0][0]
-												result_word_class_code1 = str(result_word_class_code1) + f'-{result[1][1]}'
-												# print('조합된 class code1 = ', result_word_class_code1)
-												# print('조합된 class code1 type = ', type(result_word_class_code1))
-												
-												cursor.execute(f"""
-													SELECT 
-														WORD_CLASS_CODE 
-													FROM 
-														TBL_ANAL_WORD_CLASS 
-													WHERE 
-														CLASS_NAME = "{depth_result[1][1]}"
-												""")
-												result_word_class_code2 = cursor.fetchall()[0][0]
-												result_word_class_code2 = str(result_word_class_code2) + f'-{depth_result[1][1]}'
-												# print('조합된 class code2 = ', result_word_class_code2)
-												# print('조합된 class code2 type = ', type(result_word_class_code2))
-												
-												result_word_no1 = 0
-												result_word_no2 = 0
-												for word_no_item in word_no_list :
-													if word_no_item[0] == result[1][0] : 
-														result_word_no1 = word_no_item[1]
-													if word_no_item[0] == depth_result[1][0] : 
-														result_word_no2 = word_no_item[1]
+												rows = cursor.fetchall()
+										except Exception as e :
+											print(f'****** + error! >> {e} >>>>> [{post_code} >> TBL_BOBAE_KEYWORD_MAP > SELECT 오류!]')
+											continue
+										finally : 
+											pass
 
-												##########################################################################################
-												cursor.execute(f"""
-													INSERT INTO 
-														TBL_BOBAE_KEYWORD_MAP 
-														(SOURCE_WORD_NO, SOURCE_WORD, SOURCE_CLASS_CODE, SOURCE_MORPHEME_WORD, TARGET_WORD_NO, TARGET_WORD, TARGET_CLASS_CODE, TARGET_MORPHEME_WORD, WORD_DISTANCE, UPDATE_DATE)
-													VALUES
-														("{result_word_no1}", "{result[0]}", "{result_word_class_code1}", "{result[1][0]}", "{result_word_no2}", "{depth_result[0]}", "{result_word_class_code2}", "{depth_result[1][0]}", 1, NOW())
-												""")
-											except Exception as e :
-												print(f'****** + error! >> {e} >>>>> [{post_code} >> TBL_BOBAE_KEYWORD_MAP > INSERT 오류!]')
-												continue
-											finally : 
-												pass				
+											# 3. TBL_BOBAE_KEYWORD_MAP 테이블에서 4가지 조건 동일한 데이터가 있으면 WORD_DISTANCE 1더해서 업데이트 
+											if len(rows) > 0 : 
+												# print('@@ 3번 프로세스 @@ TBL_BOBAE_KEYWORD_MAP 중복되는 것 있다 > 업데이트')
+												return_datas = {}
+												for row_idx, row in enumerate(rows) :
+													return_datas['map_no'] = int(row[0])
+													return_datas['distance'] = int(row[1])
+												# print(f'@@ 3번 프로세스 @@ 업데이트 전 데이터 확인! {return_datas}')
+												try : 
+													cursor.execute(f"""
+														UPDATE
+															TBL_BOBAE_KEYWORD_MAP 
+														SET
+															WORD_DISTANCE = {return_datas.get('distance') + 1}
+														WHERE 
+															MAP_NO = {return_datas.get('map_no')}
+													""")
+												except Exception as e :
+													print(f'****** + error! >> {e} >>>>> [{post_code} >> TBL_BOBAE_KEYWORD_MAP > UPDATE 오류!]')
+													continue
+												finally : 
+													pass
+											# 4. TBL_BOBAE_KEYWORD_MAP 테이블에서 4가지 조건 동일한 데이터가 없으면 4가지 조건값 그대로 인서트						
+											else : 
+												# print('@@ 4번 프로세스 @@ TBL_BOBAE_KEYWORD_MAP 중복되는 것 없다 > 인서트')
+												try : 
+													cursor.execute(f"""
+														SELECT 
+															WORD_CLASS_CODE 
+														FROM 
+															TBL_ANAL_WORD_CLASS 
+														WHERE 
+															CLASS_NAME = "{result[1][1]}"
+													""")
+													result_word_class_code1 = cursor.fetchall()[0][0]
+													result_word_class_code1 = str(result_word_class_code1) + f'-{result[1][1]}'
+													# print('조합된 class code1 = ', result_word_class_code1)
+													# print('조합된 class code1 type = ', type(result_word_class_code1))
+													
+													cursor.execute(f"""
+														SELECT 
+															WORD_CLASS_CODE 
+														FROM 
+															TBL_ANAL_WORD_CLASS 
+														WHERE 
+															CLASS_NAME = "{depth_result[1][1]}"
+													""")
+													result_word_class_code2 = cursor.fetchall()[0][0]
+													result_word_class_code2 = str(result_word_class_code2) + f'-{depth_result[1][1]}'
+													# print('조합된 class code2 = ', result_word_class_code2)
+													# print('조합된 class code2 type = ', type(result_word_class_code2))
+													
+													result_word_no1 = 0
+													result_word_no2 = 0
+													for word_no_item in word_no_list :
+														if word_no_item[0] == result[1][0] : 
+															result_word_no1 = word_no_item[1]
+														if word_no_item[0] == depth_result[1][0] : 
+															result_word_no2 = word_no_item[1]
 
+													##########################################################################################
+													cursor.execute(f"""
+														INSERT INTO 
+															TBL_BOBAE_KEYWORD_MAP 
+															(SOURCE_WORD_NO, SOURCE_WORD, SOURCE_CLASS_CODE, SOURCE_MORPHEME_WORD, TARGET_WORD_NO, TARGET_WORD, TARGET_CLASS_CODE, TARGET_MORPHEME_WORD, WORD_DISTANCE, UPDATE_DATE)
+														VALUES
+															("{result_word_no1}", "{result[0]}", "{result_word_class_code1}", "{result[1][0]}", "{result_word_no2}", "{depth_result[0]}", "{result_word_class_code2}", "{depth_result[1][0]}", 1, NOW())
+													""")
+												except Exception as e :
+													print(f'****** + error! >> {e} >>>>> [{post_code} >> TBL_BOBAE_KEYWORD_MAP > INSERT 오류!]')
+													continue
+												finally : 
+													dbconn.commit()
+													pass				
+				else : 
+					continue
 
-				
 				# for idx, origin_word in enumerate(origin_word_list) : 
 				# 	if idx == 0 : 
 				# 		print(f'{origin_word} : {origin_word_list[1]}, {origin_word_list[2]}')
@@ -390,11 +397,15 @@ def get_post_detail(post_code) :
 	soup = get_soup(url)
 	title = ''
 	content = ''
-	if soup.select_one('#print_area') is not None : 
+	try : 
 		detail = soup.select_one('#print_area')
 		title = detail.select_one('.writerProfile dl dt').attrs['title'].strip()
 		content = detail.select_one('.bodyCont').get_text().strip().replace('\n', '').replace('\xa0', '').replace('\r', '')
-	return title + ' ' + content
+		return title + ' ' + content
+	except Exception as e : 
+		print(f'get post detail error! >> {e}')
+		pass
+
 
 
 
@@ -417,7 +428,6 @@ if __name__ == '__main__' :
 	# 		get_post_detail(post['post_code'])
 	# 		time.sleep(2)
 	
-	dbconn.commit()
 	dbconn.close()
 
 	now = time.localtime()
