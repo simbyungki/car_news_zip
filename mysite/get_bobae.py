@@ -494,19 +494,11 @@ if __name__ == '__main__' :
 	dbconn = mysql.connector.connect(host=db_infos.get('host'), user=db_infos.get('user'), password=db_infos.get('password'), database=db_infos.get('database'), port=db_infos.get('port'))
 	cursor = dbconn.cursor()
 
-	# print(input_to_morphemes('제네시스 G80 전동화모델 이름 깨네 ㅋㅋㅋ Q30 G70'))
-	# compare_morphemes(input_to_morphemes('솔직히 국산 SUV 중 투싼이 갑 아니냐'), dbconn, cursor)
-
-	# dbconn = mysql.connector.connect(host=db_infos.get('host'), user=db_infos.get('user'), password=db_infos.get('password'), database=db_infos.get('database'), port=db_infos.get('port'))
-	# cursor = dbconn.cursor()
-
-	# # # 글 목록 가져오기 (DB Insert)
-	# get_post_list('national', dbconn, cursor)
-	# get_post_list('import', dbconn, cursor)
-	# # # 문장 분석
-	# sentence_mining(dbconn, cursor)
-
-	print(get_post_detail('https://www.bobaedream.co.kr/view?code=national&No=2053128&bm=1', 21412424))
+	# # 글 목록 가져오기 (DB Insert)
+	get_post_list('national', dbconn, cursor)
+	get_post_list('import', dbconn, cursor)
+	# # 문장 분석
+	sentence_mining(dbconn, cursor)
 
 	dbconn.close()
 
