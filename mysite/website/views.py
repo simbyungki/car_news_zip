@@ -7,6 +7,7 @@ from datetime import datetime
 from django.http import HttpResponse
 from django.core import serializers
 from konlpy.tag import Kkma
+from tqdm import trange
 import requests
 import re
 import regex
@@ -586,8 +587,9 @@ def bobaecomm_data(request) :
 			FROM 
 				TBL_BOBAE_KEYWORD_LIST
 			WHERE
-				LENGTH(WORD_MORPHEME) > 1 AND
+				CHAR_LENGTH(WORD_MORPHEME) > 1 AND
 				(WORD_CLASS = 'NNG' OR WORD_CLASS = 'NNP' OR WORD_CLASS = 'NNB' OR WORD_CLASS = 'NNM' OR WORD_CLASS = 'NP' OR WORD_CLASS = 'VA' OR WORD_CLASS = 'UN')
+			GROUP BY POST_CODE, WORD_MORPHEME
 		""")	
 		old_morphemes = cursor.fetchall()
 		# 신규 문장과 형태소 단어 비교
@@ -603,7 +605,7 @@ def bobaecomm_data(request) :
 				count[result[0]] += 1
 			except : 
 				count[result[0]] = 1
-
+		# print(count)
 		# sorting
 		fin_result = sorted(count.items(), key=(lambda v: v[1]), reverse = True)
 		fin_data = []
@@ -611,18 +613,35 @@ def bobaecomm_data(request) :
 			if idx < 3 : 
 				post_code = result[0]
 				url = f'https://www.bobaedream.co.kr/view?code=national&No={post_code}&bm=1'
-				fin_data.append(url)
-
-		print(fin_data)
+				print(url)
+				# fin_data.append(url)
+				post_detail = get_post_detail(post_code)
+				if post_detail is not None : 
+					fin_data.append([url, post_detail])
+				time.sleep(3)
+		# print(fin_data)
 		context = {}
 		context['data'] = fin_data
+		context['input'] = new_morphemes
 		
-
-
-		print(context)
+		# print(context)
 		return JsonResponse(context, status=200)
 
-
+# 보배드림 상세 글 수집
+def get_post_detail(post_code) : 
+	# print(f'>> 글 상세 내용 수집 시작합니다.')
+	url = f'https://www.bobaedream.co.kr/view?code=national&No={post_code}&bm=1'
+	soup = get_soup(url)
+	title = ''
+	content = ''
+	try : 
+		detail = soup.select_one('#print_area')
+		title = detail.select_one('.writerProfile dl dt').attrs['title'].strip()
+		content = detail.select_one('.bodyCont').get_text().strip().replace('\n', '').replace('\xa0', '').replace('\r', '')
+		return [title, content]
+	except Exception as e : 
+		print(f'get post detail error! >> {e}')
+		pass
 
 
 

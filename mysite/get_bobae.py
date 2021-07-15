@@ -459,32 +459,32 @@ def compare_morphemes(new_morphemes, dbconn, cursor) :
 	print('new_morphemes', new_morphemes)
 	print('old_morphemes', old_morphemes[0:5])
 
-	# # 신규 문장과 형태소 단어 비교
-	# results = []
-	# for idx, old_morpheme in enumerate(old_morphemes) : 
-	# 	for new_morpheme in new_morphemes : 	
-	# 		if old_morpheme[1] == new_morpheme[0] : 
-	# 			results.append([old_morpheme[0], old_morpheme[1]])
+	# 신규 문장과 형태소 단어 비교
+	results = []
+	for idx, old_morpheme in enumerate(old_morphemes) : 
+		for new_morpheme in new_morphemes : 	
+			if old_morpheme[1] == new_morpheme[0] : 
+				results.append([old_morpheme[0], old_morpheme[1]])
 
-	# count = {}
-	# # 중복 취합
-	# for idx, result in enumerate(results) : 
-	# 	try : 
-	# 		count[result[0]] += 1
-	# 	except : 
-	# 		count[result[0]] = 1
-	# # sorting
-	# fin_result = sorted(count.items(), key=(lambda v: v[1]), reverse = True)
-	# print('*'* 60)
-	# print(fin_result)
-	# # get detail URL
-	# print('*'* 60)
-	# for idx, result in enumerate(fin_result) : 
-	# 	if idx < 3 : 
-	# 		post_code = result[0]
-	# 		url = f'https://www.bobaedream.co.kr/view?code=national&No={post_code}&bm=1'
-	# 		print(f'{idx + 1}번째 추천(유사) 글 : {url}')
-	# 		print('*'* 60)
+	count = {}
+	# 중복 취합
+	for idx, result in enumerate(results) : 
+		try : 
+			count[result[0]] += 1
+		except : 
+			count[result[0]] = 1
+	# sorting
+	fin_result = sorted(count.items(), key=(lambda v: v[1]), reverse = True)
+	print('*'* 60)
+	print(fin_result)
+	# get detail URL
+	print('*'* 60)
+	for idx, result in enumerate(fin_result) : 
+		if idx < 3 : 
+			post_code = result[0]
+			url = f'https://www.bobaedream.co.kr/view?code=national&No={post_code}&bm=1'
+			print(f'{idx + 1}번째 추천(유사) 글 : {url}')
+			print('*'* 60)
 
 
 if __name__ == '__main__' : 
@@ -500,11 +500,13 @@ if __name__ == '__main__' :
 	# dbconn = mysql.connector.connect(host=db_infos.get('host'), user=db_infos.get('user'), password=db_infos.get('password'), database=db_infos.get('database'), port=db_infos.get('port'))
 	# cursor = dbconn.cursor()
 
-	# # 글 목록 가져오기 (DB Insert)
-	get_post_list('national', dbconn, cursor)
-	get_post_list('import', dbconn, cursor)
-	# # 문장 분석
-	sentence_mining(dbconn, cursor)
+	# # # 글 목록 가져오기 (DB Insert)
+	# get_post_list('national', dbconn, cursor)
+	# get_post_list('import', dbconn, cursor)
+	# # # 문장 분석
+	# sentence_mining(dbconn, cursor)
+
+	print(get_post_detail('https://www.bobaedream.co.kr/view?code=national&No=2053128&bm=1', 21412424))
 
 	dbconn.close()
 
