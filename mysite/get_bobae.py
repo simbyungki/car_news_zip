@@ -46,14 +46,16 @@ def get_soup(url) :
 ###
 # 글 목록 가져오기
 ###
-def get_post_list(dbconn, cursor) :
+def get_post_list(board_type, dbconn, cursor) :
 	page_number = 1
 	page_scale = 50
 	total_post = []
 	# 1. 목록에서 글 가져와 DB INSERT
 	for idx in range(1) : 
-		print(f'>> {page_number}번 페이지 작업 시작합니다.')
-		url = f'http://www.bobaedream.co.kr/list?code=national&s_cate=&maker_no=&model_no=&or_gu=10&or_se=desc&s_selday=&pagescale={page_scale}&info3=&noticeShow=&s_select=Subject&s_key=&level_no=&vdate=&type=list&page={page_number}'
+		print(f'>> [{board_type}]{page_number}번 페이지 작업 시작합니다.')
+		# 보배드림 국산차/수입차 게시판
+		url = f'https://www.bobaedream.co.kr/list?code={board_type}&s_cate=&maker_no=&model_no=&or_gu=10&or_se=desc&s_selday=&pagescale={page_scale}&info3=&noticeShow=&s_select=Subject&s_key=&level_no=&vdate=&type=list&page={page_number}'
+		print(f'수집 : {url}')
 		try : 
 			soup = get_soup(url)
 		except : 
@@ -70,7 +72,10 @@ def get_post_list(dbconn, cursor) :
 					tr_no = tr.select_one('.num01').get_text().strip()
 					# link_url = tr.select_one('.bsubject')['href']
 				if tr.select_one('.bsubject') is not None :
-					post_code = tr.select_one('.bsubject')['href'][-12:-5]
+					if board_type == 'national' :
+						post_code = tr.select_one('.bsubject')['href'][-12:-5]
+					elif board_type == 'import' : 
+						post_code = tr.select_one('.bsubject')['href'][-11:-5]
 					title = tr.select_one('.bsubject').get_text().strip()
 				if tr.select_one('.author') is not None :
 					writer = tr.select_one('.author').get_text().strip()
@@ -80,7 +85,7 @@ def get_post_list(dbconn, cursor) :
 					view_cnt = tr.select_one('.count').get_text().strip()
 				if tr.select_one('.date') is not None :
 					date = tr.select_one('.date').get_text().strip()
-				full_url = f'https://www.bobaedream.co.kr/view?code=national&No={post_code}&bm=1'
+				full_url = f'https://www.bobaedream.co.kr/view?code={board_type}&No={post_code}&bm=1'
 				# print(tr_no, link_url, title, writer, date)
 				in_obj = {}
 				in_obj['tr_no'] = tr_no
@@ -121,7 +126,7 @@ def sentence_mining(dbconn, cursor) :
 		except_word_list = []
 		cursor.execute(f"""
 			SELECT 
-				POST_CODE
+				POST_CODE, URL
 			FROM 
 				TBL_BOBAE_POST_CODE_LIST 
 			WHERE 
@@ -141,9 +146,9 @@ def sentence_mining(dbconn, cursor) :
 				results = []
 				post_code = row[0]
 				# 형태소 분석 > KEYWORD LIST DB INSERT
-				if (get_post_detail(post_code) is not None) and (get_post_detail(post_code) != '') : 
+				if (get_post_detail(row[1], post_code) is not None) and (get_post_detail(row[1], post_code) != '') : 
 					# 특수문자 제거
-					detail = re.sub('[-=.#/?:$}\"\']', '', str(get_post_detail(post_code))).replace('[','').replace(']','')
+					detail = re.sub('[-=.#/?:$}\"\']', '', str(get_post_detail(row[1], post_code))).replace('[','').replace(']','')
 					# 어절 분리 > list
 					origin_word_list = list(dict.fromkeys(regex.findall(r'[\p{Hangul}|\p{Latin}|\p{Han}|\d+]+', f'{detail}')))
 
@@ -391,9 +396,11 @@ def sentence_mining(dbconn, cursor) :
 ###
 # 글 상세 콘텐츠 가져오기
 ###
-def get_post_detail(post_code) : 
+def get_post_detail(url, post_code) : 
 	# print(f'>> 글 상세 내용 수집 시작합니다.')
-	url = f'https://www.bobaedream.co.kr/view?code=national&No={post_code}&bm=1'
+	# url = f'https://www.bobaedream.co.kr/view?code={board_type}&No={post_code}&bm=1'
+	print('ㅡ'* 30)
+	print(url)
 	soup = get_soup(url)
 	title = ''
 	content = ''
@@ -405,6 +412,8 @@ def get_post_detail(post_code) :
 	except Exception as e : 
 		print(f'get post detail error! >> {e}')
 		pass
+	finally : 
+		time.sleep(3)
 
 
 def input_to_morphemes(sentence) :
@@ -442,36 +451,40 @@ def compare_morphemes(new_morphemes, dbconn, cursor) :
 		FROM 
 			TBL_BOBAE_KEYWORD_LIST
 		WHERE
-			LENGTH(WORD_MORPHEME) > 1 AND
-			(WORD_CLASS = 'NNG' OR WORD_CLASS = 'NNP' OR WORD_CLASS = 'NNB' OR WORD_CLASS = 'NNM' OR WORD_CLASS = 'NP' OR WORD_CLASS = 'VA' OR WORD_CLASS = 'OL' OR WORD_CLASS = 'OH' OR WORD_CLASS = 'UN')
+			CHAR_LENGTH(WORD_MORPHEME) > 1 AND
+			(WORD_CLASS = 'NNG' OR WORD_CLASS = 'NNP' OR WORD_CLASS = 'NNB' OR WORD_CLASS = 'NNM' OR WORD_CLASS = 'NP' OR WORD_CLASS = 'VA' OR WORD_CLASS = 'UN')
+		GROUP BY POST_CODE, WORD_MORPHEME
 	""")
 	old_morphemes = cursor.fetchall()
-	# 신규 문장과 형태소 단어 비교
-	results = []
-	for idx, old_morpheme in enumerate(old_morphemes) : 
-		for new_morpheme in new_morphemes : 	
-			if old_morpheme[1] == new_morpheme[0] : 
-				results.append([old_morpheme[0], old_morpheme[1]])
+	print('new_morphemes', new_morphemes)
+	print('old_morphemes', old_morphemes[0:5])
 
-	count = {}
-	# 중복 취합
-	for idx, result in enumerate(results) : 
-		try : 
-			count[result[0]] += 1
-		except : 
-			count[result[0]] = 1
-	# sorting
-	fin_result = sorted(count.items(), key=(lambda v: v[1]), reverse = True)
-	print('*'* 60)
-	print(fin_result)
-	# get detail URL
-	print('*'* 60)
-	for idx, result in enumerate(fin_result) : 
-		if idx < 3 : 
-			post_code = result[0]
-			url = f'https://www.bobaedream.co.kr/view?code=national&No={post_code}&bm=1'
-			print(f'{idx + 1}번째 추천(유사) 글 : {url}')
-			print('*'* 60)
+	# # 신규 문장과 형태소 단어 비교
+	# results = []
+	# for idx, old_morpheme in enumerate(old_morphemes) : 
+	# 	for new_morpheme in new_morphemes : 	
+	# 		if old_morpheme[1] == new_morpheme[0] : 
+	# 			results.append([old_morpheme[0], old_morpheme[1]])
+
+	# count = {}
+	# # 중복 취합
+	# for idx, result in enumerate(results) : 
+	# 	try : 
+	# 		count[result[0]] += 1
+	# 	except : 
+	# 		count[result[0]] = 1
+	# # sorting
+	# fin_result = sorted(count.items(), key=(lambda v: v[1]), reverse = True)
+	# print('*'* 60)
+	# print(fin_result)
+	# # get detail URL
+	# print('*'* 60)
+	# for idx, result in enumerate(fin_result) : 
+	# 	if idx < 3 : 
+	# 		post_code = result[0]
+	# 		url = f'https://www.bobaedream.co.kr/view?code=national&No={post_code}&bm=1'
+	# 		print(f'{idx + 1}번째 추천(유사) 글 : {url}')
+	# 		print('*'* 60)
 
 
 if __name__ == '__main__' : 
@@ -482,20 +495,18 @@ if __name__ == '__main__' :
 	cursor = dbconn.cursor()
 
 	# print(input_to_morphemes('제네시스 G80 전동화모델 이름 깨네 ㅋㅋㅋ Q30 G70'))
-	compare_morphemes(input_to_morphemes('솔직히 국산 SUV 중 투싼이 갑 아니냐'), dbconn, cursor)
-
-
-
+	# compare_morphemes(input_to_morphemes('솔직히 국산 SUV 중 투싼이 갑 아니냐'), dbconn, cursor)
 
 	# dbconn = mysql.connector.connect(host=db_infos.get('host'), user=db_infos.get('user'), password=db_infos.get('password'), database=db_infos.get('database'), port=db_infos.get('port'))
 	# cursor = dbconn.cursor()
 
 	# # 글 목록 가져오기 (DB Insert)
-	# get_post_list(dbconn, cursor)
+	get_post_list('national', dbconn, cursor)
+	get_post_list('import', dbconn, cursor)
 	# # 문장 분석
-	# sentence_mining(dbconn, cursor)
+	sentence_mining(dbconn, cursor)
 
-	# dbconn.close()
+	dbconn.close()
 
 	now = time.localtime()
 	end_time = now
